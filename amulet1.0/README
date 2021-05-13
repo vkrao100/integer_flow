@@ -1,0 +1,10 @@
+This tool verifies or certifies AIG multiplier circuits. 
+
+You need to have installed the AIGER library in ../aiger/
+to compile it.
+Furthermore you need to have installed gmp-6.1.2 in ../gmp-6.1.2/
+to compile it.
+
+
+Daniela Kaufmann
+Sam 25 Mai 2019 10:57:28 CEST 

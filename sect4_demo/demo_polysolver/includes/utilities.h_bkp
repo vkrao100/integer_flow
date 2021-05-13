@@ -1,0 +1,15 @@
+#ifndef _UTILITIES_H
+#define _UTILITIES_H
+
+void push_parents_and_children();
+
+void push_parents_and_children_output();
+
+void set_output_poly();
+
+void set_xor_poly ();
+
+void set_and_poly ();
+
+
+#endif

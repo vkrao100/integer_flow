@@ -1,0 +1,29 @@
+Log file for ab2_test.sing
+
+Time taken for verification is
+9402
+
+The remainder is 
+24*b(1)*b(0)*a(3)*a(2)-8*b(1)*a(2)-8*b(0)*a(3)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+13333
+
+Checking for rectification at net
+-XorSlice3Level2Order5Distance168
+
+Circuit rectifiable at
+-XorSlice3Level2Order5Distance168
+
+Time to find the rectification net:
+15658
+
+Rectification successful. The rectification function is
+-XorSlice3Level2Order5Distance168-2*b(1)*b(0)*a(3)*a(2)+b(1)*a(2)+b(0)*a(3)
+
+End of computations.
+
+Total time elapsed:
+33855

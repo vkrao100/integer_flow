@@ -1,0 +1,48 @@
+/* This function computes the multivariant division of polynomials.*/
+proc multivariate_burg(poly f, list m, ideal g)
+{
+	list u;
+	ideal j0 = g; 
+	list k = m; 
+	int index;
+	for(int i = 1; i <= size(k); i++)
+	{
+		u[i] = 0;
+	} 
+	poly r = 0;
+	poly h = f; 
+	while (h != 0 )
+	{
+		index =  isDivisible(h, k);
+		h = reduce(h,j0);
+		if(index != -1)
+		{
+			u[index] = u[index] + (lead(h)/lead(k[index]));
+			"dividend-",h;
+			h = h - (lead(h)/lead(k[index]))*k[index];
+			"quotient-",u[index];
+			"divisor-",(k[index]);
+            "residue-",h;  	
+		} 
+		else
+		{
+			r = r + lead(h);
+			h = h - lead(h);
+		}
+	} 
+	return (r,u[1]);   	 
+}
+/* Checks if any polynomial in a given list can divide h */ 
+proc isDivisible(poly h, list k)
+{
+	poly r;
+	for(int i = 1; i <= size(k); i++)
+	{
+		r = division(leadmonom(h),leadmonom(k[i]))[2][1];
+		if(r == 0)
+		{
+			return (i); 
+		}
+	}
+	return (-1);
+}

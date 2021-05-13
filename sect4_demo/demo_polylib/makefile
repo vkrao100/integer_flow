@@ -1,0 +1,22 @@
+CC=g++
+CFLAGS=-Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO
+AIGLIB=@AIGLIB@
+DEP=@DEP@
+
+BUILD_PATH=build/
+SRC_PATH=includes/
+SRC      :=  $(wildcard includes/*.cpp) \
+
+OBJECTS := $(SRC:$(SRC_PATH)%.cpp=$(BUILD_PATH)%.o)
+
+all: demo
+
+$(BUILD_PATH)%.o: $(SRC_PATH)%.cpp
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+
+demo: $(OBJECTS) 
+	$(CC) $(CFLAGS)  -o  $@ demo_polylib.cpp $(OBJECTS)  -lgmp
+
+clean:
+	rm -f demo makefile \
+	rm -rf build/

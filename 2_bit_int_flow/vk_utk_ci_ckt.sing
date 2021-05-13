@@ -1,0 +1,75 @@
+// List of modifications required for every file-
+// 1. modify bit_length
+// 2. modify fix_length
+// 3. Picking nets for rectification (rf0,rf1,rf2)
+// 4. Introduce bugs, add W before the lowest index amongst the rectification
+//    nets in the ring
+// 5. modify print_debug to 1 in case you need verbose explanation of steps
+LIB "../my_proc_vk.lib";
+int bit_length = 2;
+int fix_length = 1;
+int rectified = 0;
+int pdebug = 1;
+int verify_ckt = 1;
+int check_single_fix_rect = 1;
+
+ring R = 0, (Z, A, B, z_3_, z_2_, z_1_, z_0_, x_1, x_5, x_2, x_3, a_0_, a_1_, b_0_, b_1_), lp; 
+
+//circuit -  2 bit integer multiplier poly's
+ideal J2 = 
+Z -(8*z_3_ + 4*z_2_ + 2*z_1_ + z_0_),
+A -(2*a_1_+a_0_),
+B -(2*b_1_+b_0_),
+z_3_ - x_1*x_5,
+z_2_ - ixorgate(x_1,x_5),
+//correct
+//z_1_ - ixorgate(x_3,x_2),
+//buggy
+z_1_ - x_3*x_2,
+z_0_ - a_0_*b_0_,
+x_1 - a_1_*b_1_,
+x_5 - x_3*x_2,
+x_2 - a_1_*b_0_,
+x_3 - a_0_*b_1_;
+
+//vanishing polynomials
+ideal J0 = 
+a_0_^2 - a_0_,
+a_1_^2 - a_1_,
+b_0_^2 - b_0_,
+b_1_^2 - b_1_;
+
+poly spec = Z - A*B;
+
+if (verify_ckt == 1)
+{
+	ideal J1 = sort_ring_order(J2);
+	poly rema = verify_circuit(J1,J0);
+	if (rema == 0)
+	{
+		"circuit implements specification, exiting";
+		rectified = 1;
+	}
+	else
+	{	
+		"remainder",rema;
+		"circuit doesn't implement specification";
+		if (check_single_fix_rect)
+		{
+			list rect = z_1_;
+			//ideal Jsf = del_poly_from_ideal(J1,W);
+			rectified = check_single_fix(J1, J0, rema, rect);
+		}
+		else
+		{	
+			"single-fix rectification module turned off";
+		}
+	}
+}
+/*if (rectified != 1)
+{	
+	poly fW;
+	//"performing multi-fix rectification at W +",rf0,"+",rf1*be,"+",rf2*be^2;
+	check_multi_fix(J1,J0);
+}*/
+

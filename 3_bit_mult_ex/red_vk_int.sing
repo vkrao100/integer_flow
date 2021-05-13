@@ -1,0 +1,255 @@
+//minterm: 001010
+//outputs: z_2_ z_3_
+LIB "linalg.lib";
+LIB "dmodapp.lib";
+LIB "../ff_exps/my_proc_vk.lib";
+
+int bit_length = 3;
+int fix_length = 1;
+int rectified = 0;
+int pdebug = 1;
+int verify_ckt = 1;
+int check_single_fix_rect = 1;
+
+ring R = 0, (Z, A, B, z_0_, z_1_, z_2_, z_3_, z_4_, z_5_, n31, n25, n23, n17, n22, n21, n20, n19, n18, n42, n40, n51, n46, n49, n47, n39, n41, n24, n30, n48, n33, n38, n52, n44, n45, n34, n37, n35, n28, n29, n14, n15, n36, n26, n27, a0, a1, a2, b0, b1, b2), lp;
+//ring R = 0, (Z, A, B, z_0_, z_1_, z_2_, z_3_, z_4_, z_5_, n31, n25, n23, n22, n42, n40, n51, n46, n49, n47, n21, n19, n20, n18, n39, n41, n24, n30, n48, n33, n38, n52, n44, n45, n34, n37, n35, n28, n29, n14, n15, n36, n26, n27, n17, a0, a1, a2, b0, b1, b2), lp;
+
+poly fZ = -Z + 1*z_0_ + 2*z_1_ + 4*z_2_ + 8*z_3_ + 16*z_4_ + 32*z_5_;
+poly fA = -A + 1*a0 + 2*a1 + 4*a2;
+poly fB = -B + 1*b0 + 2*b1 + 4*b2;
+// AND2X1
+poly f0 = -z_0_ + b0*a0;
+// XOR2X1
+poly f1 = -z_1_ + n15 + n14 - 2*n15*n14;
+// XOR2X1
+poly f2 = -z_2_ + n31 + n23 - 2*n31*n23;
+// XOR2X1
+poly f3 = -z_3_ + n42 + n23 - 2*n42*n23;
+// XOR2X1
+poly f4 = -z_4_ + n49 + n46 - 2*n49*n46;
+// OR2X1
+poly f5 = -z_5_ + n52 + n51 - n52*n51;
+// XOR2X1
+poly f6 = -n31 + n30 + n25 - 2*n30*n25;
+// INVX1
+poly f7 = -n25 + 1 - n24;
+// OR2X1
+poly f8 = -n23 + n22 + n17 - n22*n17;
+// OR2X1
+poly f9 = -n17 + a1 + a0 - a1*a0;
+// OR2X1
+poly f10 = -n22 + n21 + n19 - n21*n19;
+// OR2X1
+poly f11 = -n19 + b0 + n18 - b0*n18;
+// INVX1
+poly f12 = -n18 + 1 - a2;
+// OR2X1
+poly f13 = -n21 + b2 + n20 - b2*n20;
+// INVX1
+poly f14 = -n20 + 1 - b1;
+// XOR2X1
+poly f15 = -n42 + n41 + n40 - 2*n41*n40;
+// INVX1
+poly f16 = -n40 + 1 - n39;
+// AND2X1
+poly f17 = -n51 + n49*n46;
+// XOR2X1
+poly f18 = -n46 + n45 + n44 - 2*n45*n44;
+// OR2X1
+poly f19 = -n49 + n48 + n47 - n48*n47;
+// AND2X1
+poly f20 = -n47 + n41*n39;
+// XOR2X1
+poly f21 = -n39 + n38 + n33 - 2*n38*n33;
+// AND2X1
+poly f22 = -n41 + n30*n24;
+// AND2X1
+poly f23 = -n24 + b2*a0;
+// XOR2X1
+poly f24 = -n30 + n29 + n28 - 2*n29*n28;
+// AND2X1
+poly f25 = -n48 + n38*n33;
+// AND2X1
+poly f26 = -n33 + b2*a1;
+// XOR2X1
+poly f27 = -n38 + n37 + n34 - 2*n37*n34;
+// AND2X1
+poly f28 = -n52 + n45*n44;
+// AND2X1
+poly f29 = -n44 + b2*a2;
+// AND2X1
+poly f30 = -n45 + n37*n34;
+// AND2X1
+poly f31 = -n34 + b1*a2;
+// OR2X1
+poly f32 = -n37 + n36 + n35 - n36*n35;
+// AND2X1
+poly f33 = -n35 + n29*n28;
+// XOR2X1
+poly f34 = -n28 + n27 + n26 - 2*n27*n26;
+// AND2X1
+poly f35 = -n29 + n15*n14;
+// AND2X1
+poly f36 = -n14 + b1*a0;
+// AND2X1
+poly f37 = -n15 + b0*a1;
+// AND2X1
+poly f38 = -n36 + n27*n26;
+// AND2X1
+poly f39 = -n26 + b1*a1;
+// AND2X1
+poly f40 = -n27 + b0*a2;
+// INPUT
+poly f41 = a0^2 - a0;
+// INPUT
+poly f42 = a1^2 - a1;
+// INPUT
+poly f43 = a2^2 - a2;
+// INPUT
+poly f44 = b0^2 - b0;
+// INPUT
+poly f45 = b1^2 - b1;
+// INPUT
+poly f46 = b2^2 - b2;
+
+poly fcorr = -n19-a0*a1*b1*b2+a0*a1*b1+a0*b1*b2-a0*b1+a1*b1*b2-a1*b1-b1*b2+b1;
+
+ideal JC = (fZ, fA, fB, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, fcorr, f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35, f36, f37, f38, f39, f40);//, f41, f42, f43, f44, f45, f46);
+ideal J = (fZ, fA, fB, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35, f36, f37, f38, f39, f40);//,f41, f42, f43, f44, f45, f46);
+
+poly spec = -Z + A*B;
+
+ideal J0 = f41, f42, f43, f44, f45, f46;
+
+/*
+//start of alternate hi computation
+ideal JG = slimgb(JC+J0);
+matrix V = lift(JG,spec);
+matrix Vt = transpose(V);
+//Vt;
+matrix U = lift(JC+J0,JG);
+//U;
+poly sol;
+int i;
+for(i=1;i<=size(JG);i++)
+{
+	sol = sol + (Vt[1,i]*U[1,i]);
+}
+//end of alternate hi computation
+*/
+
+//check if the circuit indeed implements specification
+poly rema = reduce(spec,J);
+if (rema == 0)
+{
+	"circuit implements specification, exiting";
+	//quit;
+}
+else
+{
+	"remainder",rema;
+	"circuit doesn't implement specification, attempting rectification";
+}
+
+	int rectified = 0;
+	if (rectified == 0)
+	{
+		//rectifying at location rf
+		//poly rf = inet;
+		poly rf = -n19;
+		"checking for rectification at", rf;
+		list sorted = sort(J);
+		J = sorted[1];
+		ideal ckt_imp = J;
+		
+		int t1;
+		int ind_r = get_index(J,rf); // right now, not needed. can be entered manually.
+		//int ind_Z = get_index(ckt_imp, Z); //what is this used for?? And with RTTO, will it not always be 1?
+		
+		ideal IL = ckt_imp;
+		IL[ind_r] = rf+1;
+		ideal IH = ckt_imp;
+		IH[ind_r] = rf+0;
+		IL;
+		IH;
+		
+		int t1;
+		
+		poly rL = reduce(spec,IL+J0);
+		poly rH = reduce(spec,IH+J0);
+		
+		"rL",rL;
+		"rH",rH;
+
+		poly rlh = reduce((rL*rH),J0);
+		"ideal rlh is",rlh;
+		if (rlh==0)
+		{
+			"Circuit Rectifiable at location",rf;
+			int lenI = size(ckt_imp);
+			ideal Js = J[1..(ind_r-1)];
+			ideal Jf = J[(ind_r+1)..lenI];
+			Jf;
+			Js;
+			poly quo;
+			poly rem;
+			poly prem;
+		
+			prem = reduce(spec,Jf+J0);
+			rem, quo = multivariate_burg(prem,lead(rf)); 
+			"pre-remainder",rem;
+			"pre-quotient",quo;
+			//rem = reduce(rem,Js+J0); 
+			//quo = reduce(quo,Js+J0);
+			poly quop = reduce(quo,Js+J0);
+			"post-remainder",rem;
+			"post-quotient",quo;
+			ideal dec = variables(quo);
+			ideal JCp = quo,Js,J0;
+			if (size(dec)>=1)
+			{
+				"quotient is not a constant";
+				
+				ideal JG = slimgb(JCp);
+				matrix V = lift(JG,rem);
+				matrix Vt = transpose(V);
+				//Vt;
+				matrix U = lift(JCp,JG);
+				//U;
+				poly sol;
+				int i;
+				for(i=1;i<=size(JG);i++)
+				{
+					sol = sol + (Vt[1,i]*U[1,i]);
+				}
+			}
+			else
+			{	
+				"quotient is a constant";
+				if (quo != 1)
+				{
+					matrix quoi = inverse(quo);
+				}
+				else
+				{
+					matrix quoi = 1;
+				}
+				poly irem   = quoi[1,1]*rem;
+				poly sol    = reduce(irem,Js+J0);	
+			}
+			//sol = reduce(sol,Js+J0);
+			sol = reduce(sol,J0);
+			"solution for P is",sol; 
+			poly correc = rf+sol;
+			poly corem = reduce(spec, Jf+Js+correc+J0);
+		
+			"applying correction to circuit at",rf,"with solution",sol,":remainder after reduction is", corem;
+			rectified = 1;
+		}
+		else
+		{
+			"Circuit not rectifiable at location",rf;
+		}
+	}
+
+ideal sol1 = quotient(Js+J0,quo);

@@ -1,0 +1,422 @@
+LIB "linalg.lib";
+LIB "dmodapp.lib";
+LIB "my_proc.lib";
+
+write(":w log.txt","Log file for abc2.sing");
+write(":a log.txt", "");
+
+rtimer=0;
+system("--ticks-per-sec",1000);
+int t0 = rtimer;
+
+int dp = 2;
+
+option(notWarnSB);
+ring R  = 0, (
+  s(3),
+  s(2),
+  nn28,
+  nn24,
+  nn22,
+  s(1),
+  nn20,
+  nn16,
+  nn14,
+  nn12,
+  s(0),
+  nn10,
+  b(1),
+  b(0),
+  a(1),
+  a(0)
+), lp;
+poly PP(3) =0; 
+poly PP(2) = a(1)*b(1); 
+poly PP(1) = a(0)*b(1)+ a(1)*b(0); 
+poly PP(0) = a(0)*b(0); 
+poly Car(4) = 0; 
+ideal FS0 =
+  -nn10 + nn10^2
+;
+ideal FS1 =
+  -nn12 + nn12^2,
+  -nn14 + nn14^2,
+  -nn16 + nn16^2,
+  -nn20 + nn20^2
+;
+ideal FS2 =
+  -nn22 + nn22^2,
+  -nn24 + nn24^2,
+  -nn28 + nn28^2
+;
+ideal FS3 =
+  0
+;
+ideal FI =
+  -a(0) + a(0)^2,
+  -a(1) + a(1)^2,
+  -b(0) + b(0)^2,
+  -b(1) + b(1)^2
+;
+ideal CS0 =
+  0
+;
+ideal CS1 =
+  0
+;
+ideal CS2 =
+  0
+;
+ideal CS3 =
+  0
+;
+ideal HS3 =
+  0;
+ideal HT3 = 
+  FS2, FS3, CS2, CS3, HS3
+;
+ideal S(3) =
+  -s(3) + reduce (nn24, HT3)
+ ;
+ideal T(3) = FI, FS2, FS3, CS2, CS3, S(3);
+poly Car(3) =   reduce (s(3) + 2 * Car(4) - PP(3), T(3));
+ Car(3);
+
+ideal HS2 =
+  0;
+ideal HT2 = 
+  FS1, FS2, CS1, CS2, HS2
+;
+ideal S(2) =
+  -nn22 + a(1) * b(1), 
+  -nn24 + nn16 * nn22, 
+  -nn28 + nn16 + nn22 - 2 * nn16 * nn22,
+  -s(2) + nn28
+;
+ideal T(2) = FI, FS1, FS2, CS1, CS2, S(2);
+poly Car(2) =   reduce (s(2) + 2 * Car(3) - PP(2), T(2));
+ Car(2);
+
+ideal HS1 =
+  0;
+ideal HT1 = 
+  FS0, FS1, CS0, CS1, HS1
+;
+ideal S(1) =
+  -nn12 + a(1) * b(0), 
+  -nn14 + a(0) * b(1), 
+  -nn16 + nn12 * nn14, 
+  // -nn20 + nn12 + nn14 - 2 * nn12 * nn14,
+  -nn20 + nn12 * nn14,//bug
+  -s(1) + nn20
+;
+ideal T(1) = FI, FS0, FS1, CS0, CS1, S(1);
+poly Car(1) =   reduce (s(1) + 2 * Car(2) - PP(1), T(1));
+ Car(1);
+
+ideal HS0 =
+  -nn10 + a(0) * b(0)
+;
+ideal HT0 = 
+  FS0, CS0, HS0
+;
+ideal S(0) =
+  -s(0) + reduce (nn10, HT0)
+ ;
+ideal T(0) = FI, FS0, CS0, S(0);
+poly Car(0) =   reduce (s(0) + 2 * Car(1) - PP(0), T(0));
+ Car(0);
+
+ int t1 = rtimer-t0;
+write(":a log.txt", "Time taken for verification is",t1);
+write(":a log.txt", "");
+
+ //check if the circuit indeed implements specification
+if (Car(0) == 0)
+{
+  write(":a log.txt", "The circuit is verified against given specification.");
+  write(":a log.txt", "Exiting");
+  quit;
+}
+else
+{
+  write(":a log.txt", "The remainder is ", Car(0));
+  write(":a log.txt", "");
+  write(":a log.txt", "Circuit doesn't implement specification. Attempting rectification now.");
+  write(":a log.txt", "");
+}
+
+int i_PP = 0;
+list PP;
+list temp_PP;
+for (i_PP; i_PP <= 2*dp -1; i_PP++)
+{
+  temp_PP = PP(i_PP);
+  PP = PP + temp_PP;
+}
+
+int i_SS = 0;
+list SS;
+list temp_SS;
+for (i_SS; i_SS <= 2*dp -1; i_SS++)
+{
+  temp_SS = s(i_SS);
+  SS = SS + temp_SS;
+}
+
+int i_TT = 0;
+list TT;
+list temp_TT;
+for (i_TT; i_TT <= 2*dp -1; i_TT++)
+{
+  temp_TT = sort(T(i_TT));
+  temp_TT = temp_TT[1];
+  TT = TT + temp_TT;
+}
+
+/*
+list CC;
+CC[2*dp + 1] = 0;
+for (int i = 2*dp ; i > 0 ; i--)
+{
+  CC[i] = reduce((2*CC[i+1] + SS[i] - PP[i]),TT[i]);
+  CC[i];
+}
+*/
+//TO DO: remainder analysis and pruning search space
+
+list coneTips =  remainder_partition(Car(0),dp);
+list op = decomp(coneTips,dp);
+list cones;
+
+int sop = size(op);
+cones = -s(op[sop]);
+ideal J = S(op[sop])+S(op[sop]-1);
+
+if (size(op) == 1)
+{ 
+  if (op[1] == 0)
+  {
+    cones = -s(0);
+    list rectCheck = prune_logical_cone(cones,(S(0)));
+  }  
+  else
+  {
+    list rectCheck = prune_logical_cone(cones,J); }
+}
+else
+{
+  
+  list rectCheck = prune_logical_cone(cones,J);
+}
+
+//list rectCheck = prune_logical_cone(coneTips,J1);
+
+// list rectCheck = -AndSlice1Level1Order0Distance2Lit12;
+int t2 = rtimer-t1;
+write (":a log.txt", "Time for identifying rectifiable nets",t2);
+write(":a log.txt", "");
+
+
+int rectified = 0;
+for(int rect=1; rect<=size(rectCheck);rect++)
+{ 
+  if (rectified == 0)
+  {
+    //rectifying at location rf
+    poly rf = rectCheck[rect];
+    write (":a log.txt", "Checking for rectification at net", rf);
+
+    int ind_r;  
+    int i_ind;
+
+    //finding index
+    for (int j = 1; j <= size(TT); j++)
+    {
+      for (i_ind = 1; i_ind <= size(TT[j]) ; i_ind++)
+      {
+        if (lead(TT[j][i_ind]) == rf)
+          {
+            ind_r = i_ind;
+            int buggy_slice = j;
+          }
+      }   
+    }       
+
+    //replacing with rf+1 and rf+0
+    ideal Slice_L = TT[buggy_slice];
+    Slice_L[ind_r] = rf+1;
+    ideal Slice_H = TT[buggy_slice];
+    Slice_H[ind_r] = rf;
+    
+    list TT_L = TT;
+    list TT_H = TT;
+
+    TT_L = delete(TT_L,buggy_slice);
+    TT_L = insert(TT_L,Slice_L,buggy_slice-1);
+
+    TT_H = delete(TT_H,buggy_slice);
+    TT_H = insert(TT_H,Slice_H,buggy_slice-1);
+
+    //finding rL
+    list CC_L;
+    CC_L[buggy_slice+1] = Car(buggy_slice);
+    for (int i = buggy_slice ; i > 0 ; i--)
+    {
+      CC_L[i] = reduce((2*CC_L[i+1] + SS[i] - PP[i]),TT_L[i]);
+      CC_L[i];
+    }
+
+    //finding rH
+    list CC_H;
+    CC_H[buggy_slice + 1]= Car(buggy_slice);
+    for (int i = buggy_slice; i > 0 ; i--)
+    {
+      CC_H[i] = reduce((2*CC_H[i+1] + SS[i] - PP[i]),TT_H[i]);
+      CC_H[i];
+    }
+
+    poly rlh = reduce((CC_L[1]*CC_H[1]),FI);
+
+    kill CC_L,CC_H,TT_L,TT_H;
+
+    if (rlh == 0)
+    {
+      int t3 = rtimer-t2;
+      write(":a log.txt","Circuit rectifiable at",rf);
+      write(":a log.txt","Time to find the rectification net:" ,t3);
+
+      poly quo;
+      poly rem;
+      poly prem;
+
+      //needs checking from here 
+      //slices equivalent to Jf
+      //division of specification by Jf starts here.
+      list TT_Jf = TT;
+      ideal temp_Jf = TT[buggy_slice];
+      //ideal partial = temp_prem[(ind_r - 2)..(ind_r-1)] , temp_prem[(ind_r+2)..(size(temp_prem))];
+      ideal partial = temp_Jf[(ind_r+1)..(size(temp_Jf))];
+      TT_Jf = delete(TT_Jf,buggy_slice);
+      TT_Jf = insert(TT_Jf,partial,buggy_slice-1);
+      
+      // for(int i = 1; i < buggy_slice; i++)
+      // {
+      //   TT_Jf[i] = 0;
+      // }
+
+      list CC_prem;
+      CC_prem[buggy_slice + 1]=Car(buggy_slice);
+      for (int i = buggy_slice ; i > 0 ; i--)
+      {
+        CC_prem[i] = reduce((2*CC_prem[i+1] + SS[i] - PP[i]),TT_Jf[i]);
+        CC_prem[i];
+      }
+
+      prem = CC_prem[1];
+      "prem:",prem;
+      //division of specification by Jf stops here.
+
+      //division by xi starts here.    
+      rem, quo = multivariate_burg(prem,lead(rf),FI);  
+      //division by xi ends here.
+      // kill TT_Jf;
+
+      //slices equivalent to Js      
+      list TT_Js = TT;
+      for (int i = 2*dp; i > buggy_slice ; i--)
+      {
+        TT_Js[i] = 0;
+      }
+      ideal temp_Js = TT[buggy_slice];
+      ideal partial_Js = temp_Js[1..(ind_r-1)];
+      TT_Js[buggy_slice] = partial_Js;
+
+      /*
+      for (int i = 2*dp ; i > 0 ; i--)
+      {
+        CC_Js[i] = reduce((2*CC_Js[i+1] + SS[i] - PP[i]),TT_Js[i]);
+        CC_Js[i];
+      }
+      */
+
+      //ideal Js = temp_prem[1..ind_r-1] + S(0) + S(1);
+
+      ideal dec = variables(quo);
+      //ideal JCp = quo,Js;
+
+      if (size(dec)>=1)
+      {
+        /*
+        "quotient is not a constant";
+        ideal JG = slimgb(JCp);
+        matrix V = lift(JG,rem);
+        matrix Vt = transpose(V);
+        //Vt;
+        matrix U = lift(JCp,JG);
+        //U;
+        poly sol;
+        int i;
+        for(i=1;i<=size(JG);i++)
+        {
+          sol = sol + (Vt[1,i]*U[1,i]);
+        }
+        */
+        write(":a log.txt","Quotient is not a constant");
+        ideal JCp = quo;
+        for (int j = 1; j <= buggy_slice; j++)
+        {
+          JCp = JCp+TT_Js[j];
+        }
+        ideal JG = slimgb(JCp);
+        matrix V = lift(JG,rem);
+        matrix Vt = transpose(V);
+        //Vt;
+        matrix U = lift(JCp,JG);
+        //U;
+        poly sol;
+        int i;
+        for(i=1;i<=size(JG);i++)
+        {
+          sol = sol + (Vt[1,i]*U[1,i]);
+        }
+      }
+      else
+      { 
+        "quotient is a constant";
+        if (quo != 1)
+        {
+          matrix quoi = inverse(quo);
+        }
+        else
+        {
+          matrix quoi = 1;
+        }
+        poly irem   = quoi[1,1]*rem;
+        //poly sol    = reduce(irem,Js+FI);
+        list CC_Js;
+        CC_Js[2*dp + 1]=0; 
+        for (int i = 2*dp ; i > 0 ; i--)
+        {
+          CC_Js[i] = reduce(irem,TT_Js[i]);
+          irem = CC_Js[i];
+        }
+        poly sol = CC_Js[1];
+        int t4 = rtimer-t3;
+        write(":a log.txt","Solution computed",rf);
+        write(":a log.txt","Time to find the solution:" ,t4);
+      }
+      //to here.
+
+      //verifying if the rectification polynomial computed is correct
+      write(":a log.txt","Rectification successful. The rectification function is", rf+sol);
+      rectified = 1;         
+    }  
+    else
+    {
+      write(":a log.txt","Circuit not rectifiable at",rf);
+    }  
+  }
+}
+write(":a log.txt", "End of computations.");
+write(":a log.txt", "Total time elapsed:",rtimer-t0);

@@ -1,0 +1,48 @@
+Log file for abc32.sing
+
+Time taken for verification is
+12268
+
+The remainder is 
+48*b(1)*b(0)*a(4)*a(3)-16*b(1)*a(3)-16*b(0)*a(4)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+20736
+
+Checking for rectification at net
+-nn212
+Circuit not rectifiable at
+-nn212
+Checking for rectification at net
+-nn210
+Circuit not rectifiable at
+-nn210
+Checking for rectification at net
+-nn226
+Circuit not rectifiable at
+-nn226
+Checking for rectification at net
+-nn240
+Circuit not rectifiable at
+-nn240
+Checking for rectification at net
+-nn254
+Circuit not rectifiable at
+-nn254
+Checking for rectification at net
+-nn218
+Circuit rectifiable at
+-nn218
+Time to find the rectification net:
+37509
+Solution computed
+-nn218
+Time to find the solution:
+23032
+Rectification successful. The rectification function is
+-nn218-2*b(1)*b(0)*a(4)*a(3)+b(1)*a(3)+b(0)*a(4)
+End of computations.
+Total time elapsed:
+60542

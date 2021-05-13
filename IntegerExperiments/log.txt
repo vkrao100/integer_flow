@@ -1,0 +1,35 @@
+Log file for ab2_test.sing
+
+Time taken for verification is
+1
+
+The remainder is 
+4*b(1)*a(1)+4*b(1)+4*a(1)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+PP 
+b(0)*a(0),b(1)*a(0)+b(0)*a(1),b(1)*a(1),0
+SS 
+s(0),s(1),s(2),s(3)
+TT 
+a(0)^2-a(0),a(1)^2-a(1),b(0)^2-b(0),b(1)^2-b(1),AndOcc1Slice0Level1Order0Distance2^2-AndOcc1Slice0Level1Order0Distance2,-s(0)+b(0)*a(0),a(0)^2-a(0),a(1)^2-a(1),b(0)^2-b(0),b(1)^2-b(1),AndOcc1Slice0Level1Order0Distance2^2-AndOcc1Slice0Level1Order0Distance2,-AndSlice1Level1Order0Distance2+b(0)*a(1),AndSlice1Level1Order0Distance2^2-AndSlice1Level1Order0Distance2,-AndSlice1Level1Order1Distance2+b(1)*a(0),AndSlice1Level1Order1Distance2^2-AndSlice1Level1Order1Distance2,-AndSlice1Level2Order2Distance1+AndSlice1Level1Order1Distance2*AndSlice1Level1Order0Distance2,AndSlice1Level2Order2Distance1^2-AndSlice1Level2Order2Distance1,-XorOcc1Slice1Level2Order3Distance1-2*AndSlice1Level1Order1Distance2*AndSlice1Level1Order0Distance2+AndSlice1Level1Order1Distance2+AndSlice1Level1Order0Distance2,XorOcc1Slice1Level2Order3Distance1^2-XorOcc1Slice1Level2Order3Distance1,-s(1)+XorOcc1Slice1Level2Order3Distance1,a(0)^2-a(0),a(1)^2-a(1),b(0)^2-b(0),b(1)^2-b(1),AndSlice1Level1Order0Distance2^2-AndSlice1Level1Order0Distance2,AndSlice1Level1Order1Distance2^2-AndSlice1Level1Order1Distance2,AndSlice1Level2Order2Distance1^2-AndSlice1Level2Order2Distance1,XorOcc1Slice1Level2Order3Distance1^2-XorOcc1Slice1Level2Order3Distance1,-AndSlice2Level1Order0Distance1+2*b(1)*a(1)+b(1)+a(1),AndSlice2Level1Order0Distance1^2-AndSlice2Level1Order0Distance1,-AndOcc1Slice2Level2Order1Distance0+AndSlice2Level1Order0Distance1*AndSlice1Level2Order2Distance1,AndOcc1Slice2Level2Order1Distance0^2-AndOcc1Slice2Level2Order1Distance0,-XorOcc1Slice2Level2Order2Distance0-2*AndSlice2Level1Order0Distance1*AndSlice1Level2Order2Distance1+AndSlice2Level1Order0Distance1+AndSlice1Level2Order2Distance1,XorOcc1Slice2Level2Order2Distance0^2-XorOcc1Slice2Level2Order2Distance0,-s(2)+XorOcc1Slice2Level2Order2Distance0,a(0)^2-a(0),a(1)^2-a(1),b(0)^2-b(0),b(1)^2-b(1),AndSlice2Level1Order0Distance1^2-AndSlice2Level1Order0Distance1,AndOcc1Slice2Level2Order1Distance0^2-AndOcc1Slice2Level2Order1Distance0,XorOcc1Slice2Level2Order2Distance0^2-XorOcc1Slice2Level2Order2Distance0,-s(3)+AndOcc1Slice2Level2Order1Distance0
+Time for identifying rectifiable nets
+1
+
+Checking for rectification at net
+-AndSlice2Level1Order0Distance1
+
+Circuit rectifiable at
+-AndSlice2Level1Order0Distance1
+
+Time to find the rectification net:
+2
+
+Rectification successful. The rectification function is
+-AndSlice2Level1Order0Distance1+b(1)*a(1)
+
+End of computations.
+
+Total time elapsed:
+5

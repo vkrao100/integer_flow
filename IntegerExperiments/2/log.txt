@@ -1,0 +1,36 @@
+Log file for abc2.sing
+
+Time taken for verification is
+2
+
+The remainder is 
+6*b(1)*b(0)*a(1)*a(0)-2*b(1)*a(0)-2*b(0)*a(1)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+3
+
+Checking for rectification at net
+-nn14
+Circuit not rectifiable at
+-nn14
+Checking for rectification at net
+-nn12
+Circuit not rectifiable at
+-nn12
+Checking for rectification at net
+-nn20
+Circuit rectifiable at
+-nn20
+Time to find the rectification net:
+5
+Solution computed
+-nn20
+Time to find the solution:
+4
+Rectification successful. The rectification function is
+-nn20-2*b(1)*b(0)*a(1)*a(0)+b(1)*a(0)+b(0)*a(1)
+End of computations.
+Total time elapsed:
+9

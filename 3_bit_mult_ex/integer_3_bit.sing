@@ -1,0 +1,376 @@
+LIB "my_proc.lib";
+
+ring R  = 0,(Z,A,B,z5,z4,z3,z2,z1,z0,fc32,fc31,hc3,fc1,fc11,fc12,fs2,fc2,fc21,fc22,hc1,hs2,hc2,e8,e7,e6,e5,e4,e3,e2,e1,a0,a1,a2,b0,b1,b2),lp;
+
+proc ixorgate(poly g, poly h)
+{
+	return(g+h-2*g*h);
+}
+proc iorgate(poly g, poly h)
+{
+	return(g+h-g*h);
+}
+
+proc ixorgate3(poly g, poly h, poly i)
+{
+	return(ixorgate(ixorgate(g,h),i));
+}
+
+ideal Jc =
+Z - (32*z5 + 16*z4 + 8*z3 + 4*z2 + 2*z1 + z0),
+A - (4*a2+2*a1+a0),
+B - (4*b2+2*b1+b0), 
+
+z0-a0*b0,
+
+e1-a1*b0,
+e2-a0*b1,
+z1-ixorgate(e1,e2),
+
+hc1-e1*e2,
+e3-b0*a2,
+e4-a1*b1,
+hs2-ixorgate(e3,e4),
+hc2-e3*e4,
+e5-a0*b2,
+z2-ixorgate(ixorgate(hs2,hc1),e5),
+
+fc11-(ixorgate(hs2,hc1))*e5,
+fc12-hs2*hc1,
+fc1-iorgate(fc11,fc12),
+e6-a2*b1,
+e7-a1*b2,
+fs2-ixorgate(ixorgate(e6,e7),hc2),
+fc21-(ixorgate(e6,e7))*hc2,
+fc22-e6*e7,
+fc2-iorgate(fc21,fc22),
+z3-ixorgate(fs2,fc1),
+
+hc3-fs2*fc1,
+e8-a2*b2,
+z4-ixorgate(ixorgate(hc3,e8),fc2),
+
+fc31-(ixorgate(hc3,e8))*fc2,
+fc32-hc3*e8,
+z5-iorgate(fc31,fc32);
+
+
+ideal J2 =
+Z - (32*z5 + 16*z4 + 8*z3 + 4*z2 + 2*z1 + z0),
+A - (4*a2+2*a1+a0),
+B - (4*b2+2*b1+b0), 
+
+z0-a0*b0,
+
+e1-a1*b0,
+e2-a0*b1,
+z1-ixorgate(e1,e2),
+
+hc1-e1*e2,
+e3-b0*a2,
+e4-a1*b1,
+//hs2-ixorgate(e3,e4),//correct
+hs2-iorgate(e3,e4), //bug
+hc2-e3*e4,
+e5-a0*b2,
+z2-ixorgate(ixorgate(hs2,hc1),e5),
+
+fc11-(ixorgate(hs2,hc1))*e5,
+fc12-hs2*hc1,
+fc1-iorgate(fc11,fc12),
+e6-a2*b1,
+e7-a1*b2,
+fs2-ixorgate(ixorgate(e6,e7),hc2),
+//fc21-(ixorgate(e6,e7))*hc2,//correct
+fc21-(andgate(e6,e7))*hc2, //bug
+fc22-e6*e7,
+fc2-iorgate(fc21,fc22),
+z3-ixorgate(fs2,fc1),
+
+hc3-fs2*fc1,
+e8-a2*b2,
+z4-ixorgate(ixorgate(hc3,e8),fc2),
+
+fc31-(ixorgate(hc3,e8))*fc2,
+fc32-hc3*e8,
+z5-iorgate(fc31,fc32);
+
+ideal J0 = 
+a0^2-a0,
+a1^2-a1,
+a2^2-a2,
+b0^2-b0,
+b1^2-b1,
+b2^2-b2;
+
+poly spec = Z - A*B;
+
+//check if the circuit indeed implements specification
+ideal J1 = sort_ring_order(J2);
+poly rema = reduce(spec,J1+J0);
+
+option(redSB);
+ideal J1c = sort_ring_order(Jc);
+ideal JJ = slimgb(J1c+J0);
+JJ;
+
+if (rema == 0)
+{
+	"circuit implements specification, exiting";
+	quit;
+}
+else
+{
+	"remainder",rema;
+	"circuit doesn't implement specification, attempting rectification";
+}
+
+poly spec_z0 = z0-(a0*b0);
+poly spec_z1 = z1-ixorgate(a0*b1,a1*b0);
+poly spec_z2 = z2-(ixorgate3(a1*b1,a0*b2,a2*b0));
+/*
+//Jbnodc
+poly rf0 = d3;
+poly rf1 = d5;
+ideal Jb = J2;
+
+spec_z0 = z0-(a0*b0);
+spec_z1 = z1-xorgate(a0*b1,a1*b0);
+spec_z2 = z2- (); 2*a0*a1*a2*b0*b1-2*a0*a1*b0*b1*b2+a0*a1*b0*b1+2*a0*a1*b1*b2+2*a0*a2*b0*b2-a0*b2+2*a1*a2*b0*b1-a1*b1-a2*b0
+spec_z3 = z3-2*a0*a1*a2*b0*b1*b2+a0*a1*a2*b0*b1+2*a0*a1*a2*b0*b2-2*a0*a1*a2*b1*b2+a0*a1*b0*b1*b2-a0*a1*b0*b1+a0*a1*b1*b2+2*a0*a2*b0*b1*b2-a0*a2*b0*b2-2*a1*a2*b0*b1*b2+a1*a2*b0*b1+2*a1*a2*b1*b2-a1*b2-a2*b1
+spec_z4 = z4-3*a0*a1*a2*b0*b1*b2+a0*a1*a2*b0*b2+a0*a1*a2*b1*b2-a0*a1*b1*b2+a0*a2*b0*b1*b2+a1*a2*b0*b1*b2-a1*a2*b0*b1+a1*a2*b1*b2-a2*b2
+spec_z5 = z5+2*a0*a1*a2*b0*b1*b2-a0*a1*a2*b0*b2-a0*a2*b0*b1*b2-a1*a2*b1*b2
+
+"performing multi-fix rectification at ",rf0," and ",rf1;
+
+int indZ = getindex(J1,Z);
+int indrf0 = getindex(J1,rf0);
+int indrf1 = getindex(J1,rf1);
+
+list rr;
+int i;
+
+list evl = list(0,0), list(0,1), list(1,0), list (1,1);
+
+ideal J2 = J1;
+J2[indrf0] = 0;
+J2[indrf1] = 0;
+
+poly rsp = reduce(spec,J2+J0);
+for(i=1;i<=(2^fixlength);i++)
+{	
+	rr[i] = subst(rsp, rf0, evl[i][1], rf1, evl[i][2]);
+}
+
+poly crp = reduce(rr[1]*rr[2]*rr[3]*rr[4],J0);
+
+
+if(crp == 0)
+{
+	"Circuit Rectifiable at this location";	
+}
+else
+{
+	"Circuit not rectifiable at this location";
+}
+
+option(redSB);
+ideal J3 = J1;
+J3[indrf0] = 0;
+J3[indrf1] = 0;
+J3 = slimgb(J3+J0);
+
+int indz0 = getindex(J3,z0);
+int indz1 = getindex(J3,z1);
+int indz2 = getindex(J3,z2);
+
+poly prz0 = J3[indz0]+specz0;
+poly prz1 = J3[indz1]+specz1;
+poly prz2 = J3[indz2]+specz2;
+
+list rrz0,rrz1,rrz2;
+
+for(i=1;i<=(2^fixlength);i++)
+{	
+	rrz0[i] = subst(prz0, rf0, evl[i][1], rf1, evl[i][2]);
+	rrz1[i] = subst(prz1, rf0, evl[i][1], rf1, evl[i][2]);
+	rrz2[i] = subst(prz2, rf0, evl[i][1], rf1, evl[i][2]);
+}
+
+poly rr00 = reduce((1+rrz0[1])*(1+rrz1[1])*(1+rrz2[1])+1,J0);
+poly rr01 = reduce((1+rrz0[2])*(1+rrz1[2])*(1+rrz2[2])+1,J0);
+poly rr10 = reduce((1+rrz0[3])*(1+rrz1[3])*(1+rrz2[3])+1,J0);
+poly rr11 = reduce((1+rrz0[4])*(1+rrz1[4])*(1+rrz2[4])+1,J0);
+
+//target - 1
+poly rz00 = reduce(rrz0[1]*rrz0[2],J0);
+poly rz01 = reduce(rrz0[3]*rrz0[4],J0);
+poly rz10 = reduce(rrz1[1]*rrz1[2],J0);
+poly rz11 = reduce(rrz1[3]*rrz1[4],J0);
+poly rz20 = reduce(rrz2[1]*rrz2[2],J0);
+poly rz21 = reduce(rrz2[3]*rrz2[4],J0);
+
+"00:01",reduce(rz00*rz01,J0);
+"00:11",reduce(rz00*rz11,J0);
+"00:21",reduce(rz00*rz21,J0);
+"10:01",reduce(rz10*rz01,J0);
+"10:11",reduce(rz10*rz11,J0);
+"10:21",reduce(rz10*rz21,J0);
+"20:01",reduce(rz20*rz01,J0);
+"20:11",reduce(rz20*rz11,J0);
+"20:21",reduce(rz20*rz21,J0);
+
+//target - 2
+poly rrz00 = reduce(rrz0[1]*rrz0[3],J0);
+poly rrz01 = reduce(rrz0[2]*rrz0[4],J0);
+poly rrz10 = reduce(rrz1[1]*rrz1[3],J0);
+poly rrz11 = reduce(rrz1[2]*rrz1[4],J0);
+poly rrz20 = reduce(rrz2[1]*rrz2[3],J0);
+poly rrz21 = reduce(rrz2[2]*rrz2[4],J0);
+
+"00:01",reduce(rrz00*rrz01,J0);
+"00:11",reduce(rrz00*rrz11,J0);
+"00:21",reduce(rrz00*rrz21,J0);
+"10:01",reduce(rrz10*rrz01,J0);
+"10:11",reduce(rrz10*rrz11,J0);
+"10:21",reduce(rrz10*rrz21,J0);
+"20:01",reduce(rrz20*rrz01,J0);
+"20:11",reduce(rrz20*rrz11,J0);
+"20:21",reduce(rrz20*rrz21,J0);
+
+if (computefunc){
+
+poly NA = 1+rr00;
+poly A = rr00;
+poly NB = 1+rr01;
+poly B = rr01;
+poly NC = 1+rr10;
+poly C = rr10;
+poly ND = 1+rr11;
+poly D = rr11;
+
+//smallest - ON-set
+
+poly rfon0s = reduce(1+(NA+(NB*A)),J0);
+poly rfon1s = reduce(1+(NA+(NC*A*B)),J0);
+
+//larget - 1+OFF-set
+
+poly rfon0l = reduce(ND+(NC*D),J0);
+poly rfon1l = reduce(ND+(NB*C*D),J0);
+
+poly rf0dc = reduce(1+(1+rfon0s)*(rfon0l),J0);
+poly rf1dc = reduce(1+(1+rfon1s)*(rfon1l),J0);
+
+int indrf0 = getindex(Jcc,rf0);
+int indrf1 = getindex(Jcc,rf1);
+
+ideal Jbb = Jb;
+int indrf0 = getindex(Jbb,rf0);
+int indrf1 = getindex(Jbb,rf1);
+
+Jbb[indrf0] = rf0 + rfon0s;
+Jbb[indrf1] = rf1 + rfon1s;
+
+"remainder after patching tail of all targets with smallest onset-poly in Jb:", reduce(spec,Jbb+J0);
+
+Jbb[indrf0] = rf0 + rfon0l;
+Jbb[indrf1] = rf1 + rfon1l;
+
+"remainder after patching tail of all targets with largest onset-poly in Jb:", reduce(spec,Jbb+J0);
+
+poly rfon0 = rfon0s;
+poly rfon1 = rfon1s;
+poly rfoff0 = rfon0l+1;
+poly rfoff1 = rfon1l+1;
+poly sol = rfon0 + be*(rfon1);
+
+list all = 
+list(0, 0, 0, 0, 0, 0),
+list(0, 0, 0, 0, 0, 1),
+list(0, 0, 0, 0, 1, 0),
+list(0, 0, 0, 0, 1, 1),
+list(0, 0, 0, 1, 0, 0),
+list(0, 0, 0, 1, 0, 1),
+list(0, 0, 0, 1, 1, 0),
+list(0, 0, 0, 1, 1, 1),
+list(0, 0, 1, 0, 0, 0),
+list(0, 0, 1, 0, 0, 1),
+list(0, 0, 1, 0, 1, 0),
+list(0, 0, 1, 0, 1, 1),
+list(0, 0, 1, 1, 0, 0),
+list(0, 0, 1, 1, 0, 1),
+list(0, 0, 1, 1, 1, 0),
+list(0, 0, 1, 1, 1, 1),
+list(0, 1, 0, 0, 0, 0),
+list(0, 1, 0, 0, 0, 1),
+list(0, 1, 0, 0, 1, 0),
+list(0, 1, 0, 0, 1, 1),
+list(0, 1, 0, 1, 0, 0),
+list(0, 1, 0, 1, 0, 1),
+list(0, 1, 0, 1, 1, 0),
+list(0, 1, 0, 1, 1, 1),
+list(0, 1, 1, 0, 0, 0),
+list(0, 1, 1, 0, 0, 1),
+list(0, 1, 1, 0, 1, 0),
+list(0, 1, 1, 0, 1, 1),
+list(0, 1, 1, 1, 0, 0),
+list(0, 1, 1, 1, 0, 1),
+list(0, 1, 1, 1, 1, 0),
+list(0, 1, 1, 1, 1, 1),
+list(1, 0, 0, 0, 0, 0),
+list(1, 0, 0, 0, 0, 1),
+list(1, 0, 0, 0, 1, 0),
+list(1, 0, 0, 0, 1, 1),
+list(1, 0, 0, 1, 0, 0),
+list(1, 0, 0, 1, 0, 1),
+list(1, 0, 0, 1, 1, 0),
+list(1, 0, 0, 1, 1, 1),
+list(1, 0, 1, 0, 0, 0),
+list(1, 0, 1, 0, 0, 1),
+list(1, 0, 1, 0, 1, 0),
+list(1, 0, 1, 0, 1, 1),
+list(1, 0, 1, 1, 0, 0),
+list(1, 0, 1, 1, 0, 1),
+list(1, 0, 1, 1, 1, 0),
+list(1, 0, 1, 1, 1, 1),
+list(1, 1, 0, 0, 0, 0),
+list(1, 1, 0, 0, 0, 1),
+list(1, 1, 0, 0, 1, 0),
+list(1, 1, 0, 0, 1, 1),
+list(1, 1, 0, 1, 0, 0),
+list(1, 1, 0, 1, 0, 1),
+list(1, 1, 0, 1, 1, 0),
+list(1, 1, 0, 1, 1, 1),
+list(1, 1, 1, 0, 0, 0),
+list(1, 1, 1, 0, 0, 1),
+list(1, 1, 1, 0, 1, 0),
+list(1, 1, 1, 0, 1, 1),
+list(1, 1, 1, 1, 0, 0),
+list(1, 1, 1, 1, 0, 1),
+list(1, 1, 1, 1, 1, 0),
+list(1, 1, 1, 1, 1, 1);
+
+int i;
+
+link lf=":aw mas3allf2.txt";
+write(":w mas3allf2.txt",string("a2 a1 a0 b2 b1 b0 ")+psstring("rem",12)+psstring("rHH   ",12)+psstring("rHL   ",12)+psstring("rLH   ",12)+psstring("rLL   ",12)+psstring("rf0on   ",12)+psstring("rf0off   ",12)+psstring("rf0dc   ",14)+psstring("rf1on   ",14)+psstring("rf1off   ",14)+psstring("rf1dc   ",14)+string("sol"));
+for (i=1;i<=64;i++)
+{
+	poly temps = subst(sol,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempr = subst(rema,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempEHH = subst(rr[1],a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempEHL = subst(rr[2],a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempELH = subst(rr[3],a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempELL = subst(rr[4],a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempron0 = subst(1+rfon0s,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly temproff0 = subst(rfon0l,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempron0dc = subst(rf0dc,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempron1 = subst(1+rfon1s,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly temproff1 = subst(rfon1l,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+	poly tempron1dc = subst(rf1dc,a2,all[i][1],a1,all[i][2],a0,all[i][3],b2,all[i][4],b1,all[i][5],b0,all[i][6]);
+
+	string sw = string(all[i][1])+"  "+string(all[i][2])+"  "+string(all[i][3])+"  "+string(all[i][4])+"  "+string(all[i][5])+"  "+string(all[i][6])+"   "+pstring(tempr,9)+"   "+pstring(tempEHH,9)+"   "+pstring(tempEHL,9)+"   "+pstring(tempELH,9)+"   "+pstring(tempELL,9)+"   "+pstring(tempron0,10)+"   "+pstring(temproff0,10)+"   "+pstring(tempron0dc,10)+"   "+pstring(tempron1,10)+"   "+pstring(temproff1,10)+"   "+pstring(tempron1dc,10)+"   "+string(temps);
+	write(lf,sw);
+}
+close(lf);}*/

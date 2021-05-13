@@ -1,0 +1,1688 @@
+LIB "linalg.lib";
+LIB "dmodapp.lib";
+LIB "my_proc.lib";
+
+write(":w log.txt","Log file for abc8.sing");
+write(":a log.txt", "");
+
+rtimer=0;
+system("--ticks-per-sec",1000);
+int t0 = rtimer;
+
+int dp = 8;
+
+option(notWarnSB);
+ring R  = 0, (
+  s(15),
+  s(14),
+  nn880,
+  nn878,
+  nn874,
+  nn872,
+  nn868,
+  nn866,
+  s(13),
+  nn862,
+  nn860,
+  nn856,
+  nn864,
+  nn854,
+  nn850,
+  nn846,
+  nn842,
+  nn840,
+  nn836,
+  nn848,
+  nn834,
+  s(12),
+  nn828,
+  nn826,
+  nn822,
+  nn830,
+  nn820,
+  nn816,
+  nn812,
+  nn808,
+  nn832,
+  nn806,
+  nn802,
+  nn798,
+  nn794,
+  nn792,
+  nn788,
+  nn814,
+  nn800,
+  nn786,
+  s(11),
+  nn778,
+  nn776,
+  nn772,
+  nn780,
+  nn770,
+  nn766,
+  nn762,
+  nn758,
+  nn782,
+  nn756,
+  nn752,
+  nn748,
+  nn744,
+  nn784,
+  nn742,
+  nn738,
+  nn734,
+  nn730,
+  nn728,
+  nn724,
+  nn764,
+  nn750,
+  nn736,
+  nn722,
+  s(10),
+  nn712,
+  nn710,
+  nn706,
+  nn714,
+  nn704,
+  nn700,
+  nn696,
+  nn692,
+  nn716,
+  nn690,
+  nn686,
+  nn682,
+  nn678,
+  nn718,
+  nn676,
+  nn672,
+  nn668,
+  nn664,
+  nn720,
+  nn662,
+  nn658,
+  nn654,
+  nn650,
+  nn648,
+  nn644,
+  nn698,
+  nn684,
+  nn670,
+  nn656,
+  nn642,
+  s(9),
+  nn630,
+  nn628,
+  nn624,
+  nn632,
+  nn622,
+  nn618,
+  nn614,
+  nn610,
+  nn634,
+  nn608,
+  nn604,
+  nn600,
+  nn596,
+  nn636,
+  nn594,
+  nn590,
+  nn586,
+  nn582,
+  nn638,
+  nn580,
+  nn576,
+  nn572,
+  nn568,
+  nn640,
+  nn566,
+  nn562,
+  nn558,
+  nn554,
+  nn552,
+  nn548,
+  nn616,
+  nn602,
+  nn588,
+  nn574,
+  nn560,
+  nn546,
+  s(8),
+  nn534,
+  nn532,
+  nn528,
+  nn536,
+  nn526,
+  nn522,
+  nn518,
+  nn514,
+  nn538,
+  nn512,
+  nn508,
+  nn504,
+  nn500,
+  nn540,
+  nn498,
+  nn494,
+  nn490,
+  nn486,
+  nn542,
+  nn484,
+  nn480,
+  nn476,
+  nn472,
+  nn544,
+  nn470,
+  nn466,
+  nn462,
+  nn458,
+  nn456,
+  nn452,
+  nn448,
+  nn444,
+  nn520,
+  nn506,
+  nn492,
+  nn478,
+  nn464,
+  nn450,
+  nn442,
+  s(7),
+  nn430,
+  nn428,
+  nn424,
+  nn420,
+  nn416,
+  nn432,
+  nn414,
+  nn410,
+  nn406,
+  nn402,
+  nn434,
+  nn400,
+  nn396,
+  nn392,
+  nn388,
+  nn436,
+  nn386,
+  nn382,
+  nn378,
+  nn374,
+  nn438,
+  nn372,
+  nn368,
+  nn364,
+  nn360,
+  nn440,
+  nn358,
+  nn354,
+  nn350,
+  nn346,
+  nn344,
+  nn340,
+  nn422,
+  nn408,
+  nn394,
+  nn380,
+  nn366,
+  nn352,
+  nn338,
+  nn336,
+  s(6),
+  nn326,
+  nn324,
+  nn320,
+  nn316,
+  nn312,
+  nn328,
+  nn310,
+  nn306,
+  nn302,
+  nn298,
+  nn330,
+  nn296,
+  nn292,
+  nn288,
+  nn284,
+  nn332,
+  nn282,
+  nn278,
+  nn274,
+  nn270,
+  nn334,
+  nn268,
+  nn264,
+  nn260,
+  nn256,
+  nn254,
+  nn250,
+  nn318,
+  nn304,
+  nn290,
+  nn276,
+  nn262,
+  nn248,
+  nn246,
+  s(5),
+  nn238,
+  nn236,
+  nn232,
+  nn228,
+  nn224,
+  nn240,
+  nn222,
+  nn218,
+  nn214,
+  nn210,
+  nn242,
+  nn208,
+  nn204,
+  nn200,
+  nn196,
+  nn244,
+  nn194,
+  nn190,
+  nn186,
+  nn182,
+  nn180,
+  nn176,
+  nn230,
+  nn216,
+  nn202,
+  nn188,
+  nn174,
+  nn172,
+  s(4),
+  nn166,
+  nn164,
+  nn160,
+  nn156,
+  nn152,
+  nn168,
+  nn150,
+  nn146,
+  nn142,
+  nn138,
+  nn170,
+  nn136,
+  nn132,
+  nn128,
+  nn124,
+  nn122,
+  nn118,
+  nn158,
+  nn144,
+  nn130,
+  nn116,
+  nn114,
+  s(3),
+  nn110,
+  nn108,
+  nn104,
+  nn100,
+  nn96,
+  nn112,
+  nn94,
+  nn90,
+  nn86,
+  nn82,
+  nn80,
+  nn76,
+  nn102,
+  nn88,
+  nn74,
+  nn72,
+  s(2),
+  nn70,
+  nn68,
+  nn64,
+  nn60,
+  nn56,
+  nn54,
+  nn50,
+  nn62,
+  nn48,
+  nn46,
+  s(1),
+  nn44,
+  nn40,
+  nn38,
+  nn36,
+  s(0),
+  nn34,
+  b(7),
+  b(6),
+  b(5),
+  b(4),
+  b(3),
+  b(2),
+  b(1),
+  b(0),
+  a(7),
+  a(6),
+  a(5),
+  a(4),
+  a(3),
+  a(2),
+  a(1),
+  a(0)
+), lp;
+poly PP(15) =0; 
+poly PP(14) = a(7)*b(7); 
+poly PP(13) = a(6)*b(7)+ a(7)*b(6); 
+poly PP(12) = a(5)*b(7)+ a(6)*b(6)+ a(7)*b(5); 
+poly PP(11) = a(4)*b(7)+ a(5)*b(6)+ a(6)*b(5)+ a(7)*b(4); 
+poly PP(10) = a(3)*b(7)+ a(4)*b(6)+ a(5)*b(5)+ a(6)*b(4)+ a(7)*b(3); 
+poly PP(9) = a(2)*b(7)+ a(3)*b(6)+ a(4)*b(5)+ a(5)*b(4)+ a(6)*b(3)+ a(7)*b(2); 
+poly PP(8) = a(1)*b(7)+ a(2)*b(6)+ a(3)*b(5)+ a(4)*b(4)+ a(5)*b(3)+ a(6)*b(2)+ a(7)*b(1); 
+poly PP(7) = a(0)*b(7)+ a(1)*b(6)+ a(2)*b(5)+ a(3)*b(4)+ a(4)*b(3)+ a(5)*b(2)+ a(6)*b(1)+ a(7)*b(0); 
+poly PP(6) = a(0)*b(6)+ a(1)*b(5)+ a(2)*b(4)+ a(3)*b(3)+ a(4)*b(2)+ a(5)*b(1)+ a(6)*b(0); 
+poly PP(5) = a(0)*b(5)+ a(1)*b(4)+ a(2)*b(3)+ a(3)*b(2)+ a(4)*b(1)+ a(5)*b(0); 
+poly PP(4) = a(0)*b(4)+ a(1)*b(3)+ a(2)*b(2)+ a(3)*b(1)+ a(4)*b(0); 
+poly PP(3) = a(0)*b(3)+ a(1)*b(2)+ a(2)*b(1)+ a(3)*b(0); 
+poly PP(2) = a(0)*b(2)+ a(1)*b(1)+ a(2)*b(0); 
+poly PP(1) = a(0)*b(1)+ a(1)*b(0); 
+poly PP(0) = a(0)*b(0); 
+poly Car(16) = 0; 
+ideal FS0 =
+  -nn34 + nn34^2
+;
+ideal FS1 =
+  -nn36 + nn36^2,
+  -nn38 + nn38^2,
+  -nn40 + nn40^2,
+  -nn44 + nn44^2
+;
+ideal FS2 =
+  -nn46 + nn46^2,
+  -nn48 + nn48^2,
+  -nn62 + nn62^2,
+  -nn50 + nn50^2,
+  -nn54 + nn54^2,
+  -nn56 + nn56^2,
+  -nn60 + nn60^2,
+  -nn64 + nn64^2,
+  -nn68 + nn68^2,
+  -nn70 + nn70^2
+;
+ideal FS3 =
+  -nn72 + nn72^2,
+  -nn74 + nn74^2,
+  -nn88 + nn88^2,
+  -nn102 + nn102^2,
+  -nn76 + nn76^2,
+  -nn80 + nn80^2,
+  -nn82 + nn82^2,
+  -nn86 + nn86^2,
+  -nn90 + nn90^2,
+  -nn94 + nn94^2,
+  -nn112 + nn112^2,
+  -nn96 + nn96^2,
+  -nn100 + nn100^2,
+  -nn104 + nn104^2,
+  -nn108 + nn108^2,
+  -nn110 + nn110^2
+;
+ideal FS4 =
+  -nn114 + nn114^2,
+  -nn116 + nn116^2,
+  -nn130 + nn130^2,
+  -nn144 + nn144^2,
+  -nn158 + nn158^2,
+  -nn118 + nn118^2,
+  -nn122 + nn122^2,
+  -nn124 + nn124^2,
+  -nn128 + nn128^2,
+  -nn132 + nn132^2,
+  -nn136 + nn136^2,
+  -nn170 + nn170^2,
+  -nn138 + nn138^2,
+  -nn142 + nn142^2,
+  -nn146 + nn146^2,
+  -nn150 + nn150^2,
+  -nn168 + nn168^2,
+  -nn152 + nn152^2,
+  -nn156 + nn156^2,
+  -nn160 + nn160^2,
+  -nn164 + nn164^2,
+  -nn166 + nn166^2
+;
+ideal FS5 =
+  -nn172 + nn172^2,
+  -nn174 + nn174^2,
+  -nn188 + nn188^2,
+  -nn202 + nn202^2,
+  -nn216 + nn216^2,
+  -nn230 + nn230^2,
+  -nn176 + nn176^2,
+  -nn180 + nn180^2,
+  -nn182 + nn182^2,
+  -nn186 + nn186^2,
+  -nn190 + nn190^2,
+  -nn194 + nn194^2,
+  -nn244 + nn244^2,
+  -nn196 + nn196^2,
+  -nn200 + nn200^2,
+  -nn204 + nn204^2,
+  -nn208 + nn208^2,
+  -nn242 + nn242^2,
+  -nn210 + nn210^2,
+  -nn214 + nn214^2,
+  -nn218 + nn218^2,
+  -nn222 + nn222^2,
+  -nn240 + nn240^2,
+  -nn224 + nn224^2,
+  -nn228 + nn228^2,
+  -nn232 + nn232^2,
+  -nn236 + nn236^2,
+  -nn238 + nn238^2
+;
+ideal FS6 =
+  -nn246 + nn246^2,
+  -nn248 + nn248^2,
+  -nn262 + nn262^2,
+  -nn276 + nn276^2,
+  -nn290 + nn290^2,
+  -nn304 + nn304^2,
+  -nn318 + nn318^2,
+  -nn250 + nn250^2,
+  -nn254 + nn254^2,
+  -nn256 + nn256^2,
+  -nn260 + nn260^2,
+  -nn264 + nn264^2,
+  -nn268 + nn268^2,
+  -nn334 + nn334^2,
+  -nn270 + nn270^2,
+  -nn274 + nn274^2,
+  -nn278 + nn278^2,
+  -nn282 + nn282^2,
+  -nn332 + nn332^2,
+  -nn284 + nn284^2,
+  -nn288 + nn288^2,
+  -nn292 + nn292^2,
+  -nn296 + nn296^2,
+  -nn330 + nn330^2,
+  -nn298 + nn298^2,
+  -nn302 + nn302^2,
+  -nn306 + nn306^2,
+  -nn310 + nn310^2,
+  -nn328 + nn328^2,
+  -nn312 + nn312^2,
+  -nn316 + nn316^2,
+  -nn320 + nn320^2,
+  -nn324 + nn324^2,
+  -nn326 + nn326^2
+;
+ideal FS7 =
+  -nn336 + nn336^2,
+  -nn338 + nn338^2,
+  -nn352 + nn352^2,
+  -nn366 + nn366^2,
+  -nn380 + nn380^2,
+  -nn394 + nn394^2,
+  -nn408 + nn408^2,
+  -nn422 + nn422^2,
+  -nn340 + nn340^2,
+  -nn344 + nn344^2,
+  -nn346 + nn346^2,
+  -nn350 + nn350^2,
+  -nn354 + nn354^2,
+  -nn358 + nn358^2,
+  -nn440 + nn440^2,
+  -nn360 + nn360^2,
+  -nn364 + nn364^2,
+  -nn368 + nn368^2,
+  -nn372 + nn372^2,
+  -nn438 + nn438^2,
+  -nn374 + nn374^2,
+  -nn378 + nn378^2,
+  -nn382 + nn382^2,
+  -nn386 + nn386^2,
+  -nn436 + nn436^2,
+  -nn388 + nn388^2,
+  -nn392 + nn392^2,
+  -nn396 + nn396^2,
+  -nn400 + nn400^2,
+  -nn434 + nn434^2,
+  -nn402 + nn402^2,
+  -nn406 + nn406^2,
+  -nn410 + nn410^2,
+  -nn414 + nn414^2,
+  -nn432 + nn432^2,
+  -nn416 + nn416^2,
+  -nn420 + nn420^2,
+  -nn424 + nn424^2,
+  -nn428 + nn428^2,
+  -nn430 + nn430^2
+;
+ideal FS8 =
+  -nn442 + nn442^2,
+  -nn450 + nn450^2,
+  -nn464 + nn464^2,
+  -nn478 + nn478^2,
+  -nn492 + nn492^2,
+  -nn506 + nn506^2,
+  -nn520 + nn520^2,
+  -nn444 + nn444^2,
+  -nn448 + nn448^2,
+  -nn452 + nn452^2,
+  -nn456 + nn456^2,
+  -nn458 + nn458^2,
+  -nn462 + nn462^2,
+  -nn466 + nn466^2,
+  -nn470 + nn470^2,
+  -nn544 + nn544^2,
+  -nn472 + nn472^2,
+  -nn476 + nn476^2,
+  -nn480 + nn480^2,
+  -nn484 + nn484^2,
+  -nn542 + nn542^2,
+  -nn486 + nn486^2,
+  -nn490 + nn490^2,
+  -nn494 + nn494^2,
+  -nn498 + nn498^2,
+  -nn540 + nn540^2,
+  -nn500 + nn500^2,
+  -nn504 + nn504^2,
+  -nn508 + nn508^2,
+  -nn512 + nn512^2,
+  -nn538 + nn538^2,
+  -nn514 + nn514^2,
+  -nn518 + nn518^2,
+  -nn522 + nn522^2,
+  -nn526 + nn526^2,
+  -nn536 + nn536^2,
+  -nn528 + nn528^2,
+  -nn532 + nn532^2,
+  -nn534 + nn534^2
+;
+ideal FS9 =
+  -nn546 + nn546^2,
+  -nn560 + nn560^2,
+  -nn574 + nn574^2,
+  -nn588 + nn588^2,
+  -nn602 + nn602^2,
+  -nn616 + nn616^2,
+  -nn548 + nn548^2,
+  -nn552 + nn552^2,
+  -nn554 + nn554^2,
+  -nn558 + nn558^2,
+  -nn562 + nn562^2,
+  -nn566 + nn566^2,
+  -nn640 + nn640^2,
+  -nn568 + nn568^2,
+  -nn572 + nn572^2,
+  -nn576 + nn576^2,
+  -nn580 + nn580^2,
+  -nn638 + nn638^2,
+  -nn582 + nn582^2,
+  -nn586 + nn586^2,
+  -nn590 + nn590^2,
+  -nn594 + nn594^2,
+  -nn636 + nn636^2,
+  -nn596 + nn596^2,
+  -nn600 + nn600^2,
+  -nn604 + nn604^2,
+  -nn608 + nn608^2,
+  -nn634 + nn634^2,
+  -nn610 + nn610^2,
+  -nn614 + nn614^2,
+  -nn618 + nn618^2,
+  -nn622 + nn622^2,
+  -nn632 + nn632^2,
+  -nn624 + nn624^2,
+  -nn628 + nn628^2,
+  -nn630 + nn630^2
+;
+ideal FS10 =
+  -nn642 + nn642^2,
+  -nn656 + nn656^2,
+  -nn670 + nn670^2,
+  -nn684 + nn684^2,
+  -nn698 + nn698^2,
+  -nn644 + nn644^2,
+  -nn648 + nn648^2,
+  -nn650 + nn650^2,
+  -nn654 + nn654^2,
+  -nn658 + nn658^2,
+  -nn662 + nn662^2,
+  -nn720 + nn720^2,
+  -nn664 + nn664^2,
+  -nn668 + nn668^2,
+  -nn672 + nn672^2,
+  -nn676 + nn676^2,
+  -nn718 + nn718^2,
+  -nn678 + nn678^2,
+  -nn682 + nn682^2,
+  -nn686 + nn686^2,
+  -nn690 + nn690^2,
+  -nn716 + nn716^2,
+  -nn692 + nn692^2,
+  -nn696 + nn696^2,
+  -nn700 + nn700^2,
+  -nn704 + nn704^2,
+  -nn714 + nn714^2,
+  -nn706 + nn706^2,
+  -nn710 + nn710^2,
+  -nn712 + nn712^2
+;
+ideal FS11 =
+  -nn722 + nn722^2,
+  -nn736 + nn736^2,
+  -nn750 + nn750^2,
+  -nn764 + nn764^2,
+  -nn724 + nn724^2,
+  -nn728 + nn728^2,
+  -nn730 + nn730^2,
+  -nn734 + nn734^2,
+  -nn738 + nn738^2,
+  -nn742 + nn742^2,
+  -nn784 + nn784^2,
+  -nn744 + nn744^2,
+  -nn748 + nn748^2,
+  -nn752 + nn752^2,
+  -nn756 + nn756^2,
+  -nn782 + nn782^2,
+  -nn758 + nn758^2,
+  -nn762 + nn762^2,
+  -nn766 + nn766^2,
+  -nn770 + nn770^2,
+  -nn780 + nn780^2,
+  -nn772 + nn772^2,
+  -nn776 + nn776^2,
+  -nn778 + nn778^2
+;
+ideal FS12 =
+  -nn786 + nn786^2,
+  -nn800 + nn800^2,
+  -nn814 + nn814^2,
+  -nn788 + nn788^2,
+  -nn792 + nn792^2,
+  -nn794 + nn794^2,
+  -nn798 + nn798^2,
+  -nn802 + nn802^2,
+  -nn806 + nn806^2,
+  -nn832 + nn832^2,
+  -nn808 + nn808^2,
+  -nn812 + nn812^2,
+  -nn816 + nn816^2,
+  -nn820 + nn820^2,
+  -nn830 + nn830^2,
+  -nn822 + nn822^2,
+  -nn826 + nn826^2,
+  -nn828 + nn828^2
+;
+ideal FS13 =
+  -nn834 + nn834^2,
+  -nn848 + nn848^2,
+  -nn836 + nn836^2,
+  -nn840 + nn840^2,
+  -nn842 + nn842^2,
+  -nn846 + nn846^2,
+  -nn850 + nn850^2,
+  -nn854 + nn854^2,
+  -nn864 + nn864^2,
+  -nn856 + nn856^2,
+  -nn860 + nn860^2,
+  -nn862 + nn862^2
+;
+ideal FS14 =
+  -nn866 + nn866^2,
+  -nn868 + nn868^2,
+  -nn872 + nn872^2,
+  -nn874 + nn874^2,
+  -nn878 + nn878^2,
+  -nn880 + nn880^2
+;
+ideal FS15 =
+  0
+;
+ideal FI =
+  -a(0) + a(0)^2,
+  -a(1) + a(1)^2,
+  -a(2) + a(2)^2,
+  -a(3) + a(3)^2,
+  -a(4) + a(4)^2,
+  -a(5) + a(5)^2,
+  -a(6) + a(6)^2,
+  -a(7) + a(7)^2,
+  -b(0) + b(0)^2,
+  -b(1) + b(1)^2,
+  -b(2) + b(2)^2,
+  -b(3) + b(3)^2,
+  -b(4) + b(4)^2,
+  -b(5) + b(5)^2,
+  -b(6) + b(6)^2,
+  -b(7) + b(7)^2
+;
+ideal CS0 =
+  0
+;
+ideal CS1 =
+  0
+;
+ideal CS2 =
+  nn56 * nn50,
+  nn64 * nn56
+;
+ideal CS3 =
+  nn82 * nn76,
+  nn90 * nn82,
+  nn96 * nn90,
+  nn104 * nn96
+;
+ideal CS4 =
+  nn124 * nn118,
+  nn132 * nn124,
+  nn138 * nn132,
+  nn146 * nn138,
+  nn152 * nn146,
+  nn160 * nn152
+;
+ideal CS5 =
+  nn182 * nn176,
+  nn190 * nn182,
+  nn196 * nn190,
+  nn204 * nn196,
+  nn210 * nn204,
+  nn218 * nn210,
+  nn224 * nn218,
+  nn232 * nn224
+;
+ideal CS6 =
+  nn256 * nn250,
+  nn264 * nn256,
+  nn270 * nn264,
+  nn278 * nn270,
+  nn284 * nn278,
+  nn292 * nn284,
+  nn298 * nn292,
+  nn306 * nn298,
+  nn312 * nn306,
+  nn320 * nn312
+;
+ideal CS7 =
+  nn346 * nn340,
+  nn354 * nn346,
+  nn360 * nn354,
+  nn368 * nn360,
+  nn374 * nn368,
+  nn382 * nn374,
+  nn388 * nn382,
+  nn396 * nn388,
+  nn402 * nn396,
+  nn410 * nn402,
+  nn416 * nn410,
+  nn424 * nn416
+;
+ideal CS8 =
+  nn452 * nn444,
+  nn458 * nn452,
+  nn466 * nn458,
+  nn472 * nn466,
+  nn480 * nn472,
+  nn486 * nn480,
+  nn494 * nn486,
+  nn500 * nn494,
+  nn508 * nn500,
+  nn514 * nn508,
+  nn522 * nn514,
+  nn528 * nn522
+;
+ideal CS9 =
+  nn554 * nn548,
+  nn562 * nn554,
+  nn568 * nn562,
+  nn576 * nn568,
+  nn582 * nn576,
+  nn590 * nn582,
+  nn596 * nn590,
+  nn604 * nn596,
+  nn610 * nn604,
+  nn618 * nn610,
+  nn624 * nn618
+;
+ideal CS10 =
+  nn650 * nn644,
+  nn658 * nn650,
+  nn664 * nn658,
+  nn672 * nn664,
+  nn678 * nn672,
+  nn686 * nn678,
+  nn692 * nn686,
+  nn700 * nn692,
+  nn706 * nn700
+;
+ideal CS11 =
+  nn730 * nn724,
+  nn738 * nn730,
+  nn744 * nn738,
+  nn752 * nn744,
+  nn758 * nn752,
+  nn766 * nn758,
+  nn772 * nn766
+;
+ideal CS12 =
+  nn794 * nn788,
+  nn802 * nn794,
+  nn808 * nn802,
+  nn816 * nn808,
+  nn822 * nn816
+;
+ideal CS13 =
+  nn842 * nn836,
+  nn850 * nn842,
+  nn856 * nn850
+;
+ideal CS14 =
+  nn874 * nn868
+;
+ideal CS15 =
+  0
+;
+ideal HS15 =
+  0;
+ideal HT15 = 
+  FS14, FS15, CS14, CS15, HS15
+;
+ideal S(15) =
+  -s(15) + reduce ((1 - nn880), HT15)
+ ;
+ideal T(15) = FI, FS14, FS15, CS14, CS15, S(15);
+poly Car(15) =   reduce (s(15) + 2 * Car(16) - PP(15), T(15));
+ Car(15);
+
+ideal HS14 =
+  -nn868 + (1 - nn864) * nn866, 
+  -nn874 + (1 - nn862) * nn872
+;
+ideal HT14 = 
+  FS13, FS14, CS13, CS14, HS14
+;
+ideal S(14) =
+  -nn866 + a(7) * b(7), 
+  -nn872 + nn864 + (1 - nn866) - 2 * nn864 * (1 - nn866),
+  -nn878 + nn862 + (1 - nn872) - 2 * nn862 * (1 - nn872),
+  -nn880 + reduce ((1 - nn868) * (1 - nn874), HT14), 
+  -s(14) + nn878
+;
+ideal T(14) = FI, FS13, FS14, CS13, CS14, S(14);
+poly Car(14) =   reduce (s(14) + 2 * Car(15) - PP(14), T(14));
+ Car(14);
+
+ideal HS13 =
+  -nn836 + (1 - nn832) * nn834, 
+  -nn842 + (1 - nn830) * nn840, 
+  -nn850 + nn846 * nn848, 
+  -nn856 + (1 - nn828) * nn854
+;
+ideal HT13 = 
+  FS12, FS13, CS12, CS13, HS13
+;
+ideal S(13) =
+  -nn834 + a(7) * b(6), 
+  -nn848 + a(6) * b(7), 
+  -nn840 + nn832 + (1 - nn834) - 2 * nn832 * (1 - nn834),
+  -nn846 + nn830 + (1 - nn840) - 2 * nn830 * (1 - nn840),
+  -nn854 + nn846 + nn848 - 2 * nn846 * nn848,
+  -nn864 + reduce ((1 - nn836) * (1 - nn842), HT13), 
+  -nn860 + nn828 + (1 - nn854) - 2 * nn828 * (1 - nn854),
+  -nn862 + reduce ((1 - nn850) * (1 - nn856), HT13), 
+  -s(13) + nn860
+;
+ideal T(13) = FI, FS12, FS13, CS12, CS13, S(13);
+poly Car(13) =   reduce (s(13) + 2 * Car(14) - PP(13), T(13));
+ Car(13);
+
+ideal HS12 =
+  -nn788 + (1 - nn784) * nn786, 
+  -nn794 + (1 - nn782) * nn792, 
+  -nn802 + nn798 * nn800, 
+  -nn808 + (1 - nn780) * nn806, 
+  -nn816 + nn812 * nn814, 
+  -nn822 + (1 - nn778) * nn820
+;
+ideal HT12 = 
+  FS11, FS12, CS11, CS12, HS12
+;
+ideal S(12) =
+  -nn786 + a(7) * b(5), 
+  -nn800 + a(6) * b(6), 
+  -nn814 + a(5) * b(7), 
+  -nn792 + nn784 + (1 - nn786) - 2 * nn784 * (1 - nn786),
+  -nn798 + nn782 + (1 - nn792) - 2 * nn782 * (1 - nn792),
+  -nn806 + nn798 + nn800 - 2 * nn798 * nn800,
+  -nn832 + reduce ((1 - nn788) * (1 - nn794), HT12), 
+  -nn812 + nn780 + (1 - nn806) - 2 * nn780 * (1 - nn806),
+  -nn820 + nn812 + nn814 - 2 * nn812 * nn814,
+  -nn830 + reduce ((1 - nn802) * (1 - nn808), HT12), 
+  -nn826 + nn778 + (1 - nn820) - 2 * nn778 * (1 - nn820),
+  -nn828 + reduce ((1 - nn816) * (1 - nn822), HT12), 
+  -s(12) + nn826
+;
+ideal T(12) = FI, FS11, FS12, CS11, CS12, S(12);
+poly Car(12) =   reduce (s(12) + 2 * Car(13) - PP(12), T(12));
+ Car(12);
+
+ideal HS11 =
+  -nn724 + (1 - nn720) * nn722, 
+  -nn730 + (1 - nn718) * nn728, 
+  -nn738 + nn734 * nn736, 
+  -nn744 + (1 - nn716) * nn742, 
+  -nn752 + nn748 * nn750, 
+  -nn758 + (1 - nn714) * nn756, 
+  -nn766 + nn762 * nn764, 
+  -nn772 + (1 - nn712) * nn770
+;
+ideal HT11 = 
+  FS10, FS11, CS10, CS11, HS11
+;
+ideal S(11) =
+  -nn722 + a(7) * b(4), 
+  -nn736 + a(6) * b(5), 
+  -nn750 + a(5) * b(6), 
+  -nn764 + a(4) * b(7), 
+  -nn728 + nn720 + (1 - nn722) - 2 * nn720 * (1 - nn722),
+  -nn734 + nn718 + (1 - nn728) - 2 * nn718 * (1 - nn728),
+  -nn742 + nn734 + nn736 - 2 * nn734 * nn736,
+  -nn784 + reduce ((1 - nn724) * (1 - nn730), HT11), 
+  -nn748 + nn716 + (1 - nn742) - 2 * nn716 * (1 - nn742),
+  -nn756 + nn748 + nn750 - 2 * nn748 * nn750,
+  -nn782 + reduce ((1 - nn738) * (1 - nn744), HT11), 
+  -nn762 + nn714 + (1 - nn756) - 2 * nn714 * (1 - nn756),
+  -nn770 + nn762 + nn764 - 2 * nn762 * nn764,
+  -nn780 + reduce ((1 - nn752) * (1 - nn758), HT11), 
+  -nn776 + nn712 + (1 - nn770) - 2 * nn712 * (1 - nn770),
+  -nn778 + reduce ((1 - nn766) * (1 - nn772), HT11), 
+  -s(11) + nn776
+;
+ideal T(11) = FI, FS10, FS11, CS10, CS11, S(11);
+poly Car(11) =   reduce (s(11) + 2 * Car(12) - PP(11), T(11));
+ Car(11);
+
+ideal HS10 =
+  -nn644 + (1 - nn640) * nn642, 
+  -nn650 + (1 - nn638) * nn648, 
+  -nn658 + nn654 * nn656, 
+  -nn664 + (1 - nn636) * nn662, 
+  -nn672 + nn668 * nn670, 
+  -nn678 + (1 - nn634) * nn676, 
+  -nn686 + nn682 * nn684, 
+  -nn692 + (1 - nn632) * nn690, 
+  -nn700 + nn696 * nn698, 
+  -nn706 + (1 - nn630) * nn704
+;
+ideal HT10 = 
+  FS9, FS10, CS9, CS10, HS10
+;
+ideal S(10) =
+  -nn642 + a(7) * b(3), 
+  -nn656 + a(6) * b(4), 
+  -nn670 + a(5) * b(5), 
+  -nn684 + a(4) * b(6), 
+  -nn698 + a(3) * b(7), 
+  -nn648 + nn640 + (1 - nn642) - 2 * nn640 * (1 - nn642),
+  -nn654 + nn638 + (1 - nn648) - 2 * nn638 * (1 - nn648),
+  -nn662 + nn654 + nn656 - 2 * nn654 * nn656,
+  -nn720 + reduce ((1 - nn644) * (1 - nn650), HT10), 
+  -nn668 + nn636 + (1 - nn662) - 2 * nn636 * (1 - nn662),
+  -nn676 + nn668 + nn670 - 2 * nn668 * nn670,
+  -nn718 + reduce ((1 - nn658) * (1 - nn664), HT10), 
+  -nn682 + nn634 + (1 - nn676) - 2 * nn634 * (1 - nn676),
+  -nn690 + nn682 + nn684 - 2 * nn682 * nn684,
+  -nn716 + reduce ((1 - nn672) * (1 - nn678), HT10), 
+  -nn696 + nn632 + (1 - nn690) - 2 * nn632 * (1 - nn690),
+  -nn704 + nn696 + nn698 - 2 * nn696 * nn698,
+  -nn714 + reduce ((1 - nn686) * (1 - nn692), HT10), 
+  -nn710 + nn630 + (1 - nn704) - 2 * nn630 * (1 - nn704),
+  -nn712 + reduce ((1 - nn700) * (1 - nn706), HT10), 
+  -s(10) + nn710
+;
+ideal T(10) = FI, FS9, FS10, CS9, CS10, S(10);
+poly Car(10) =   reduce (s(10) + 2 * Car(11) - PP(10), T(10));
+ Car(10);
+
+ideal HS9 =
+  -nn548 + nn444 * nn546, 
+  -nn554 + (1 - nn544) * nn552, 
+  -nn562 + nn558 * nn560, 
+  -nn568 + (1 - nn542) * nn566, 
+  -nn576 + nn572 * nn574, 
+  -nn582 + (1 - nn540) * nn580, 
+  -nn590 + nn586 * nn588, 
+  -nn596 + (1 - nn538) * nn594, 
+  -nn604 + nn600 * nn602, 
+  -nn610 + (1 - nn536) * nn608, 
+  -nn618 + nn614 * nn616, 
+  -nn624 + (1 - nn534) * nn622
+;
+ideal HT9 = 
+  FS8, FS9, CS8, CS9, HS9
+;
+ideal S(9) =
+  -nn546 + a(7) * b(2), 
+  -nn560 + a(6) * b(3), 
+  -nn574 + a(5) * b(4), 
+  -nn588 + a(4) * b(5), 
+  -nn602 + a(3) * b(6), 
+  -nn616 + a(2) * b(7), 
+  -nn552 + nn444 + nn546 - 2 * nn444 * nn546,
+  -nn558 + nn544 + (1 - nn552) - 2 * nn544 * (1 - nn552),
+  -nn566 + nn558 + nn560 - 2 * nn558 * nn560,
+  -nn640 + reduce ((1 - nn548) * (1 - nn554), HT9), 
+  -nn572 + nn542 + (1 - nn566) - 2 * nn542 * (1 - nn566),
+  -nn580 + nn572 + nn574 - 2 * nn572 * nn574,
+  -nn638 + reduce ((1 - nn562) * (1 - nn568), HT9), 
+  -nn586 + nn540 + (1 - nn580) - 2 * nn540 * (1 - nn580),
+  -nn594 + nn586 + nn588 - 2 * nn586 * nn588,
+  -nn636 + reduce ((1 - nn576) * (1 - nn582), HT9), 
+  -nn600 + nn538 + (1 - nn594) - 2 * nn538 * (1 - nn594),
+  -nn608 + nn600 + nn602 - 2 * nn600 * nn602,
+  -nn634 + reduce ((1 - nn590) * (1 - nn596), HT9), 
+  -nn614 + nn536 + (1 - nn608) - 2 * nn536 * (1 - nn608),
+  -nn622 + nn614 + nn616 - 2 * nn614 * nn616,
+  -nn632 + reduce ((1 - nn604) * (1 - nn610), HT9), 
+  -nn628 + nn534 + (1 - nn622) - 2 * nn534 * (1 - nn622),
+  -nn630 + reduce ((1 - nn618) * (1 - nn624), HT9), 
+  -s(9) + nn628
+;
+ideal T(9) = FI, FS8, FS9, CS8, CS9, S(9);
+poly Car(9) =   reduce (s(9) + 2 * Car(10) - PP(9), T(9));
+ Car(9);
+
+ideal HS8 =
+  -nn452 + nn448 * nn450, 
+  -nn458 + (1 - nn438) * nn456, 
+  -nn466 + nn462 * nn464, 
+  -nn472 + (1 - nn436) * nn470, 
+  -nn480 + nn476 * nn478, 
+  -nn486 + (1 - nn434) * nn484, 
+  -nn494 + nn490 * nn492, 
+  -nn500 + (1 - nn432) * nn498, 
+  -nn508 + nn504 * nn506, 
+  -nn514 + (1 - nn430) * nn512, 
+  -nn522 + nn518 * nn520, 
+  -nn528 + nn424 * nn526
+;
+ideal HT8 = 
+  FS7, FS8, CS7, CS8, HS8
+;
+ideal S(8) =
+  -nn442 + a(7) * b(1), 
+  -nn450 + a(6) * b(2), 
+  -nn464 + a(5) * b(3), 
+  -nn478 + a(4) * b(4), 
+  -nn492 + a(3) * b(5), 
+  -nn506 + a(2) * b(6), 
+  -nn520 + a(1) * b(7), 
+  -nn444 + (1 - nn440) * nn442, 
+  -nn448 + nn440 + (1 - nn442) - 2 * nn440 * (1 - nn442),
+  -nn456 + nn448 + nn450 - 2 * nn448 * nn450,
+  -nn462 + nn438 + (1 - nn456) - 2 * nn438 * (1 - nn456),
+  -nn470 + nn462 + nn464 - 2 * nn462 * nn464,
+  -nn544 + reduce ((1 - nn452) * (1 - nn458), HT8), 
+  -nn476 + nn436 + (1 - nn470) - 2 * nn436 * (1 - nn470),
+  -nn484 + nn476 + nn478 - 2 * nn476 * nn478,
+  -nn542 + reduce ((1 - nn466) * (1 - nn472), HT8), 
+  -nn490 + nn434 + (1 - nn484) - 2 * nn434 * (1 - nn484),
+  -nn498 + nn490 + nn492 - 2 * nn490 * nn492,
+  -nn540 + reduce ((1 - nn480) * (1 - nn486), HT8), 
+  -nn504 + nn432 + (1 - nn498) - 2 * nn432 * (1 - nn498),
+  -nn512 + nn504 + nn506 - 2 * nn504 * nn506,
+  -nn538 + reduce ((1 - nn494) * (1 - nn500), HT8), 
+  -nn518 + nn430 + (1 - nn512) - 2 * nn430 * (1 - nn512),
+  -nn526 + nn518 + nn520 - 2 * nn518 * nn520,
+  -nn536 + reduce ((1 - nn508) * (1 - nn514), HT8), 
+  -nn532 + nn424 + nn526 - 2 * nn424 * nn526,
+  -nn534 + reduce ((1 - nn522) * (1 - nn528), HT8), 
+  -s(8) + nn532
+;
+ideal T(8) = FI, FS7, FS8, CS7, CS8, S(8);
+poly Car(8) =   reduce (s(8) + 2 * Car(9) - PP(8), T(8));
+ Car(8);
+
+ideal HS7 =
+  -nn340 + nn336 * nn338, 
+  -nn346 + (1 - nn334) * nn344, 
+  -nn354 + nn350 * nn352, 
+  -nn360 + (1 - nn332) * nn358, 
+  -nn368 + nn364 * nn366, 
+  -nn374 + (1 - nn330) * nn372, 
+  -nn382 + nn378 * nn380, 
+  -nn388 + (1 - nn328) * nn386, 
+  -nn396 + nn392 * nn394, 
+  -nn402 + (1 - nn326) * nn400, 
+  -nn410 + nn406 * nn408, 
+  -nn416 + nn320 * nn414
+;
+ideal HT7 = 
+  FS6, FS7, CS6, CS7, HS7
+;
+ideal S(7) =
+  -nn336 + a(7) * b(0), 
+  -nn338 + a(6) * b(1), 
+  -nn352 + a(5) * b(2), 
+  -nn366 + a(4) * b(3), 
+  -nn380 + a(3) * b(4), 
+  -nn394 + a(2) * b(5), 
+  -nn408 + a(1) * b(6), 
+  -nn422 + a(0) * b(7), 
+  // -nn344 + nn336 + nn338 - 2 * nn336 * nn338,
+  -nn344 + nn336 * nn338,//bug
+  -nn350 + nn334 + (1 - nn344) - 2 * nn334 * (1 - nn344),
+  -nn358 + nn350 + nn352 - 2 * nn350 * nn352,
+  -nn440 + reduce ((1 - nn340) * (1 - nn346), HT7), 
+  -nn364 + nn332 + (1 - nn358) - 2 * nn332 * (1 - nn358),
+  -nn372 + nn364 + nn366 - 2 * nn364 * nn366,
+  -nn438 + reduce ((1 - nn354) * (1 - nn360), HT7), 
+  -nn378 + nn330 + (1 - nn372) - 2 * nn330 * (1 - nn372),
+  -nn386 + nn378 + nn380 - 2 * nn378 * nn380,
+  -nn436 + reduce ((1 - nn368) * (1 - nn374), HT7), 
+  -nn392 + nn328 + (1 - nn386) - 2 * nn328 * (1 - nn386),
+  -nn400 + nn392 + nn394 - 2 * nn392 * nn394,
+  -nn434 + reduce ((1 - nn382) * (1 - nn388), HT7), 
+  -nn406 + nn326 + (1 - nn400) - 2 * nn326 * (1 - nn400),
+  -nn414 + nn406 + nn408 - 2 * nn406 * nn408,
+  -nn432 + reduce ((1 - nn396) * (1 - nn402), HT7), 
+  -nn420 + nn320 + nn414 - 2 * nn320 * nn414,
+  -nn424 + nn420 * nn422, 
+  -nn428 + nn420 + nn422 - 2 * nn420 * nn422,
+  -nn430 + reduce ((1 - nn410) * (1 - nn416), HT7), 
+  -s(7) + nn428
+;
+ideal T(7) = FI, FS6, FS7, CS6, CS7, S(7);
+poly Car(7) =   reduce (s(7) + 2 * Car(8) - PP(7), T(7));
+ Car(7);
+
+ideal HS6 =
+  -nn250 + nn246 * nn248, 
+  -nn256 + (1 - nn244) * nn254, 
+  -nn264 + nn260 * nn262, 
+  -nn270 + (1 - nn242) * nn268, 
+  -nn278 + nn274 * nn276, 
+  -nn284 + (1 - nn240) * nn282, 
+  -nn292 + nn288 * nn290, 
+  -nn298 + (1 - nn238) * nn296, 
+  -nn306 + nn302 * nn304, 
+  -nn312 + nn232 * nn310
+;
+ideal HT6 = 
+  FS5, FS6, CS5, CS6, HS6
+;
+ideal S(6) =
+  -nn246 + a(6) * b(0), 
+  -nn248 + a(5) * b(1), 
+  -nn262 + a(4) * b(2), 
+  -nn276 + a(3) * b(3), 
+  -nn290 + a(2) * b(4), 
+  -nn304 + a(1) * b(5), 
+  -nn318 + a(0) * b(6), 
+  -nn254 + nn246 + nn248 - 2 * nn246 * nn248,
+  // -nn254 + nn246 * nn248, //bug
+  -nn260 + nn244 + (1 - nn254) - 2 * nn244 * (1 - nn254),
+  -nn268 + nn260 + nn262 - 2 * nn260 * nn262,
+  -nn334 + reduce ((1 - nn250) * (1 - nn256), HT6), 
+  -nn274 + nn242 + (1 - nn268) - 2 * nn242 * (1 - nn268),
+  -nn282 + nn274 + nn276 - 2 * nn274 * nn276,
+  -nn332 + reduce ((1 - nn264) * (1 - nn270), HT6), 
+  -nn288 + nn240 + (1 - nn282) - 2 * nn240 * (1 - nn282),
+  -nn296 + nn288 + nn290 - 2 * nn288 * nn290,
+  -nn330 + reduce ((1 - nn278) * (1 - nn284), HT6), 
+  -nn302 + nn238 + (1 - nn296) - 2 * nn238 * (1 - nn296),
+  -nn310 + nn302 + nn304 - 2 * nn302 * nn304,
+  -nn328 + reduce ((1 - nn292) * (1 - nn298), HT6), 
+  -nn316 + nn232 + nn310 - 2 * nn232 * nn310,
+  -nn320 + nn316 * nn318, 
+  -nn324 + nn316 + nn318 - 2 * nn316 * nn318,
+  -nn326 + reduce ((1 - nn306) * (1 - nn312), HT6), 
+  -s(6) + nn324
+;
+ideal T(6) = FI, FS5, FS6, CS5, CS6, S(6);
+poly Car(6) =   reduce (s(6) + 2 * Car(7) - PP(6), T(6));
+ Car(6);
+
+ideal HS5 =
+  -nn176 + nn172 * nn174, 
+  -nn182 + (1 - nn170) * nn180, 
+  -nn190 + nn186 * nn188, 
+  -nn196 + (1 - nn168) * nn194, 
+  -nn204 + nn200 * nn202, 
+  -nn210 + (1 - nn166) * nn208, 
+  -nn218 + nn214 * nn216, 
+  -nn224 + nn160 * nn222
+;
+ideal HT5 = 
+  FS4, FS5, CS4, CS5, HS5
+;
+ideal S(5) =
+  -nn172 + a(5) * b(0), 
+  -nn174 + a(4) * b(1), 
+  -nn188 + a(3) * b(2), 
+  -nn202 + a(2) * b(3), 
+  -nn216 + a(1) * b(4), 
+  -nn230 + a(0) * b(5), 
+  -nn180 + nn172 + nn174 - 2 * nn172 * nn174,
+  -nn186 + nn170 + (1 - nn180) - 2 * nn170 * (1 - nn180),
+  -nn194 + nn186 + nn188 - 2 * nn186 * nn188,
+  -nn244 + reduce ((1 - nn176) * (1 - nn182), HT5), 
+  -nn200 + nn168 + (1 - nn194) - 2 * nn168 * (1 - nn194),
+  -nn208 + nn200 + nn202 - 2 * nn200 * nn202,
+  -nn242 + reduce ((1 - nn190) * (1 - nn196), HT5), 
+  -nn214 + nn166 + (1 - nn208) - 2 * nn166 * (1 - nn208),
+  -nn222 + nn214 + nn216 - 2 * nn214 * nn216,
+  -nn240 + reduce ((1 - nn204) * (1 - nn210), HT5), 
+  -nn228 + nn160 + nn222 - 2 * nn160 * nn222,
+  -nn232 + nn228 * nn230, 
+  -nn236 + nn228 + nn230 - 2 * nn228 * nn230,
+  -nn238 + reduce ((1 - nn218) * (1 - nn224), HT5), 
+  -s(5) + nn236
+;
+ideal T(5) = FI, FS4, FS5, CS4, CS5, S(5);
+poly Car(5) =   reduce (s(5) + 2 * Car(6) - PP(5), T(5));
+ Car(5);
+
+ideal HS4 =
+  -nn118 + nn114 * nn116, 
+  -nn124 + (1 - nn112) * nn122, 
+  -nn132 + nn128 * nn130, 
+  -nn138 + (1 - nn110) * nn136, 
+  -nn146 + nn142 * nn144, 
+  -nn152 + nn104 * nn150
+;
+ideal HT4 = 
+  FS3, FS4, CS3, CS4, HS4
+;
+ideal S(4) =
+  -nn114 + a(4) * b(0), 
+  -nn116 + a(3) * b(1), 
+  -nn130 + a(2) * b(2), 
+  -nn144 + a(1) * b(3), 
+  -nn158 + a(0) * b(4), 
+  -nn122 + nn114 + nn116 - 2 * nn114 * nn116,
+  -nn128 + nn112 + (1 - nn122) - 2 * nn112 * (1 - nn122),
+  -nn136 + nn128 + nn130 - 2 * nn128 * nn130,
+  -nn170 + reduce ((1 - nn118) * (1 - nn124), HT4), 
+  -nn142 + nn110 + (1 - nn136) - 2 * nn110 * (1 - nn136),
+  -nn150 + nn142 + nn144 - 2 * nn142 * nn144,
+  -nn168 + reduce ((1 - nn132) * (1 - nn138), HT4), 
+  -nn156 + nn104 + nn150 - 2 * nn104 * nn150,
+  -nn160 + nn156 * nn158, 
+  -nn164 + nn156 + nn158 - 2 * nn156 * nn158,
+  -nn166 + reduce ((1 - nn146) * (1 - nn152), HT4), 
+  -s(4) + nn164
+;
+ideal T(4) = FI, FS3, FS4, CS3, CS4, S(4);
+poly Car(4) =   reduce (s(4) + 2 * Car(5) - PP(4), T(4));
+ Car(4);
+
+ideal HS3 =
+  -nn76 + nn72 * nn74, 
+  -nn82 + (1 - nn70) * nn80, 
+  -nn90 + nn86 * nn88, 
+  -nn96 + nn64 * nn94
+;
+ideal HT3 = 
+  FS2, FS3, CS2, CS3, HS3
+;
+ideal S(3) =
+  -nn72 + a(3) * b(0), 
+  -nn74 + a(2) * b(1), 
+  -nn88 + a(1) * b(2), 
+  -nn102 + a(0) * b(3), 
+  -nn80 + nn72 + nn74 - 2 * nn72 * nn74,
+  -nn86 + nn70 + (1 - nn80) - 2 * nn70 * (1 - nn80),
+  -nn94 + nn86 + nn88 - 2 * nn86 * nn88,
+  -nn112 + reduce ((1 - nn76) * (1 - nn82), HT3), 
+  -nn100 + nn64 + nn94 - 2 * nn64 * nn94,
+  -nn104 + nn100 * nn102, 
+  -nn108 + nn100 + nn102 - 2 * nn100 * nn102,
+  -nn110 + reduce ((1 - nn90) * (1 - nn96), HT3), 
+  -s(3) + nn108
+;
+ideal T(3) = FI, FS2, FS3, CS2, CS3, S(3);
+poly Car(3) =   reduce (s(3) + 2 * Car(4) - PP(3), T(3));
+ Car(3);
+
+ideal HS2 =
+  -nn50 + nn46 * nn48, 
+  -nn56 + nn40 * nn54
+;
+ideal HT2 = 
+  FS1, FS2, CS1, CS2, HS2
+;
+ideal S(2) =
+  -nn46 + a(2) * b(0), 
+  -nn48 + a(1) * b(1), 
+  -nn62 + a(0) * b(2), 
+  -nn54 + nn46 + nn48 - 2 * nn46 * nn48,
+  -nn60 + nn40 + nn54 - 2 * nn40 * nn54,
+  -nn64 + nn60 * nn62, 
+  -nn68 + nn60 + nn62 - 2 * nn60 * nn62,
+  -nn70 + reduce ((1 - nn50) * (1 - nn56), HT2), 
+  -s(2) + nn68
+;
+ideal T(2) = FI, FS1, FS2, CS1, CS2, S(2);
+poly Car(2) =   reduce (s(2) + 2 * Car(3) - PP(2), T(2));
+ Car(2);
+
+ideal HS1 =
+  0;
+ideal HT1 = 
+  FS0, FS1, CS0, CS1, HS1
+;
+ideal S(1) =
+  -nn36 + a(1) * b(0), 
+  -nn38 + a(0) * b(1), 
+  -nn40 + nn36 * nn38, 
+  -nn44 + nn36 + nn38 - 2 * nn36 * nn38,
+  -s(1) + nn44
+;
+ideal T(1) = FI, FS0, FS1, CS0, CS1, S(1);
+poly Car(1) =   reduce (s(1) + 2 * Car(2) - PP(1), T(1));
+ Car(1);
+
+ideal HS0 =
+  -nn34 + a(0) * b(0)
+;
+ideal HT0 = 
+  FS0, CS0, HS0
+;
+ideal S(0) =
+  -s(0) + reduce (nn34, HT0)
+ ;
+ideal T(0) = FI, FS0, CS0, S(0);
+poly Car(0) =   reduce (s(0) + 2 * Car(1) - PP(0), T(0));
+ Car(0);
+
+ int t1 = rtimer-t0;
+write(":a log.txt", "Time taken for verification is",t1);
+write(":a log.txt", "");
+
+ //check if the circuit indeed implements specification
+if (Car(0) == 0)
+{
+  write(":a log.txt", "The circuit is verified against given specification.");
+  write(":a log.txt", "Exiting");
+  quit;
+}
+else
+{
+  write(":a log.txt", "The remainder is ", Car(0));
+  write(":a log.txt", "");
+  write(":a log.txt", "Circuit doesn't implement specification. Attempting rectification now.");
+  write(":a log.txt", "");
+}
+
+int i_PP = 0;
+list PP;
+list temp_PP;
+for (i_PP; i_PP <= 2*dp -1; i_PP++)
+{
+  temp_PP = PP(i_PP);
+  PP = PP + temp_PP;
+}
+
+int i_SS = 0;
+list SS;
+list temp_SS;
+for (i_SS; i_SS <= 2*dp -1; i_SS++)
+{
+  temp_SS = s(i_SS);
+  SS = SS + temp_SS;
+}
+
+int i_TT = 0;
+list TT;
+list temp_TT;
+for (i_TT; i_TT <= 2*dp -1; i_TT++)
+{
+  temp_TT = sort(T(i_TT));
+  temp_TT = temp_TT[1];
+  TT = TT + temp_TT;
+}
+
+/*
+list CC;
+CC[2*dp + 1] = 0;
+for (int i = 2*dp ; i > 0 ; i--)
+{
+  CC[i] = reduce((2*CC[i+1] + SS[i] - PP[i]),TT[i]);
+  CC[i];
+}
+*/
+//TO DO: remainder analysis and pruning search space
+
+list coneTips =  remainder_partition(Car(0),dp);
+list op = decomp(coneTips,dp);
+list cones;
+
+int sop = size(op);
+cones = -s(op[sop]);
+ideal J = S(op[sop]);
+op;
+if (size(op) == 1)
+{ 
+  if (op[1] == 0)
+  {
+    cones = -s(0);
+    list rectCheck = prune_logical_cone(cones,(S(0)));
+  }  
+  else
+  {
+    list rectCheck = prune_logical_cone(cones,J); }
+}
+else
+{
+  
+  list rectCheck = prune_logical_cone(cones,J);
+}
+
+//list rectCheck = prune_logical_cone(coneTips,J1);
+
+// list rectCheck = -AndSlice1Level1Order0Distance2Lit12;
+int t2 = rtimer-t1;
+write (":a log.txt", "Time for identifying rectifiable nets",t2);
+write(":a log.txt", "");
+
+
+int rectified = 0;
+for(int rect=1; rect<=size(rectCheck);rect++)
+{ 
+  if (rectified == 0)
+  {
+    //rectifying at location rf
+    poly rf = rectCheck[rect];
+    write (":a log.txt", "Checking for rectification at net", rf);
+
+    int ind_r;  
+    int i_ind;
+
+    //finding index
+    for (int j = 1; j <= size(TT); j++)
+    {
+      for (i_ind = 1; i_ind <= size(TT[j]) ; i_ind++)
+      {
+        if (lead(TT[j][i_ind]) == rf)
+          {
+            ind_r = i_ind;
+            int buggy_slice = j;
+          }
+      }   
+    }       
+
+    //replacing with rf+1 and rf+0
+    ideal Slice_L = TT[buggy_slice];
+    Slice_L[ind_r] = rf+1;
+    ideal Slice_H = TT[buggy_slice];
+    Slice_H[ind_r] = rf;
+    
+    list TT_L = TT;
+    list TT_H = TT;
+
+    TT_L = delete(TT_L,buggy_slice);
+    TT_L = insert(TT_L,Slice_L,buggy_slice-1);
+
+    TT_H = delete(TT_H,buggy_slice);
+    TT_H = insert(TT_H,Slice_H,buggy_slice-1);
+
+    //finding rL
+    list CC_L;
+    CC_L[buggy_slice+1] = Car(buggy_slice);
+    for (int i = buggy_slice ; i > 0 ; i--)
+    {
+      CC_L[i] = reduce((2*CC_L[i+1] + SS[i] - PP[i]),TT_L[i]);
+      CC_L[i];
+    }
+
+    //finding rH
+    list CC_H;
+    CC_H[buggy_slice + 1]= Car(buggy_slice);
+    for (int i = buggy_slice; i > 0 ; i--)
+    {
+      CC_H[i] = reduce((2*CC_H[i+1] + SS[i] - PP[i]),TT_H[i]);
+      CC_H[i];
+    }
+
+    poly rlh = reduce((CC_L[1]*CC_H[1]),FI);
+
+    kill CC_L,CC_H,TT_L,TT_H;
+
+    if (rlh == 0)
+    {
+      int t3 = rtimer-t2;
+      write(":a log.txt","Circuit rectifiable at",rf);
+      write(":a log.txt","Time to find the rectification net:" ,t3);
+
+      poly quo;
+      poly rem;
+      poly prem;
+
+      //needs checking from here 
+      //slices equivalent to Jf
+      //division of specification by Jf starts here.
+      list TT_Jf = TT;
+      ideal temp_Jf = TT[buggy_slice];
+      //ideal partial = temp_prem[(ind_r - 2)..(ind_r-1)] , temp_prem[(ind_r+2)..(size(temp_prem))];
+      ideal partial = temp_Jf[(ind_r+1)..(size(temp_Jf))];
+      TT_Jf = delete(TT_Jf,buggy_slice);
+      TT_Jf = insert(TT_Jf,partial,buggy_slice-1);
+      
+      // for(int i = 1; i < buggy_slice; i++)
+      // {
+      //   TT_Jf[i] = 0;
+      // }
+
+      list CC_prem;
+      CC_prem[buggy_slice + 1]=Car(buggy_slice);
+      for (int i = buggy_slice ; i > 0 ; i--)
+      {
+        CC_prem[i] = reduce((2*CC_prem[i+1] + SS[i] - PP[i]),TT_Jf[i]);
+        CC_prem[i];
+      }
+
+      prem = CC_prem[1];
+      "prem:",prem;
+      //division of specification by Jf stops here.
+
+      //division by xi starts here.    
+      rem, quo = multivariate_burg(prem,lead(rf),FI);  
+      //division by xi ends here.
+      kill TT_Jf;
+
+      //slices equivalent to Js      
+      list TT_Js = TT;
+      for (int i = 2*dp; i > buggy_slice ; i--)
+      {
+        TT_Js[i] = 0;
+      }
+      ideal temp_Js = TT[buggy_slice];
+      ideal partial_Js = temp_Js[1..(ind_r-1)];
+      TT_Js[buggy_slice] = partial_Js;
+
+      /*
+      for (int i = 2*dp ; i > 0 ; i--)
+      {
+        CC_Js[i] = reduce((2*CC_Js[i+1] + SS[i] - PP[i]),TT_Js[i]);
+        CC_Js[i];
+      }
+      */
+
+      //ideal Js = temp_prem[1..ind_r-1] + S(0) + S(1);
+
+      ideal dec = variables(quo);
+      //ideal JCp = quo,Js;
+
+      if (size(dec)>=1)
+      {
+        /*
+        "quotient is not a constant";
+        ideal JG = slimgb(JCp);
+        matrix V = lift(JG,rem);
+        matrix Vt = transpose(V);
+        //Vt;
+        matrix U = lift(JCp,JG);
+        //U;
+        poly sol;
+        int i;
+        for(i=1;i<=size(JG);i++)
+        {
+          sol = sol + (Vt[1,i]*U[1,i]);
+        }
+        */
+        write(":a log.txt","Quotient is not a constant");
+        ideal JCp = quo;
+        for (int j = 1; j <= buggy_slice; j++)
+        {
+          JCp = JCp+TT_Js[j];
+        }
+        ideal JG = slimgb(JCp);
+        matrix V = lift(JG,rem);
+        matrix Vt = transpose(V);
+        //Vt;
+        matrix U = lift(JCp,JG);
+        //U;
+        poly sol;
+        int i;
+        for(i=1;i<=size(JG);i++)
+        {
+          sol = sol + (Vt[1,i]*U[1,i]);
+        }
+      }
+      else
+      { 
+        "quotient is a constant";
+        if (quo != 1)
+        {
+          matrix quoi = inverse(quo);
+        }
+        else
+        {
+          matrix quoi = 1;
+        }
+        poly irem   = quoi[1,1]*rem;
+        //poly sol    = reduce(irem,Js+FI);
+        list CC_Js;
+        CC_Js[2*dp + 1]=0; 
+        for (int i = 2*dp ; i > 0 ; i--)
+        {
+          CC_Js[i] = reduce(irem,TT_Js[i]);
+          irem = CC_Js[i];
+        }
+        poly sol = CC_Js[1];
+        int t4 = rtimer-t3;
+        write(":a log.txt","Solution computed",rf);
+        write(":a log.txt","Time to find the solution:" ,t4);
+      }
+      //to here.
+
+      //verifying if the rectification polynomial computed is correct
+      write(":a log.txt","Rectification successful. The rectification function is", rf+sol);
+      rectified = 1;         
+    }  
+    else
+    {
+      write(":a log.txt","Circuit not rectifiable at",rf);
+    }  
+  }
+}
+write(":a log.txt", "End of computations.");
+write(":a log.txt", "Total time elapsed:",rtimer-t0);

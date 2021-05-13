@@ -1,0 +1,103 @@
+LIB "primdec.lib";
+LIB "multivariate_burg.lib";
+LIB "linalg.lib";
+ring R = integer,(Z0,Z1,Z2,Z3,Z4,Z5,sp2_3,sp2_2,sp2_1,sp2_0,P2C2,P2C1,P2C0,P2X2,P2D2,P2X1,P2D1,P2X0,P2D0,s2_2,s2_1,s2_0,sp1_3,sp1_2,sp1_1,sp1_0,P1C2,P1C1,P1C0,P1X2,P1D2,P1X1,P1D1,P1X0,P1D0,s1_2,s1_1,s1_0,sp0_3,sp0_2,sp0_1,sp0_0,s0_2,s0_1,s0_0,b2,a2,b1,a1,b0,a0),lp;
+
+
+// ideal J = 0;
+ideal J1 = 
+// s3;
+// s3,
+s0_0 + a0*b0,
+s0_1 + a1*b0,
+s0_2 + a2*b0,
+Z0 + sp0_0,
+sp0_0 + s0_0,
+sp0_1 + s0_1,
+sp0_2 + s0_2,
+s1_0 + a0*b1,
+s1_1 + a1*b1,
+s1_2 + a2*b1,
+sp0_3,
+s2_0 + a0*b2,
+s2_1 + a1*b2,
+s2_2 + a2*b2,
+P1X0 + sp0_1+s1_0,
+P1D0 + sp0_1*s1_0,
+P1X1 + sp0_2+s1_1,
+P1D1 + sp0_2*s1_1,
+P1X2 + sp0_3+s1_2,
+P1D2 + sp0_3*s1_2,
+P1C0 + P1D0,
+P1C1 + P1D1*P1X1*P1C0 + P1D1 + P1X1*P1C0,
+P1C2 + P1D2*P1X2*P1C1 + P1D2 + P1X2*P1C1,
+sp1_0 + P1X0,
+Z1 + sp1_0,
+sp1_1 + P1X1+P1C0,
+sp1_2 + P1X2+P1C1,
+sp1_3 + P1C2,
+P2X0 + sp1_1+s2_0,
+P2D0 + sp1_1*s2_0,
+P2X1 + sp1_2+s2_1,
+P2D1 + sp1_2*s2_1,
+P2X2 + sp1_3+s2_2,
+P2D2 + sp1_3*s2_2,
+P2C0 + P2D0,
+P2C1 + P2D1*P2X1*P2C0 + P2D1 + P2X1*P2C0,
+P2C2 + P2D2*P2X2*P2C1 + P2D2 + P2X2*P2C1,
+sp2_1 + P2X1+P2C0,
+sp2_2 + P2X2+P2C1,
+sp2_3 + P2C2,
+sp2_0 + P2X0,
+Z2 + sp2_0,
+Z3 + sp2_1,
+Z4 + sp2_2,
+Z5 + sp2_3;
+
+ideal J0 = 
+a0^2 - a0,
+a1^2 - a1,
+a2^2 - a2,
+b0^2 - b0,
+b1^2 - b1,
+b2^2 - b2;
+
+poly spec = 32*Z5 + 16*Z4 + 8*Z3 + 4*Z2 + 2*Z1 + Z0 - ((4*a2+2*a1+a0)*((4*b2+2*b1+b0)));
+
+reduce(spec,J1+J0);
+
+poly quo;
+poly rem;
+
+poly prem = reduce(spec,J1+J0);
+
+"partial remainder",prem;
+
+rem, quo = multivariate_burg(prem,lead(uc),J0);
+
+"remainder",rem;
+"quotient",quo;
+
+ideal dec = variables(quo);
+ideal JCp = quo,J2;
+
+JCp,
+
+if (size(dec)>=1)
+{
+	"quotient is not a constant";
+	matrix T3 = lift(JCp+J0,rem);
+	poly sol  = T3[1,1];
+}
+else
+{	
+	"quotient is a constant";
+	//matrix quoi = inverse(quo),
+	//quoi,
+	//poly irem   = quoi[1,1]*rem,
+	//poly sol    = reduce(irem,J2),
+	matrix T3 = lift(JCp+J0,rem);
+	poly sol  = T3[1,1];
+}
+
+"solution for P is ",sol; quit;

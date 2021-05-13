@@ -1,0 +1,20 @@
+log_b3 file for abc16.sing
+
+Time taken for verification is
+399
+
+The remainder is 
+64*nn292-128*b(1)*b(0)*a(6)*a(5)*a(4)*a(3)*a(2)*a(1)*a(0)+128*b(1)*b(0)*a(6)*a(5)*a(4)*a(3)*a(2)*a(1)+128*b(1)*b(0)*a(6)*a(5)*a(4)*a(3)*a(2)+128*b(1)*b(0)*a(6)*a(5)*a(4)*a(3)*a(1)*a(0)-128*b(1)*b(0)*a(6)*a(5)*a(4)*a(3)-128*b(1)*b(0)*a(6)*a(5)*a(4)*a(2)*a(1)-128*b(1)*b(0)*a(6)*a(5)*a(4)+128*b(1)*b(0)*a(6)*a(5)*a(3)*a(2)*a(1)*a(0)-128*b(1)*b(0)*a(6)*a(5)*a(3)*a(2)-128*b(1)*b(0)*a(6)*a(5)*a(3)*a(1)*a(0)+128*b(1)*b(0)*a(6)*a(5)-128*b(1)*b(0)*a(6)*a(4)*a(3)*a(2)*a(1)+128*b(1)*b(0)*a(6)*a(4)*a(3)+128*b(1)*b(0)*a(6)*a(4)*a(2)*a(1)+64*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)*a(0)-64*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)-64*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)-64*b(1)*b(0)*a(5)*a(4)*a(3)*a(1)*a(0)+64*b(1)*b(0)*a(5)*a(4)*a(3)+64*b(1)*b(0)*a(5)*a(4)*a(2)*a(1)+64*b(1)*b(0)*a(5)*a(4)-64*b(1)*b(0)*a(5)*a(3)*a(2)*a(1)*a(0)+64*b(1)*b(0)*a(5)*a(3)*a(2)+64*b(1)*b(0)*a(5)*a(3)*a(1)*a(0)+64*b(1)*b(0)*a(4)*a(3)*a(2)*a(1)-64*b(1)*b(0)*a(4)*a(3)-64*b(1)*b(0)*a(4)*a(2)*a(1)-64*b(1)*a(5)-64*b(0)*a(6)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+300
+
+Checking for rectification at net
+-nn232
+Circuit not rectifiable at
+-nn232
+End of computations.
+Total time elapsed:
+1018

@@ -1,0 +1,26 @@
+LIB "primdec.lib";
+LIB "multivariate_burg.lib";
+LIB "linalg.lib";
+ring R = integer,(Z0,Z1,Z2,Z3,sp1_2,sp1_1,sp1_0,P1C1,P1C0,P1X1,P1D1,P1X0,P1D0,s1_1,s1_0,sp0_2,sp0_1,sp0_0,s0_1,s0_0,a0,a1,b0,b1),lp;
+
+ideal J1= 
+s0_0 + a0*b0,
+s0_1 + a1*b0,
+Z0 + sp0_0,
+sp0_0 + s0_0,
+sp0_1 + s0_1,
+s1_0 + a0*b1,
+s1_1 + a1*b1,
+sp0_2,
+P1X0 + sp0_1+s1_0,
+P1D0 + sp0_1*s1_0,
+P1X1 + sp0_2+s1_1,
+P1D1 + sp0_2*s1_1,
+P1C0 + P1D0,
+P1C1 + P1D1*P1X1*P1C0 + P1D1 + P1X1*P1C0,
+sp1_1 + P1X1+P1C0,
+sp1_2 + P1C1,
+sp1_0 + P1X0,
+Z1 + sp1_0,
+Z2 + sp1_1,
+Z3 + sp1_2;

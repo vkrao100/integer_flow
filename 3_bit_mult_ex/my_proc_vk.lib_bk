@@ -1,0 +1,1327 @@
+LIB "crypto.lib";
+LIB "normaliz.lib";
+LIB "ring.lib";
+LIB "poly.lib";//for lcm
+LIB "dmodapp.lib";
+LIB "linalg.lib";
+//LIB "gate2poly.lib";
+LIB "teachstd.lib";
+
+
+/*#define ASSERT(expression,message)
+   ((void)((expression)? 0 : __ASSERT(#expression, message, __FILE__, __LINE__)))*/
+
+
+/* 
+proc inter_JS(ideal g_JA, ideal J0C, ideal XA)
+{
+	ideal JS = J0C;
+	list tmp_JS;
+	for(int i=1; i<=size(g_JA); i=i+1)
+	{
+		if(reduce(g_JA[i],XA) == g_JA[i])
+		{
+			tmp_JS = insert(tmp_JS,g_JA[i]);
+		}
+	}
+	for(i=1; i<=size(tmp_JS); i=i+1)
+	{
+		JS = JS + tmp_JS[i];
+	}
+	return(JS);
+}
+*/
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+
+// Compute vanishing polynomials for a list of variables
+proc van_id(list X)
+{
+	ideal I;
+	for(int i=1; i<=size(X); i=i+1)
+	{
+		I = I + (X[i]^2 - X[i]);
+	}
+	return(I);
+}
+
+//Find ring indices of variables in the (nested) list L 
+proc var2index(list L)
+{
+	list V;
+	for(int i=1; i<=size(L[1]); i=i+1)
+	{
+		V = insert(V,rvar(L[1][i]),size(V));
+	}
+	return(V);
+}
+
+//Find XA, XB, XC
+proc find_var_part(list tmp_XA, list tmp_XB)
+{
+	list XA,XB,XC;
+	int ind;
+	list ind_xa = var2index(tmp_XA);
+	list ind_xb = var2index(tmp_XB);
+
+	for(int i=1; i<=size(ind_xa); i=i+1)
+	{	
+		ind = find_index(ind_xb,ind_xa[i]);
+		if(ind != 0)
+		{
+			XC = insert(XC,var(ind_xa[i]),size(XC) );
+			ind_xb = delete(ind_xb,ind);
+		}
+		else
+		{
+			XA = insert(XA,var(ind_xa[i]), size(XA) );
+		}
+	} 
+	
+	for(i=1;i<=size(ind_xb);i=i+1)
+	{
+		XB = insert(XB, var(ind_xb[i]), size(XB));
+	}	
+	return(XA,XB,XC);
+}
+
+//Convert a list to an ideal
+proc list2ideal(list L)
+{
+	ideal I;
+	for(int i=2; i<=size(L); i=i+1)
+	{
+		I = I + L[i];
+	}
+	return(I);
+}
+
+//Return list of zero elements
+proc zero_list(int n);
+{	
+	list l;
+	for(int i=1; i<=n; i=i+1)
+	{
+		l = insert(l,0);
+	}
+	return(l);
+}
+
+//Compute Standard Monomials
+proc comp_sm(ideal I, list XC, int sab)
+{
+	list sm; 
+	list bl = zero_list(size(XC));
+	intmat N[1][sab+size(XC)];
+	poly tmp;
+	int i,j;
+
+	for(i=1; i<=2^size(XC); i=i+1 )
+	{		
+		tmp = intmat2mons(N)[1];
+		
+		if(reduce(tmp,lead(I)) != 0)
+		{
+			sm = insert(sm,tmp);
+		}
+
+		bl = binary_add(bl);
+
+		for(j=1; j<=size(XC); j=j+1)
+		{
+			N[1,sab+j] = bl[j];
+		}
+
+	}
+	return(sm);
+}
+
+
+// Compute JS
+proc inter_JS(ideal JA, list XA, ideal J0C)
+{
+	poly elm = 1;
+	for(int i=1; i<=size(XA); i=i+1)
+	{
+		elm = elm*XA[i];
+	}
+	ideal JS = eliminate(JA,elm);
+	return(JS);
+}
+
+// Compute JL
+proc inter_JL(ideal JB, list XB, ideal J0C)
+{
+	poly elm = 1;
+	for(int i=1; i<=size(XB); i=i+1)
+	{
+		elm = elm*XB[i];
+	}
+	ideal tmp_JL = eliminate(JB,elm);
+	"computing quotient J0C:tmp_JL";
+	ideal JL = quotient(J0C,tmp_JL);
+	return(JL);
+}
+
+// Write the new ring with XA,XB,XC variable order
+proc new_ring(list XA, list XB, list XC)
+{
+	string rr; int i;
+	rr = "ring Q = 2, (";
+
+	if(size(XA) != 0)
+	{rr = rr + string(XA[1]);}
+	for(i=2; i<=size(XA); i=i+1)
+	{
+		rr = rr + "," + string(XA[i]);
+	}
+	
+	if(size(XB) != 0)
+	{rr = rr + "," + string(XB[1]);}
+	for(i=2; i<=size(XB); i=i+1)
+	{
+		rr = rr + "," + string(XB[i]);
+	}
+	
+	if(size(XC) != 0)
+	{rr = rr + "," + string(XC[1]);}
+	for(i=2; i<=size(XC); i=i+1)
+	{
+		rr = rr + "," + string(XC[i]);
+	}
+
+	rr = rr + "), lp;";
+	write(":w new.ring", rr);
+}
+
+//Pick appropriate polynomials
+proc pick_g(ideal GD, list sm, poly curr)
+{
+	int i,j;
+	poly gdi;
+	for(i=1; i<=size(GD); i++)
+	{
+		gdi = GD[i];
+		for(j=1; j<=size(sm); j=j+1)
+		{
+			if(lead(gdi) == sm[j])
+			{
+				gdi = gdi - lead(gdi);
+				if((gdi == 1 || gdi == 0) && GD[i] != curr)
+				{
+					return(GD[i]);
+				}	
+			}
+		}
+	}
+
+	if(i == size(GD)+1)
+	{
+		return(0);
+	}	
+}
+
+//Returns Interpolants of increasing size
+proc get_larger_interpolants(ideal JS, ideal JL, ideal JD, ideal J0C, list sm, int max_no)
+{
+	list L; int count;
+	int br;
+	L = insert(L,JS,size(L));
+	poly gdi = sm[size(sm) div 2]+1; //Last element of sm is 1
+	ideal GD;
+	count=1;
+
+	while(1)
+	{
+		if(count > max_no){break;}
+
+		GD = groebner(JD + gdi);
+		L = insert(L,JS*GD,size(L));
+		gdi = pick_g(GD, sm, gdi);
+		if(gdi == 0)
+		{
+			L = insert(L,JL,size(L));
+			return(L);
+		}
+
+		count = count + 1;
+	}
+
+	return(L);
+}
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+// ECO work
+
+proc get_index(ideal J, poly f)
+{
+	int i;
+	for(i=1;i<=size(J); i++)
+	{
+		if(lead(J[i]) == f)
+		{
+			return(i);
+		}
+	}
+	return(-1);
+}
+
+proc get_index_str(ideal J, string f)
+{
+	int i;
+	for(i=1;i<=size(J); i++)
+	{
+		if(string(lead(J[i])) == f)
+		{
+			return(i);
+		}
+	}
+	return(-1);
+}
+
+//Author of return_primary_var_ideals: Vikas
+proc elm_PI(ideal g, int num)
+{
+	list L = ringlist(R);
+	int i;
+	int j;
+    int nu = size(L[2]);
+    int nidx = nu-2*num+1;
+    ideal searching;
+    ideal solution;
+    list idxmatch;
+    for(i=1;i<=size(g);i=i+1)
+    {	
+    	searching = variables(g[i]);
+    	idxmatch  = var2index(searching);
+    	for(j=1;j<=size(idxmatch);j=j+1)
+    	{	
+    		if(idxmatch[j]<nidx)
+    		{
+    			break;
+    		}
+    	}
+    	if (j > size(idxmatch))
+    	{
+    		solution = solution + g[i];
+    	} 
+    }
+    return(solution);
+}
+
+//Author of return_primary_var_ideals: Vikas
+proc elm_PI_list(ideal g, ideal PI)
+{
+	list L = ringlist(R);
+	int i;
+	int j;
+    int nu = size(L[2]);
+    int nidx = nu-size(PI)+1;
+    ideal searching;
+    ideal solution;
+    list idxmatch;
+    for(i=1;i<=size(g);i=i+1)
+    {	
+    	searching = variables(g[i]);
+    	idxmatch  = var2index(searching);
+    	for(j=1;j<=size(idxmatch);j=j+1)
+    	{	
+    		if(idxmatch[j]<nidx)
+    		{
+    			break;
+    		}
+    	}
+    	if (j > size(idxmatch))
+    	{
+    		solution = solution + g[i];
+    	} 
+    }
+    return(solution);
+}
+
+proc Spoly(poly f1, poly f2)
+{
+	
+}
+
+// added by vikas for FMCAD experiments
+
+/* This function computes the multivariant division of polynomials.*/
+proc multivariate_burg(poly f, poly m)
+{
+/*	poly u = 0;
+	//ideal j0 = g; 
+	int index; 
+	//poly h = f; 
+	index = isDivisible(f, m);
+	while (index != -1 & f !=0)
+	{
+		u = u + (lead(f)/m);
+		//"dividend-",h;
+		f = f - (lead(f)/m)*m;
+		"quotient-",u;
+		index =  isDivisible(f, m);
+		//"divisor-",(k[index]);
+        //"residue-",h;  	
+	} 
+	return (f,u);*/
+	list T = division(f,m);
+	return (T[2][1],T[1][1,1]);
+
+}
+
+/* Checks if any polynomial in a given list can divide h */ 
+proc isDivisible(poly h, poly m)
+{
+	poly r;
+	r = division(leadmonom(h),m)[2][1];
+	if(r == 0)
+	{
+		return (1); 
+	}
+	return (-1);
+}
+
+proc isDivisiblei(poly h, ideal k)
+{
+	poly r;
+	for(int i = 1; i <= size(k); i++)
+	{	
+		r = division(leadmonom(h),leadmonom(k[i]))[2][1];
+		if(r == 0)
+		{
+			return (i); 
+		}
+	}
+	return (-1);
+}
+
+/*input - poly f to be reduced and ideal J
+   the ideal J will be sorted according to the ring order 
+   and the generated index list will be used for 
+   consecutive division. */
+proc fast_reduce(poly f, ideal J)
+{	
+	list l = sortvec(J);
+	int divide;
+	int di;
+	for (di= size(l[1]); di>0; di=di-1)
+	{	
+		divide=1;
+		while(divide != -1 & f != 0) 
+		{
+			f = f - (lead(f)/lead(J[l[1][di]]))*J[l[1][di]];
+			divide = isDivisible(lead(f),lead(J[l[1][di]]));
+		}
+	}
+	return (f);
+}
+
+proc remainder_partition(poly rema, int datapathsize)
+{
+	int i,j;
+	list L1;
+	list L = poly2list(rema);
+	//determine the coefficient list from remainder
+	for (i=1;i<=size(L);i++)
+	{	
+		L1 = insert(L1,leadcoef(L[i][2]));
+	}
+	//remove the duplicates from the coefficient list
+    L1 = removelistduplicates(L1);
+    "list of coefficients from remainder",L1;
+	//identify z_* string affected output list using the coefficients
+	list bout, exps;
+	bout, exps = find_bz(L1,datapathsize);
+	"list of affected outputs",bout;
+	return(bout,exps);
+}
+
+proc find_bz(list L, int bit_length) //bit_length: datapath size; for 32 bit multiplier, bit_length=32
+{
+	string fac,sub,sub1;
+	int i,j,k,t;
+	list exp;
+	list bout;
+	list exps;
+	list to_del;
+	string out1;
+    if (string(lead(spec))== "D")
+    {
+    	out1 = "d_";
+    }
+    else
+    {
+    	out1 = "z_";
+    }
+	for(i=0; i<bit_length; i++) //making list of all exponents
+	{
+		exp = exp + list(i);
+	}
+
+	for(i=1; i<=size(L); i++)
+	{
+		to_del = list();
+		fac = string(L[i]);
+		// fac;
+		for(j=1; j<=size(exp); j++) //checking in the current exp
+		{	
+			if(exp[j] != 1) //exp = 0
+			{	
+				if(exp[j] == 0)
+				{sub = "1";sub1 = "1";}
+				else
+				{sub = parstr(R)+string(exp[j]);
+				 sub1 = parstr(R)+"^"+string(exp[j]);}
+				
+				if( (find(fac,sub) != 0) || (find(fac,sub1) != 0)) // if substring present
+				{	
+				bout = insert(bout,out1+string(exp[j])+"_"); //out buggy
+				exps = insert(exps,exp[j]);
+				to_del = to_del + list(j);//no need to check for it in next factor
+				}
+			} 
+			else 
+			{
+				sub = parstr(R)+"+";
+				t = find(fac,sub);
+				// fac;t;
+				if(t != 0)
+				{
+					bout = insert(bout,out1+string(exp[j])+"_"); //out buggy
+					exps = insert(exps,exp[j]);
+					to_del = to_del + list(j);//no need to check for it in next factor
+					// continue;
+				}
+				sub = parstr(R)+")";
+				t = find(fac,sub);
+				// fac;t;
+				if(t != 0)
+				{
+					bout = insert(bout,out1+string(exp[j])+"_"); //out buggy
+					exps = insert(exps,exp[j]);
+					to_del = to_del + list(j);//no need to check for it in next factor
+				} 
+			}
+		}
+		for(k=size(to_del); k>0; k--) //deleting already checked exponents
+		{
+				exp = delete(exp,to_del[k]);
+		}	
+	}
+	return(bout,exps);
+}
+
+/* record the logical cone of a given net/poly */ 
+
+proc logical_cone(string tip, ideal J)
+{
+	list vars;
+	ideal k = J; 
+	int index,i;
+	poly r = 0;
+	for(i=1;i<=size(k);i++)
+	{ 
+		if (string(lead(k[i]))==tip)
+		{
+			poly h = lead(k[i]);
+		}
+	}
+	while(h != 0 )
+	{
+		index = isDivisiblei(h, k);
+		if(index != -1)
+		{	
+			h = h - (lead(h)/lead(k[index]))*k[index];
+			vars = insert(vars,lead(k[index]));
+		} 
+		else
+		{
+			r = r + lead(h);
+			h = h - lead(h);
+		}
+	} 
+	vars = removelistduplicates(vars);
+
+	return(vars);
+}
+
+proc prune_logical_cone(list coneTips, ideal J1)
+{
+	int conetip,i;
+	list Vars;
+	list final;
+	for(conetip=1;conetip<=size(coneTips[1]);conetip++)
+	{	
+		Vars = insert(Vars,logical_cone(string(coneTips[1][conetip]),J1));
+		"logical cone of output",coneTips[1][conetip],Vars[1];
+	}
+	list temp_list = Vars[1];
+	if (size(Vars)==1)
+	{
+		return(temp_list);
+	}
+	else
+	{
+		for(i=1;i<size(Vars);i++)
+		{	
+			temp_list = intrsct_lists(temp_list,Vars[i+1]);
+		}
+		"pruned intersection of cones to be checked for rectification",temp_list;
+		return(temp_list);
+	}
+}
+
+proc removelistduplicates(list vars)
+{
+	int i,j;
+	for (i=1;i<=size(vars);i++)
+	{
+		for(j=i+1;j<=size(vars);j++)
+		{
+			if (vars[i] == vars[j])
+			{
+				vars = delete(vars,j);
+				j--;
+			}
+		}
+	}
+	return(vars);
+}
+
+proc sublists(list L)
+{
+  if (size(L)==1)
+  {
+  	return(list(list(),L));
+  }
+  list L1 = L[1..size(L)-1];
+  list S1 = sublists(L1);
+  list S2;
+  for (int i = 1;i<=size(S1);i++)
+  {
+    S2[i]=S1[i]+list(L[size(L)]);
+  }
+  return(S1+S2);
+}
+
+proc intrsct_lists(list LL, list MM)
+{
+  list new;
+  int jj=1;
+  for (int j=1; j<=size(LL); j++)
+  {
+     if (member(LL[j],MM))
+     {
+        if (not member(LL[j],new))
+        {
+          new[jj]=LL[j];
+          jj++;
+        }
+     }
+  }
+  return(new);
+}
+
+proc member(def e, list L)
+{
+  for (int j=1; j<=size(L); j++)
+  {
+    if (L[j]==e)
+    { 
+    	return(1); 
+    }
+  }
+  return(0);
+}
+
+
+//procedure for quotient of ideals as discussed in chapter 2 of adams
+// and loustaunau - by arpitha
+proc interpoly(ideal J, poly f)
+{
+	ideal preGB = w*J,(1-w)*f;
+	ideal GGB = groebner(preGB);
+	ideal GEB = eliminate(preGB,w);
+	ideal L = GEB/f;
+	return(L);
+}
+
+proc interid(ideal J, ideal I)
+{
+	ideal preGB = w*J,(1-w)*I;
+	ideal GGB = groebner(preGB);
+	ideal GEB = eliminate (GGB,w);
+	return(GEB);
+}
+
+
+proc quot(ideal J,poly I)
+{
+
+	//int si = size(I);
+	int sj = size(J);
+	int i;
+
+	ideal K;//groebner basis
+	ideal L;//gb by fi
+	ideal E;
+	list Q;
+	
+	for (i=1;i<=si;i++)
+		{
+			K = interpoly(J,I[i]);
+			L = K/I[i];
+			Q[i] = L;
+		}
+
+	int sq = size(Q);
+	ideal M = Q[1];
+		
+	for (i=2;i<=sq;i++)
+		{
+			i;
+			ideal F = Q[i];
+			ideal buf = interid(M,F);
+			ideal M = buf;
+		}
+	return(M);
+}
+
+//###########################################################//
+//															 //	
+//															 //		
+// 			Added by Vikas for ICCAD experiments			 //
+//															 //		
+//															 //		
+//###########################################################//
+//verification
+proc reduce_max(poly f, ideal g1)
+{
+	poly temp = f;
+	list L = sortvec(g1);
+	ideal g;
+	for(int i=size(g1); i>=1; i=i-1)
+	{	
+		g = g + g1[L[1][i]];
+	}
+	for (int i=1; i <= size(g);i=i+1)
+	{
+  		temp = reduce(temp,g[i]);
+  		max_val = max(max_val,size(temp));
+	}
+	return(temp, max_val);
+}
+
+proc verify_circuit(ideal J1, ideal J0)
+{
+	poly rema = reduce(spec,J1+J0);
+	return(rema);
+}
+
+//primitive gates for finite fields
+proc xorgate(poly g, poly h)
+{
+	return(g+h);
+}
+proc orgate(poly g, poly h)
+{
+	return(g+h+g*h);
+}
+proc andgate(poly g, poly h)
+{
+	return(g*h);
+}
+proc halfAdder(poly g, poly h)
+{
+	return(g+h,g*h);
+}
+proc fullAdder(poly g, poly h, poly i)
+{
+	poly s1, c1 = halfAdder(g,h);
+	poly s2, c2 = halfAdder(i,s1);
+	return(s2,orgate(c1,c2));
+}
+
+//primitive gates for integers
+proc ixorgate(poly g, poly h)
+{
+	return(g+h-2*g*h);
+}
+proc iorgate(poly g, poly h)
+{
+	return(g+h-g*h);
+}
+
+proc return_field_constraints()
+{	
+	int k = lcm(bit_length,fix_length);
+	if(k>=31)
+	{
+		bigint kk = BigExp(2,k)-1;
+		bigint bl = BigExp(2,bit_length)-1;
+		bigint fl = BigExp(2,fix_length)-1;
+		bigint kb = kk/bl;
+		bigint kf = kk/fl;
+	}
+	else
+	{
+		int kk = BigExp(2,k)-1;
+		int bl = BigExp(2,bit_length)-1;
+		int fl = BigExp(2,fix_length)-1;
+		int kb = kk/bl;
+		int kf = kk/fl;
+	}
+	"kb for ga", kb; 
+	"kf for be", kf; 
+	number ga = BigExp(al,kb);
+	number be = BigExp(al,kf);
+	if (pdebug)
+	{	
+		"LCM of m,n: k= ", k;
+		"beta in terms of alpha",be;
+		"gamma in terms of alpha",ga;
+	}
+	return (be,ga);
+}
+
+proc word_level_vars(ideal J0)
+{
+	J0 = J0,W^(2^fix_length)-W;
+	if (pdebug)
+	{
+		// "J0 after field polynomial W addition", J0;
+	}
+	return (W + rf2*be^2 + rf1*be + rf0,J0);
+}
+
+proc rect_check_multi_fix(ideal JJ, ideal J0, int ind_rf)
+{	
+
+	list rr;
+	int i;
+	ideal gg;
+	list evl = 0, 1, be, be^2, be^3, be^4, be^5, be^6;
+	"Now Checking"; //JJ;
+	
+	//gg = JJ; gg[ind_rf] = 0;
+	//poly tmp3 = reduce(spec, gg);
+	//"tmp3-------",tmp3;exit;
+	gg = JJ;
+	gg[ind_rf] = 0; //removing the poly, W=0
+	poly rr_with_W = reduce(spec,gg+J0); //this poly will contain W's 
+	// the following loop substitutes the W's with evl values
+	for(i=1;i<=(2^fix_length);i++)
+	{	
+		//gg = JJ;
+		//gg[ind_rf] = W + evl[i];
+		//gg = slimgb(gg);
+		rr[i] = subst(rr_with_W, W, evl[i]);
+	}
+/*	for(i=1;i<=(2^fix_length);i++)
+	{	
+		gg = JJ;
+		gg[ind_rf] = W + evl[i];
+		gg = slimgb(gg);
+		rr1[i] = reduce(spec, gg+J0);
+	}*/
+	"rr",rr;
+	
+	poly rec_chk = 1;
+	// ideal rec_chk_id = 1;
+	for(i=1;i<=(2^fix_length);i++)
+	{	
+		//rec_chk_id = reduce(intersect(rec_chk_id,rr[i]),J0);
+		rec_chk = reduce(rec_chk*rr[i],J0);
+		//rec_chk = rec_chk*rr[i];
+		//"rec_chk = ",rec_chk;
+	}
+	//"rec_chk_id:",rec_chk_id;
+	//rec_chk = reduce(rec_chk,J0);
+	// Following lines needed for the intersect case
+	//if ( (rec_chk_id+0) == 0) {rec_chk = 0;}
+	//else {rec_chk = 1;}
+
+	if (pdebug)
+	{	
+		"rectification check done";	
+		//"partial remainders generated during rectification check -", rr;
+		"product of partial remainders reduced with J0 =", rec_chk;
+	}
+	"Time elapsed until rect check completion:", rtimer-t0;
+	return (rec_chk);
+}
+
+proc compute_word_level_rect_func(ideal Jchk, ideal J0, int ind_rf)
+{
+	
+	//ideal Jf = Jchk[1..(ind_rf-1)];
+	ideal Jf = Jchk;
+	Jf[ind_rf] = 0; //removing the polynomial, W=0
+	//ideal Js = Jchk[(ind_rf+1)..size(Jchk)];
+	Jf;	
+	//ideal Jgf = std(Jf);
+	//poly pr = reduce(spec,Jf);
+	poly pr = reduce(spec,Jf+J0);
+	"partial remainder after first reduction-",pr;
+	//long proc - vkr
+	/*poly rem, quo = multivariate_burg(pr,W);
+	
+	ideal JCp = quo, Js, J0;
+	ideal dec = variables(quo);
+	if (pdebug)
+	{
+		//"ideal f_1..f_(i-1)",Jf;
+		//"ideal f_(i+1)..f_s",Js;
+		"remainder after division by W-", rem;
+		"quotient after division by W-", quo;
+	}
+
+	if (size(dec)>=1)
+	{	
+		ideal JG  = groebner(JCp);
+		poly rrem = reduce(rem,JG);rrem;
+		matrix U1 = lift(JCp,JG);
+		matrix V  = lift(JG,rem);
+		matrix Vt = transpose(V);
+		poly psol;
+		int i;
+		for(i=1;i<=size(JG);i++)
+		{
+			psol = psol + (Vt[1,i]*U1[1,i]);
+		}
+		psol = reduce(psol,Js);
+		psol = W + psol;
+		ideal Jsol = psol,W^(2^fix_length)-W;
+		ideal gg = slimgb(Jsol);
+		int sol_idx = get_index(gg,W);
+		if (sol_idx == -1)
+		{	"no polynomial with leading term W";}
+		else
+		{	poly sol = reduce(gg[sol_idx],J0);}
+		if (pdebug)
+		{
+			"quotient is not a constant";
+			"ideal for membership test -",JCp;
+			"slimgb of <quo,f_(i+1)..f_s>",JG;
+			//"matrix M representing relation of g_1..g_t and f_1..f_s",U1;
+			"remainder constructed as g_1..g_t",V;
+			"partial solution constructed as rem*U1[1,1]",psol;
+			"ideal used for solution construction", Jsol;
+			"slimgb of the ideal to compute solution", gg;
+		}
+	}
+	else
+	{	
+		if (quo != 1)
+		{
+			matrix quoi = inverse(quo);
+		}
+		else
+		{
+			matrix quoi = 1;
+		}		
+		poly irem = quoi[1,1]*rem;
+		poly sol  = reduce(irem,Js+J0);
+		sol = W + sol;	
+		if (pdebug)
+		{
+			"quotient is a constant";
+			"inverse of quotient",quoi[1,1];
+			"interim remainder after multiplying inverse of quotient",irem;
+		}
+	}
+	//long proc
+	//option(redSB); option();
+	*/
+	// hack -vkr
+	ideal gg = slimgb(pr+J0); gg;
+
+	poly sol = normalize(gg[size(gg)]);
+	// Following logic will not work with PD as they have 3 sets of PI
+	//poly sol = normalize(gg[(2*bit_length)+1]);
+	//hack -vkr
+	"word-level rectification function at W -", sol;
+	"Time elapsed until rect func computation:", rtimer-t0;
+	ideal Jcorrection = Jf,sol,J0;
+	//Jcorrection;
+	poly correction_rem = reduce(spec,Jcorrection);
+	"remainder of verification using word-level correction", correction_rem;
+}
+
+//alternate word level correction procedure
+proc compute_word_level_rect_func_alt(ideal Jchk, ideal J0, int ind_rf)
+{
+	
+	ideal Jf = Jchk[1..(ind_rf-1)];
+	//ideal Jf = Jchk;
+	//Jf[ind_rf] = 0; //removing the polynomial, W=0
+	ideal Js = Jchk[(ind_rf+1)..size(Jchk)];
+	//Jf;	
+	//ideal Jgf = std(Jf);
+	//poly pr = reduce(spec,Jf);
+	poly pr = reduce(spec,Jf+J0);
+
+	poly rem, quo = multivariate_burg(pr,W);
+	
+	ideal JCp = quo, J0;
+	ideal dec = variables(quo);
+	if (pdebug)
+	{
+		//"ideal f_1..f_(i-1)",Jf;
+		//"ideal f_(i+1)..f_s",Js;
+		"partial remainder after first reduction-",pr;
+		"remainder after division by W-", rem;
+		"quotient after division by W-", quo;
+	}
+
+	if (size(dec)>=1)
+	{	
+		ideal JG  = groebner(JCp); JCp; JG;
+		poly rrem = reduce(rem,JG); rrem;
+		matrix U1 = lift(JCp,JG); U1;
+		matrix V  = lift(JG,rem); V;
+		matrix Vt = transpose(V); Vt;
+		poly psol;
+		int i;
+		for(i=1;i<=size(JG);i++)
+		{
+			psol = psol + (Vt[1,i]*U1[1,i]);
+		}
+		psol = reduce(psol,Js);
+		psol = W + psol;
+		ideal Jsol = psol,W^(2^fix_length)-W;
+		ideal gg = slimgb(Jsol);
+		int sol_idx = get_index(gg,W);
+		if (sol_idx == -1)
+		{	"no polynomial with leading term W";}
+		else
+		{	poly sol = reduce(gg[sol_idx],J0);}
+		if (pdebug)
+		{
+			"quotient is not a constant";
+			"ideal for membership test -",JCp;
+			"slimgb of <quo,f_(i+1)..f_s>",JG;
+			//"matrix M representing relation of g_1..g_t and f_1..f_s",U1;
+			"remainder constructed as g_1..g_t",V;
+			"partial solution constructed as rem*U1[1,1]",psol;
+			"ideal used for solution construction", Jsol;
+			"slimgb of the ideal to compute solution", gg;
+		}
+	}
+	else
+	{	
+		if (quo != 1)
+		{
+			matrix quoi = inverse(quo);
+		}
+		else
+		{
+			matrix quoi = 1;
+		}		
+		poly irem = quoi[1,1]*rem;
+		poly sol  = reduce(irem,J0);
+		sol = W + sol;	
+		if (pdebug)
+		{
+			"quotient is a constant";
+			"inverse of quotient",quoi[1,1];
+			"interim remainder after multiplying inverse of quotient",irem;
+		}
+	}
+	//option(redSB); option();
+	//ideal gg = slimgb(pr+J0); gg;
+	// Following logic will not work with PD as they have 3 sets of PI
+	//poly sol = normalize(gg[(2*bit_length)+1]);
+
+	//poly sol = normalize(gg[size(gg)]);
+
+	"word-level rectification function at W -", sol;
+	"Time elapsed until rect func computation:", rtimer-t0;
+	ideal Jcorrection = Jf,sol,J0;
+	//Jcorrection;
+	poly correction_rem = reduce(spec,Jcorrection);
+	"remainder of verification using word-level correction", correction_rem;
+}
+
+// Returns word-level representation for each variables
+// from the word-level polynomial representation
+proc return_word_level_rep(number nu)
+{
+	if (fix_length == 2)
+	{
+		poly m0 = (nu)*W^2+(nu^2)*W;
+		poly m1 = W^2+W;
+		poly m2 = 0;
+	}
+	if (fix_length == 3) //2^3 Prim poly = X^3 + X + 1
+	{
+		poly m0 = W^4 + W^2 + W;
+		poly m1 = (nu)*W^4+(nu^2+nu)*W^2+(nu^2)*W;
+		poly m2 = (nu^2+nu)*W^4 + (nu^2)*W^2+(nu)*W;
+	}
+	return (m0, m1, m2);
+}
+
+proc del_poly_from_ideal(ideal J, poly variable)
+{	
+	int index  = get_index(J,variable);
+	if (index == -1)
+	{
+		"index not found in the ideal for deleting", variable;
+	}
+	else
+	{
+		if (index == size(J))
+		{
+			J = J[1..(index-1)];
+		}
+		else
+		{
+			// Following line will not work when index=1
+			//J = J[1..(index-1)],J[(index+1)..(size(J))];
+			J[index] = 0;
+		}
+	}
+	return(J+0);
+}
+
+proc rewrite_ideal_J1_J0(ideal J1, ideal J0)
+{	
+	fW, J0 = word_level_vars(J0);
+
+	poly m0, m1, m2 = return_word_level_rep(be);
+	//Jchkpoly tmp1 = reduce(spec,J1);
+	//"tmp1-------", tmp1;
+	J1 = del_poly_from_ideal(J1,rf0); 
+	J1 = del_poly_from_ideal(J1,rf1);
+	//poly tmp2 = reduce(spec,J1);
+	//"tmp2-------", tmp2;
+	
+	J1 = subst(J1,rf0,m0);
+	J1 = subst(J1,rf1,m1);
+	
+	if (fix_length==3)
+	{
+		J1 = del_poly_from_ideal(J1,rf2);
+		J1 = subst(J1,rf2,m2);
+	}
+	if (pdebug)
+	{
+		"word level polynomial for fixing",fW;
+		"word level representations",m0,m1,m2;
+		//"ideal before modification",J1;
+		//"ideal after modification/substitution of rectification nets in terms of W",J1;
+	}
+	return (fW, J1, J0);
+}
+
+proc sort_ring_order(ideal JJ)
+{
+
+	"Running test case with bit width:", bit_length, "and fix length:", fix_length;
+	list L = sortvec(JJ);
+	int j = size(L[1]);
+	ideal J1 = JJ[L[1][j]];
+	for(int i=j-1; i>=1; i=i-1)
+	{
+		J1 = J1 , JJ[L[1][i]];
+	}
+	"Sorted ideal according to ring order";
+	return (J1);
+}
+
+proc check_single_fix(ideal J1, ideal J0, poly rema, list rectCheck)
+{
+	
+	if (size(rectCheck)==0)
+	{	
+		list coneTips = remainder_partition(rema,bit_length);
+		rectCheck = prune_logical_cone(coneTips,J1);
+	}
+	
+	int rectified = 0;
+	for(int rect=1; rect<=size(rectCheck);rect++)
+	{	
+		if (rectified == 0)
+		{
+			//rectifying at location rf
+			poly rf = rectCheck[rect];
+			
+			"checking for rectification at", rf;
+			ideal ckt_imp = J1;
+			
+			int ind_r = get_index(ckt_imp, rf);
+			//int ind_Z = get_index(ckt_imp, Z);
+			
+			ideal IL = ckt_imp;
+			IL[ind_r] = rf+1;
+			ideal IH = ckt_imp;
+			IH[ind_r] = rf;
+			
+			poly rL = reduce(spec,slimgb(IL+J0));
+			poly rH = reduce(spec,slimgb(IH+J0));
+			
+			"rL",rL;
+			"rH",rH;
+	
+			ideal rlh = reduce((rL*rH),J0);
+			"rlh is", rlh;
+			if (rlh==0)
+			{	
+				"Circuit Rectifiable at location",rf;
+				int lenI = size(ckt_imp);
+				ideal Jf = ckt_imp[1..(ind_r-1)];
+				ideal Js = ckt_imp[(ind_r+1)..lenI];
+				Jf;
+				Js;
+				poly quo;
+				poly rem;
+				poly prem;
+			
+				prem = reduce(spec,Jf);
+			
+				rem, quo = multivariate_burg(prem,lead(rf),J0); 
+			
+				"remainder",rem;
+				"quotient",quo;
+			
+				ideal dec = variables(quo);
+				ideal JCp = quo,Js;
+				if (size(dec)>=1)
+				{
+					"quotient is not a constant";
+					ideal JG = slimgb(JCp);
+					matrix V = lift(JG,rem);
+					matrix Vt = transpose(V);
+					//Vt;
+					matrix U = lift(JCp,JG);
+					//U;
+					poly sol;
+					int i;
+					for(i=1;i<=size(JG);i++)
+					{
+						sol = sol + (Vt[1,i]*U[1,i]);
+					}
+				}
+				else
+				{	
+					"quotient is a constant";
+					if (quo != 1)
+					{
+						matrix quoi = inverse(quo);
+					}
+					else
+					{
+						matrix quoi = 1;
+					}
+					poly irem   = quoi[1,1]*rem;
+					poly sol    = reduce(irem,Js+J0);	
+				}
+				"solution for P is",sol;
+				poly correc = rf+sol;
+				poly corem = reduce(spec, Jf+Js+correc+J0);
+			
+				"applying correction to circuit at",rf,"with solution",sol,":remainder after reduction is", corem;
+				rectified = 1;
+			}
+			else
+			{
+				"Circuit not rectifiable at location",rf;
+			}
+		}
+	}
+	if(rectified == 0)
+	{
+		"circuit doesn't admit single-fix rectification";
+	}
+	return (rectified);
+}	
+
+proc check_multi_fix(ideal J1, ideal J0)
+{	
+	// Get word-level fix as a polynomial function and
+	// -modify J0 to add field polynomial for W
+	// -modify J1 to delete rectification nodes in leading term
+	// -substitute J1 rectification nets with word-level formulation
+	poly fW;
+	ideal Jchk; 
+	fW, Jchk, J0 = rewrite_ideal_J1_J0(J1,J0);
+	//Jchk;exit;	
+	//get index of W
+	int ind_rf = get_index(Jchk,W); 
+	
+	//multi-fix rectification check
+	poly mf_chk = rect_check_multi_fix(Jchk,J0,ind_rf);
+	//poly mf_chk = 0; //bypassing the test
+	
+	if(mf_chk == 0)
+	{
+		"multi-fix rectification exists at -",fW;
+		compute_word_level_rect_func(Jchk,J0,ind_rf);
+		//compute_word_level_rect_func_alt(Jchk,J0,ind_rf);
+	}
+	else
+	{
+		"multi-fix rectification doesn't exist at -", fW;
+	}
+}
+
+proc BigExp(def b, bigint N)
+"USAGE: Exp(b,N); a number / bigint /int ; N int / bigint
+RETURN: number resp. bigint b^N,
+NOTE: the return type is 
+       number, if b is of type number but not a transcendantal parameter 
+       bigint, if b is of type bigint
+       int,    if b is of type int, and b^N is less or equal to MAXINT = 2^31-1,
+               resp. bigint otherwise
+"
+{
+   
+   string b_type = typeof(b);
+   if (b_type != "int" and b_type != "bigint" and b_type != "number")
+   {
+   		ERROR("// -- proc Exp: basis must be of type int, bigint or number");
+   }
+   if (N < 0) 
+   {
+    	ERROR("// -- proc Exp: only non-negative exponent allowed");
+   }
+   if (b_type=="number")
+   {   
+    	number Res = 1;
+    	number B = b;
+   }
+   
+   if (b_type=="int" or b_type=="bigint" )
+   {
+    	bigint Res = 1;
+    	bigint B = b;
+   }
+
+   while (N > 0)
+   {
+   		if (N mod 2 == 1)
+      	{
+        	Res = Res * B;
+        	N = N-1;
+      	}
+      	B = B * B;
+      	N = N div 2;
+   }
+  
+   if (b_type=="int" and Res<=2147483647)   // MAXINT,  
+   {
+   		return(int(Res));             // convert result to int
+   }
+   else
+   {
+   		return(Res);
+   }
+}

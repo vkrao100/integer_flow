@@ -1,0 +1,188 @@
+.model abc_mul4.aig
+.inputs i2 i4 i6 i8 i10 i12 i14 i16 
+.outputs o0 o1 o2 o3 o4 o5 o6 o7 
+.names i10 i2 a18
+11 1
+.names i10 i4 a20
+11 1
+.names i12 i2 a22
+11 1
+.names a22 a20 a24
+11 1
+.names a22 a20 a26
+00 1
+.names a26 a24 a28
+00 1
+.names i10 i6 a30
+11 1
+.names i12 i4 a32
+11 1
+.names a32 a30 a34
+11 1
+.names a32 a30 a36
+00 1
+.names a36 a34 a38
+00 1
+.names a38 a24 a40
+11 1
+.names a38 a24 a42
+00 1
+.names a42 a40 a44
+00 1
+.names i14 i2 a46
+11 1
+.names a46 a44 a48
+11 1
+.names a46 a44 a50
+00 1
+.names a50 a48 a52
+00 1
+.names a40 a34 a54
+00 1
+.names i10 i8 a56
+11 1
+.names i12 i6 a58
+11 1
+.names a58 a56 a60
+11 1
+.names a58 a56 a62
+00 1
+.names a62 a60 a64
+00 1
+.names a64 a54 a66
+10 1
+.names a64 a54 a68
+01 1
+.names a68 a66 a70
+00 1
+.names i14 i4 a72
+11 1
+.names a72 a70 a74
+11 1
+.names a72 a70 a76
+00 1
+.names a76 a74 a78
+00 1
+.names a78 a48 a80
+11 1
+.names a78 a48 a82
+00 1
+.names a82 a80 a84
+00 1
+.names i16 i2 a86
+11 1
+.names a86 a84 a88
+11 1
+.names a86 a84 a90
+00 1
+.names a90 a88 a92
+00 1
+.names a80 a74 a94
+00 1
+.names a66 a60 a96
+00 1
+.names i12 i8 a98
+11 1
+.names a98 a96 a100
+10 1
+.names a98 a96 a102
+01 1
+.names a102 a100 a104
+00 1
+.names i14 i6 a106
+11 1
+.names a106 a104 a108
+11 1
+.names a106 a104 a110
+00 1
+.names a110 a108 a112
+00 1
+.names a112 a94 a114
+10 1
+.names a112 a94 a116
+01 1
+.names a116 a114 a118
+00 1
+.names i16 i4 a120
+11 1
+.names a120 a118 a122
+11 1
+.names a120 a118 a124
+00 1
+.names a124 a122 a126
+00 1
+.names a126 a88 a128
+11 1
+.names a126 a88 a130
+00 1
+.names a130 a128 a132
+00 1
+.names a128 a122 a134
+00 1
+.names a114 a108 a136
+00 1
+.names i14 i8 a138
+11 1
+.names a138 a100 a140
+11 1
+.names a138 a100 a142
+00 1
+.names a142 a140 a144
+00 1
+.names a144 a136 a146
+10 1
+.names a144 a136 a148
+01 1
+.names a148 a146 a150
+00 1
+.names i16 i6 a152
+11 1
+.names a152 a150 a154
+11 1
+.names a152 a150 a156
+00 1
+.names a156 a154 a158
+00 1
+.names a158 a134 a160
+10 1
+.names a158 a134 a162
+01 1
+.names a162 a160 a164
+00 1
+.names a160 a154 a166
+00 1
+.names a146 a140 a168
+00 1
+.names i16 i8 a170
+11 1
+.names a170 a168 a172
+10 1
+.names a170 a168 a174
+01 1
+.names a174 a172 a176
+00 1
+.names a176 a166 a178
+10 1
+.names a176 a166 a180
+01 1
+.names a180 a178 a182
+00 1
+.names a178 a172 a184
+00 1
+.names a18 o0
+1 1
+.names a28 o1
+1 1
+.names a52 o2
+1 1
+.names a92 o3
+1 1
+.names a132 o4
+1 1
+.names a164 o5
+1 1
+.names a182 o6
+1 1
+.names a184 o7
+0 1
+.end

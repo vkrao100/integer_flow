@@ -1,0 +1,56 @@
+Log file for abc18.sing
+
+Time taken for verification is
+647
+
+The remainder is 
+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+48964
+
+Checking for rectification at net
+-nn288
+Circuit not rectifiable at
+-nn288
+Checking for rectification at net
+-nn286
+Circuit not rectifiable at
+-nn286
+Checking for rectification at net
+-nn302
+Circuit not rectifiable at
+-nn302
+Checking for rectification at net
+-nn316
+Circuit not rectifiable at
+-nn316
+Checking for rectification at net
+-nn330
+Circuit not rectifiable at
+-nn330
+Checking for rectification at net
+-nn344
+Circuit not rectifiable at
+-nn344
+Checking for rectification at net
+-nn358
+Circuit not rectifiable at
+-nn358
+Checking for rectification at net
+-nn294
+Circuit rectifiable at
+-nn294
+Time to find the rectification net:
+2479
+Solution computed
+-nn294
+Time to find the solution:
+49060
+Rectification successful. The rectification function is
+-nn294-2*b(1)*b(0)*a(6)*a(5)+b(1)*a(5)+b(0)*a(6)
+End of computations.
+Total time elapsed:
+51539

@@ -1,0 +1,56 @@
+Log file for abc32.sing
+
+Time taken for verification is
+12284
+
+The remainder is 
+96*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)*a(0)+96*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)-96*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)-96*b(1)*b(0)*a(5)*a(4)*a(3)*a(1)*a(0)-96*b(1)*b(0)*a(5)*a(4)*a(3)-96*b(1)*b(0)*a(5)*a(4)*a(2)*a(1)+128*b(1)*b(0)*a(5)*a(4)-96*b(1)*b(0)*a(5)*a(3)*a(2)*a(1)*a(0)+96*b(1)*b(0)*a(5)*a(3)*a(2)+96*b(1)*b(0)*a(5)*a(3)*a(1)*a(0)-64*b(1)*b(0)*a(4)*a(3)*a(2)*a(1)*a(0)-32*b(1)*b(0)*a(4)*a(3)*a(2)*a(1)+64*b(1)*b(0)*a(4)*a(3)*a(2)+64*b(1)*b(0)*a(4)*a(3)*a(1)*a(0)+32*b(1)*b(0)*a(4)*a(3)+32*b(1)*b(0)*a(4)*a(2)*a(1)+64*b(1)*b(0)*a(3)*a(2)*a(1)*a(0)-64*b(1)*b(0)*a(3)*a(2)-64*b(1)*b(0)*a(3)*a(1)*a(0)-64*b(1)*a(4)-64*b(0)*a(5)+32
+
+Circuit doesn't implement specification. Attempting rectification now.
+
+Time for identifying rectifiable nets
+43817
+
+Checking for rectification at net
+-nn268
+Circuit not rectifiable at
+-nn268
+Checking for rectification at net
+-nn270
+Circuit not rectifiable at
+-nn270
+Checking for rectification at net
+-nn284
+Circuit not rectifiable at
+-nn284
+Checking for rectification at net
+-nn298
+Circuit not rectifiable at
+-nn298
+Checking for rectification at net
+-nn312
+Circuit not rectifiable at
+-nn312
+Checking for rectification at net
+-nn326
+Circuit not rectifiable at
+-nn326
+Checking for rectification at net
+-nn276
+Circuit not rectifiable at
+-nn276
+Checking for rectification at net
+-nn282
+Circuit rectifiable at
+-nn282
+Time to find the rectification net:
+46441
+Solution computed
+-nn282
+Time to find the solution:
+46220
+Rectification successful. The rectification function is
+-nn282-2*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)*a(0)-2*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)*a(1)+2*b(1)*b(0)*a(5)*a(4)*a(3)*a(2)+2*b(1)*b(0)*a(5)*a(4)*a(3)*a(1)*a(0)+2*b(1)*b(0)*a(5)*a(4)*a(3)+2*b(1)*b(0)*a(5)*a(4)*a(2)*a(1)-2*b(1)*b(0)*a(5)*a(4)+2*b(1)*b(0)*a(5)*a(3)*a(2)*a(1)*a(0)-2*b(1)*b(0)*a(5)*a(3)*a(2)-2*b(1)*b(0)*a(5)*a(3)*a(1)*a(0)+b(1)*b(0)*a(4)*a(3)*a(2)*a(1)*a(0)+b(1)*b(0)*a(4)*a(3)*a(2)*a(1)-b(1)*b(0)*a(4)*a(3)*a(2)-b(1)*b(0)*a(4)*a(3)*a(1)*a(0)-b(1)*b(0)*a(4)*a(3)-b(1)*b(0)*a(4)*a(2)*a(1)-b(1)*b(0)*a(3)*a(2)*a(1)*a(0)+b(1)*b(0)*a(3)*a(2)+b(1)*b(0)*a(3)*a(1)*a(0)+b(1)*a(4)+b(0)*a(5)
+End of computations.
+Total time elapsed:
+92662

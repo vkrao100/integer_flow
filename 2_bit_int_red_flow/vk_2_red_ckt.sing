@@ -1,0 +1,319 @@
+// List of modifications required for every file-
+// 1. modify bit_length
+// 2. modify fix_length
+// 3. Picking nets for rectification (rf0,rf1,rf2)
+// 4. Introduce bugs, add W before the lowest index amongst the rectification
+//    nets in the ring
+// 5. modify print_debug to 1 in case you need verbose explanation of steps
+LIB "my_proc.lib";
+int bit_length = 2;
+int fix_length = 1;
+int rectified = 0;
+int pdebug = 1;
+int verify_ckt = 1;
+int check_single_fix_rect = 1;
+
+//ring F2R = (2,al),(Z, A, B, z_3_, z_2_, z_1_, z_0_, x_1, x_5, f_0, f_1, x_2, x_3, e_1, e_0, x_0, a_0_, a_1_, b_0_, b_1_), lp;
+
+ring R = 0, (Z, A, B, z_3_, z_2_, z_1_, z_0_, x_1, x_5, f_0, f_1, x_2, x_3, e_1, e_0, x_0, a_0_, a_1_, b_0_, b_1_), lp;
+//circuit -  2 bit integer multiplier poly's
+ideal J2 = 
+Z -(8*z_3_ + 4*z_2_ + 2*z_1_ + z_0_),
+A -(2*a_1_+a_0_),
+B -(2*b_1_+b_0_),
+z_3_ - x_1*x_5,
+z_2_ - ixorgate(x_1,x_5),
+z_1_ - f_0*f_1,
+f_1 - ixorgate(x_3,x_2),
+z_0_ - a_0_*b_0_,
+x_1 - a_1_*b_1_,
+x_5 - x_3*x_2,
+f_0 - ixorgate(e_0,e_1),
+e_1 - (1-b_0_),
+//correct
+//e_0 - x_0*b_0_,
+//buggy
+e_0 - ixorgate(x_0,b_0_),
+//working patch
+//e_0 - (a_0_*b_0_*b_1_-a_0_*b_1_+1),
+x_0 - iorgate(a_0_,b_0_),
+x_2 - a_1_*b_0_,
+x_3 - a_0_*b_1_;
+
+//vanishing polynomials
+ideal J0 = 
+a_0_^2 - a_0_,
+a_1_^2 - a_1_,
+b_0_^2 - b_0_,
+b_1_^2 - b_1_;
+
+poly spec = Z - A*B;
+
+//check if the circuit indeed implements specification
+ideal J1 = sort_ring_order(J2);
+poly rema = reduce(spec,J1+J0);
+if (rema == 0)
+{
+	"circuit implements specification, exiting";
+	quit;
+}
+else
+{
+	"remainder",rema;
+	"circuit doesn't implement specification, attempting rectification";
+}
+list rectCheck = e_0;
+if (size(rectCheck)==0)
+	{	
+		list coneTips = remainder_partition(rema,bit_length);
+		rectCheck = prune_logical_cone(coneTips,J1);
+	}
+	
+	int rectified = 0;
+	for(int rect=1; rect<=size(rectCheck);rect++)
+	{	
+		if (rectified == 0)
+		{
+			//rectifying at location rf
+			poly rf = rectCheck[rect];
+			
+			"checking for rectification at", rf;
+			ideal ckt_imp = J1;
+			
+			int ind_r = get_index(ckt_imp, rf);
+			//int ind_Z = get_index(ckt_imp, Z);
+			
+			ideal IL = ckt_imp;
+			IL[ind_r] = rf;
+			ideal IH = ckt_imp;
+			IH[ind_r] = rf-1;
+/*			IL;
+			IH;*/
+			poly rL = reduce(spec,slimgb(IL+J0));
+			poly rH = reduce(spec,slimgb(IH+J0));
+			
+			"rL",rL;
+			"rH",rH;
+	
+			ideal rlh = reduce((rL*rH),J0);
+			"rlh is", rlh;
+			if (rlh==0)
+			{	
+				"Circuit Rectifiable at location",rf;
+				int lenI = size(ckt_imp);
+				ideal Jf = ckt_imp[1..(ind_r-1)];
+				ideal Js = ckt_imp[(ind_r+1)..lenI];
+				poly quo;
+				poly rem;
+				poly prem;
+			
+				prem = reduce(spec,Jf+J0);
+				list res_div = division(prem,lead(rf)); 
+				quo = res_div[1][1,1];
+				rem = res_div[2][1];
+				
+				rem = reduce(rem,Js+J0);
+				quo = reduce(quo,Js+J0);
+				ideal JCp = quo,J0;
+
+				//ideal JCp = quo,Js,J0;
+
+				"remainder",rem;
+				"quotient",quo;
+
+				ideal dec = variables(quo);
+				"ideal membership test:",reduce(rem,slimgb(JCp));
+				if (size(dec)>=1)
+				{
+					"quotient is not a constant";
+					ideal JG = slimgb(JCp);
+					matrix V = lift(JG,rem);
+					matrix Vt = transpose(V);
+					//Vt;
+					matrix U = lift(JCp,JG);
+					//U;
+					poly sol;
+					int i;
+					for(i=1;i<=size(JG);i++)
+					{
+						sol = sol + (Vt[1,i]*U[1,i]);
+					}
+				}
+				else
+				{	
+					"quotient is a constant";
+					if (quo != 1)
+					{
+						matrix quoi = inverse(quo);
+					}
+					else
+					{
+						matrix quoi = 1;
+					}
+					poly irem   = quoi[1,1]*rem;
+					poly sol    = reduce(irem,Js+J0);	
+				}
+				sol = reduce(sol,Js+J0);
+				"solution for P is",sol;
+				//works
+				// slimgb of sol
+/*				poly solr = a_0_*b_0_*b_1_-2*a_0_*b_0_-a_0_*b_1_+2*a_0_-2*b_0_*b_1_+4*b_0_+2*b_1_-3;
+				poly correc = rf - solr;*/
+
+				// computed by ORing individual minterm points looking at rL's variety
+				//poly sol1 = -2*a_0_*a_1_*b_0_*b_1_+a_0_*b_0_*b_1_+a_1_*b_0_;
+/*				poly sol1 = ixorgate(a_1_*b_0_,a_0_*b_0_*b_1_);
+				poly correc = rf - sol1;*/
+
+				// computed using slimgb of sol by doing mod 2
+				//poly sol2 = 1+a_0_*b_0_*b_1_-a_0_*b_1_;
+				poly sol2 = invgate(ixorgate(a_0_*b_1_,a_0_*b_1_*b_0_));
+				poly correc = rf - sol2;
+
+				ideal Jr = slimgb(rL+J0);
+				ideal Jrd = quotient(J0,Jr);
+				poly red_sol = id2poly_int(Jr,J0);
+				poly red_solc = id2poly_int(Jrd,J0);
+				//poly correc = rf-red_sol;
+				poly corem = reduce(spec, Jf+Js+correc+J0);
+			
+				"applying correction to circuit at",rf,"with solution",sol2,":remainder after reduction is", corem;
+				rectified = 1;
+			}
+			else
+			{
+				"Circuit not rectifiable at location",rf;
+			}
+		}
+	}
+	if(rectified == 0)
+	{
+		"circuit doesn't admit single-fix rectification";quit;
+	}
+
+option(redSB);
+
+J1[ind_r] = rf - rL;
+"Trying rL for rectification :",reduce(spec,J1+J0);
+poly red_rL = id2poly_int(slimgb(rL+J0),J0);
+poly red_rH = id2poly_int(slimgb(rH+J0),J0);
+J1[ind_r] = rf - red_rL;
+"Trying reduced rL for rectification :",reduce(spec,J1+J0);
+J1[ind_r] = rf - red_rH;
+"Trying reduced rH for rectification :",reduce(spec,J1+J0);
+
+/*poly rLm = 4*a_0_*a_1_*b_0_*b_1_+2*a_0_*b_0_*b_1_+2*a_1_*b_0_;
+poly rHm = 2*a_0_*b_0_*b_1_+2*a_0_*b_1_;
+poly remam = 4*a_0_*a_1_*b_0_*b_1_+2*a_0_*b_1_+2*a_1_*b_0_;
+poly quom = 4*a_0_*a_1_*b_0_*b_1_+4*a_0_*b_0_*b_1_+2*a_0_*b_1_+2*a_1_*b_0_;
+poly solm = 4*a_0_*a_1_*b_0_*b_1_+4*a_0_*b_0_*b_1_+2*a_0_*b_1_+2*a_1_*b_0_+3*b_0_+2;*/
+//rL = 8*a0*a1*a2*b0+16*a0*a1*a2*b1+12*a0*a1+8*a0*a2*b0+16*a0*a2*b1+12*a0+8*a1*a2*b0+16*a1*a2*b1+12*a1+8*a2*b0+16*a2*b1+12;
+
+
+poly red_rema = id2poly_int(slimgb(rema+J0),J0);
+poly red_quo = id2poly_int(slimgb(quo+J0),J0);
+
+
+poly rLm  = red_rL;
+poly rHm  = red_rH;
+poly remam  = red_rema;
+poly quom  = red_quo;
+poly solm  = red_sol;
+
+
+/*ideal Jr = rL+J0;
+buchberger(Jr);*/
+
+
+int modVal = 3;
+
+/*ideal sol1 = quotient(Js+J0,quo);
+poly sol1p = id2poly_int(sol1,J0);*/
+
+poly invquo = id2poly_int(quotient(J0,quo),J0);
+
+//poly prl = -a_0_*a_1_*b_0_*b_1_+a_1_*b_0_;
+poly prl = reduce(b_0_*(iorgate(iorgate((1-a_1_)*a_0_*b_1_,a_1_*(1-a_0_)*(1-b_1_)),iorgate(a_1_*(1-a_0_)*b_1_,a_1_*a_0_*(1-b_1_)))),J0);
+
+list all = 
+list(0, 0, 0, 0),
+list(0, 0, 0, 1),
+list(0, 0, 1, 0),
+list(0, 0, 1, 1),
+list(0, 1, 0, 0),
+list(0, 1, 0, 1),
+list(0, 1, 1, 0),
+list(0, 1, 1, 1),
+list(1, 0, 0, 0),
+list(1, 0, 0, 1),
+list(1, 0, 1, 0),
+list(1, 0, 1, 1),
+list(1, 1, 0, 0),
+list(1, 1, 0, 1),
+list(1, 1, 1, 0),
+list(1, 1, 1, 1);
+
+poly qprem = reduce(prem,Js+J0);
+
+/*poly p1 = -a_0_*b_0_*b_1_+a_0_*b_1_+a_1_*b_0_;
+poly p2 = a_0_*b_0_*b_1_+a_0_*b_1_+a_1_*b_0_;
+poly p3 = reduce(ixorgate(ixorgate(a_0_*b_1_,a_0_*b_1_*b_0_),a_1_*b_0_),J0);*/
+
+poly rlr = reduce(ixorgate(a_1_*b_0_,a_0_*b_0_*b_1_),J0);
+poly p1 = (4/3)*a_0_*a_1_*b_0_*b_1_-2*a_0_*b_0_*b_1_-2*a_1_*b_0_;
+poly p2 = reduce(ixorgate(-a_1_*b_0_,a_0_*b_0_*b_1_),J0);
+
+int i;
+link lf=":aw vk_2_eval.txt";
+write(":w vk_2_eval.txt",string("a1 a0 b1 b0 ")+psstring("rema",9)+psstring("rema(poly)",12)+psstring("rL",9)+psstring("rL(poly)",12)+psstring("rH",12)+psstring("rH(poly)",12)+psstring("(h_i)",12)+psstring("h_i(poly)",12)+psstring("sol",12)+psstring("sol(poly)",12)+psstring("prem",12)+psstring("sol*quo",12)+psstring("rsol*rquo",12)+psstring("inv(h_i))",12));
+for (i=1;i<=16;i++)
+{
+	poly temprem       = subst(rema,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempremp  = subst(red_rema,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempq          = subst(quo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempiq      = subst(invquo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempqr     = subst(ixorgate(a_0_*b_1_,a_1_*b_0_),a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temps          = subst(sol,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempsr     = subst(invgate(ixorgate(a_0_*b_1_,a_0_*b_1_*b_0_)),a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprL          = subst(rL,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprLr     = subst(rlr,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprH          = subst(rH,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprHr     = subst(red_rH,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+//	poly tempprem     = subst(qprem,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+//	poly tempsquo1   = subst((rf+sol)*quo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempsquo2     = subst((rf-red_sol)*red_quo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempprem     = subst(p1,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempsquo1   = subst(p2,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+//	poly tempsquo2     = subst(p3,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+
+	string sw = string(all[i][1])+"  "+string(all[i][2])+"  "+string(all[i][3])+"  "+string(all[i][4])+"   "+pstring(temprem,6)+"   "+pstring(tempremp,9)+"   "+pstring(temprL,7)+"   "+pstring(temprLr,9)+"   "+pstring(temprH,9)+"   "+pstring(temprHr,9)+"   "+pstring(tempq,9)+"   "+pstring(tempqr,9)+"   "+pstring(temps,9)+"   "+pstring(tempsr,9)+"   "+pstring(tempprem,9)+"   "+pstring(tempsquo1,9)+"   "+pstring(tempsquo2,9)+"   "+pstring(tempiq,9);
+	write(lf,sw);
+}
+close(lf);
+
+/*int i;
+link lf=":aw vk_2_eval.txt";
+write(":w vk_2_eval.txt",string("a1 a0 b1 b0 ")+psstring("rema",9)+psstring("rema(poly)",12)+psstring("remam",12)+psstring("rL",12)+psstring("rL(poly)",12)+psstring("rLm",12)+psstring("rH",12)+psstring("rH(poly)",12)+psstring("rHm",12)+psstring("(h_i)",12)+psstring("inv(h_i))",12)+psstring("h_i(poly)",12)+psstring("(h_i)m",12)+psstring("sol",12)+psstring("sol(poly)",12)+psstring("solm",12));
+for (i=1;i<=16;i++)
+{
+	poly temprem       = subst(rema,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempremm       = subst(remam,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempremp  = subst(red_rema,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempq          = subst(quo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempqm          = subst(quom,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempiq      = subst(invquo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempqr     = subst(red_quo,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temps          = subst(sol,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempsm          = subst(solm,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly tempsr     = subst(red_sol,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprL          = subst(rL,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprLm          = subst(rLm,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprLr     = subst(red_rL,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprH          = subst(rH,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprHm          = subst(rHm,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+	poly temprHr     = subst(red_rH,a_1_,all[i][1],a_0_,all[i][2],b_1_,all[i][3],b_0_,all[i][4]);
+
+	string sw = string(all[i][1])+"  "+string(all[i][2])+"  "+string(all[i][3])+"  "+string(all[i][4])+"   "+pstring(temprem,7)+"   "+pstring(tempremp,9)+"   "+pstring(int(tempremm)%modVal,7)+"   "+pstring(temprL,9)+"   "+pstring(temprLr,9)+"   "+pstring(int(temprLm)%modVal,9)+"   "+pstring(temprH,9)+"   "+pstring(temprHr,9)+"   "+pstring(int(temprHm)%modVal,9)+"   "+pstring(tempq,9)+"   "+pstring(tempiq,9)+"   "+pstring(tempqr,9)+"   "+pstring(int(tempqm)%modVal,9)+"   "+pstring(temps,9)+"   "+pstring(tempsr,9)+"   "+pstring(int(tempsm)%modVal,9);
+	write(lf,sw);
+}
+close(lf);*/

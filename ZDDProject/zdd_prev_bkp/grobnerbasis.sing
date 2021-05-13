@@ -1,0 +1,212 @@
+LIB "poly.lib";
+
+proc grobner(list f)//grobner basis calculation
+{
+	list g;
+	g =f;
+	list k;
+int n=0;
+int count_spoly;
+int count_spoly_nonzero;
+int i;
+int j,cmt,cnt;
+poly s1_poly,remen;
+	for(i=1;i<=size(f);i++)
+	{
+		for(j=i+1;j<=size(f);j++)//Creating pairs into the list
+		{
+			
+			k=insert(k,f[i],n);
+			k=insert(k,f[j],n+1);
+			n=n+2;
+		}
+	}
+
+	while(size(k)!=0)
+	{
+			s1_poly = spolynom(k[1],k[2]);//Calculating the S polynomial
+			"s1_poly = ",s1_poly;
+			count_spoly=count_spoly+1;
+			if(s1_poly == 0)
+			{
+				k=delete(k,1);
+				k=delete(k,1);
+				continue;
+			}
+			else
+			{	
+			remen  = multivaraite(s1_poly,g);//Calculating the remainder
+			"remen = ",remen;
+			if(remen == 0)
+			{
+				k=delete(k,1);
+				k=delete(k,1);
+				continue;
+			}
+			else
+			{
+				count_spoly_nonzero=count_spoly_nonzero+1;
+
+				g=insert(g,remen,size(g));
+				cmt = size(k);
+				for( cnt =1;cnt<size(g);cnt++)//recreating the pairs 
+				{
+
+					k=insert(k,g[cnt],cmt);
+					k=insert(k,remen,cmt+1);
+					cmt=cmt+2;
+					
+
+				}
+
+				k=delete(k,1);
+				k=delete(k,1);	
+
+			}
+			}
+
+	}
+"Total Number of S polynomials Computed:";count_spoly;
+"S polynomials that result in non-zero remainder after reduction:";count_spoly_nonzero;	
+return(g);
+	
+}
+
+
+proc spolynom(poly f, poly g)//S polynomial Calculation
+{
+poly nm =0;
+poly s_poly;
+nm = lcm(leadmonom(f),leadmonom(g));
+s_poly = ((nm/lead(f))*f)-((nm/lead(g))*g);
+return (s_poly);
+}
+
+
+proc multivaraite(poly f,list l)//Multi varaite division
+{
+poly quot = 0;
+poly r = 0;
+poly h= f;
+int count,i;
+while(h!=0)
+{
+count = 0;
+
+	for(i=1;i<=size(l);i++)
+	{
+		if ((leadmonom(h)/leadmonom(l[i]))!=0)
+		{	
+			quot = quot + (lead(h)/lead(l[i]));
+			h = h - ((lead(h)/lead(l[i]))*l[i]);
+			break;
+			
+		}
+		else
+		{
+		count =count+1;
+		}
+	} 
+	if(count == size(l))
+	{	
+		r = r+lead(h);
+		h=h-lead(h);
+	}
+}
+return (r);
+}
+proc minimalgrob(list h)//Minimal Grobner basis
+{
+list low;
+ low=h;
+     int i;
+     int j;
+     for(i=1;i<=size(low);i=i+1)
+       {
+         //low;
+         for(j=i+1;j<=size(low);j=j+1)
+           {
+             if(((leadmonom(low[i]))/(leadmonom(low[j])))!=0)
+              {
+               
+                low=delete(low,i);
+                i=i-1;
+                break;
+              }
+             if((leadmonom(low[j]))/(leadmonom(low[i]))!=0)
+              {
+                low=delete(low,j);
+                i=i-1;
+                break;
+              }
+           
+           }
+        
+      }
+
+"the minimal groebner basis are : ";
+low;  
+return(low);
+}
+
+
+proc reducedgrobn(list p)//Reduced grobner basis
+{
+list G=p;
+list temp;
+poly rem;
+int i;
+for(i=1;i<size(G)+1;i++)
+{
+   temp    = delete(G,i);
+   rem     = multivaraite(G[i],temp);
+   if(rem != 0) //example if G contains x2+y,x2+y
+   {
+      G  = insert(temp,rem,i-1);  
+   }
+   else
+   {
+      G = delete(G,i);
+   }
+   
+}
+return (G);
+}
+
+//ring R = 0,(x,y,z),dp;
+//poly f1 = x2y-y+x;
+//poly f2 = xy2-x;
+
+ring Q = 2, (z,h,e,g,d,f,c,a,b), lp;
+//ring r = 2, (x_1,x_2,x_3,x_4), lp;
+
+poly f1=z+h+e+h*e;
+poly f2=h+g+d+g*d;
+poly f3=g+f+c+c*f;
+poly f4=f+a+b+a*b;
+list f=(f1,f2,f3,f4);
+//poly f1=xy+yz+zx;
+//poly f2=x+y+z;
+//poly f3=x+y;
+//poly f4=yz+y+z;
+//poly f5=y+z;
+//poly f6=z;
+//list f =(f1,f2,f3,f4,f5,f6);
+list grob;
+list minm;
+list reduced1;
+//grob = grobner(l);
+//minm = minimalgrob(grob);
+//reduced1=reducedgrobn(minm);
+"grobneer basis";grob;
+//"minimal Grobner basis:";minm;
+//"//reduced grobner basis";reduced1;
+//poly fnew= x4y-2*x5+2*x2y2-2*x3y-2*x4-2*y3+4*xy2-3*x2y+2*x3-y+2*x;
+timer=0;
+system("--ticks-per-sec",1000);
+int t=timer;
+poly r1=multivaraite(z,f);
+printf("Runtime is: %s ms",timer-t);
+//"Remainder when f is divided by (f1,f2)";r1;
+//
+

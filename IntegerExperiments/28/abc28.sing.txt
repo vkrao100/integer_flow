@@ -1,0 +1,974 @@
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn12040+1
+-nn12022-nn12024+2
+-nn11988-nn11990-nn11992+3
+-nn11938-nn11940-nn11942-nn11944+4
+-nn11872-nn11874-nn11876-nn11878-nn11880+5
+-nn11790-nn11792-nn11794-nn11796-nn11798-nn11800+6
+-nn11692-nn11694-nn11696-nn11698-nn11700-nn11702-nn11704+7
+-nn11578-nn11580-nn11582-nn11584-nn11586-nn11588-nn11590-nn11592+8
+-nn11448-nn11450-nn11452-nn11454-nn11456-nn11458-nn11460-nn11462-nn11464+9
+-nn11302-nn11304-nn11306-nn11308-nn11310-nn11312-nn11314-nn11316-nn11318-nn11320+10
+-nn11140-nn11142-nn11144-nn11146-nn11148-nn11150-nn11152-nn11154-nn11156-nn11158-nn11160+11
+-nn10962-nn10964-nn10966-nn10968-nn10970-nn10972-nn10974-nn10976-nn10978-nn10980-nn10982-nn10984+12
+-nn10768-nn10770-nn10772-nn10774-nn10776-nn10778-nn10780-nn10782-nn10784-nn10786-nn10788-nn10790-nn10792+13
+-nn10558-nn10560-nn10562-nn10564-nn10566-nn10568-nn10570-nn10572-nn10574-nn10576-nn10578-nn10580-nn10582-nn10584+14
+-nn10332-nn10334-nn10336-nn10338-nn10340-nn10342-nn10344-nn10346-nn10348-nn10350-nn10352-nn10354-nn10356-nn10358-nn10360+15
+-nn10090-nn10092-nn10094-nn10096-nn10098-nn10100-nn10102-nn10104-nn10106-nn10108-nn10110-nn10112-nn10114-nn10116-nn10118-nn10120+16
+-nn9832-nn9834-nn9836-nn9838-nn9840-nn9842-nn9844-nn9846-nn9848-nn9850-nn9852-nn9854-nn9856-nn9858-nn9860-nn9862-nn9864+17
+-nn9558-nn9560-nn9562-nn9564-nn9566-nn9568-nn9570-nn9572-nn9574-nn9576-nn9578-nn9580-nn9582-nn9584-nn9586-nn9588-nn9590-nn9592+18
+-nn9268-nn9270-nn9272-nn9274-nn9276-nn9278-nn9280-nn9282-nn9284-nn9286-nn9288-nn9290-nn9292-nn9294-nn9296-nn9298-nn9300-nn9302-nn9304+19
+-nn8962-nn8964-nn8966-nn8968-nn8970-nn8972-nn8974-nn8976-nn8978-nn8980-nn8982-nn8984-nn8986-nn8988-nn8990-nn8992-nn8994-nn8996-nn8998-nn9000+20
+-nn8640-nn8642-nn8644-nn8646-nn8648-nn8650-nn8652-nn8654-nn8656-nn8658-nn8660-nn8662-nn8664-nn8666-nn8668-nn8670-nn8672-nn8674-nn8676-nn8678-nn8680+21
+-nn8302-nn8304-nn8306-nn8308-nn8310-nn8312-nn8314-nn8316-nn8318-nn8320-nn8322-nn8324-nn8326-nn8328-nn8330-nn8332-nn8334-nn8336-nn8338-nn8340-nn8342-nn8344+22
+-nn7948-nn7950-nn7952-nn7954-nn7956-nn7958-nn7960-nn7962-nn7964-nn7966-nn7968-nn7970-nn7972-nn7974-nn7976-nn7978-nn7980-nn7982-nn7984-nn7986-nn7988-nn7990-nn7992+23
+-nn7578-nn7580-nn7582-nn7584-nn7586-nn7588-nn7590-nn7592-nn7594-nn7596-nn7598-nn7600-nn7602-nn7604-nn7606-nn7608-nn7610-nn7612-nn7614-nn7616-nn7618-nn7620-nn7622-nn7624+24
+-nn7192-nn7194-nn7196-nn7198-nn7200-nn7202-nn7204-nn7206-nn7208-nn7210-nn7212-nn7214-nn7216-nn7218-nn7220-nn7222-nn7224-nn7226-nn7228-nn7230-nn7232-nn7234-nn7236-nn7238-nn7240+25
+-nn6790-nn6792-nn6794-nn6796-nn6798-nn6800-nn6802-nn6804-nn6806-nn6808-nn6810-nn6812-nn6814-nn6816-nn6818-nn6820-nn6822-nn6824-nn6826-nn6828-nn6830-nn6832-nn6834-nn6836-nn6838-nn6840+26
+-nn6374-nn6376-nn6378-nn6380-nn6382-nn6384-nn6386-nn6388-nn6390-nn6392-nn6394-nn6396-nn6398-nn6400-nn6402-nn6404-nn6406-nn6408-nn6410-nn6412-nn6414-nn6416-nn6418-nn6420-nn6422-nn6424+nn6004+26
+-nn5950+nn5944-nn5952-nn5954-nn5956-nn5958-nn5960-nn5962-nn5964-nn5966-nn5968-nn5970-nn5972-nn5974-nn5976-nn5978-nn5980-nn5982-nn5984-nn5986-nn5988-nn5990-nn5992-nn5994-nn5996-nn5998-nn6000+26
+-nn5526+nn5520-nn5528-nn5530-nn5532-nn5534-nn5536-nn5538-nn5540-nn5542-nn5544-nn5546-nn5548-nn5550-nn5552-nn5554-nn5556-nn5558-nn5560-nn5562-nn5564-nn5566-nn5568-nn5570-nn5572-nn5574+25
+-nn5118+nn5112-nn5120-nn5122-nn5124-nn5126-nn5128-nn5130-nn5132-nn5134-nn5136-nn5138-nn5140-nn5142-nn5144-nn5146-nn5148-nn5150-nn5152-nn5154-nn5156-nn5158-nn5160-nn5162-nn5164+24
+-nn4726+nn4720-nn4728-nn4730-nn4732-nn4734-nn4736-nn4738-nn4740-nn4742-nn4744-nn4746-nn4748-nn4750-nn4752-nn4754-nn4756-nn4758-nn4760-nn4762-nn4764-nn4766-nn4768-nn4770+23
+-nn4350+nn4344-nn4352-nn4354-nn4356-nn4358-nn4360-nn4362-nn4364-nn4366-nn4368-nn4370-nn4372-nn4374-nn4376-nn4378-nn4380-nn4382-nn4384-nn4386-nn4388-nn4390-nn4392+22
+-nn3990+nn3984-nn3992-nn3994-nn3996-nn3998-nn4000-nn4002-nn4004-nn4006-nn4008-nn4010-nn4012-nn4014-nn4016-nn4018-nn4020-nn4022-nn4024-nn4026-nn4028-nn4030+21
+-nn3646+nn3640-nn3648-nn3650-nn3652-nn3654-nn3656-nn3658-nn3660-nn3662-nn3664-nn3666-nn3668-nn3670-nn3672-nn3674-nn3676-nn3678-nn3680-nn3682-nn3684+20
+-nn3318+nn3312-nn3320-nn3322-nn3324-nn3326-nn3328-nn3330-nn3332-nn3334-nn3336-nn3338-nn3340-nn3342-nn3344-nn3346-nn3348-nn3350-nn3352-nn3354+19
+-nn3006+nn3000-nn3008-nn3010-nn3012-nn3014-nn3016-nn3018-nn3020-nn3022-nn3024-nn3026-nn3028-nn3030-nn3032-nn3034-nn3036-nn3038-nn3040+18
+-nn2710+nn2704-nn2712-nn2714-nn2716-nn2718-nn2720-nn2722-nn2724-nn2726-nn2728-nn2730-nn2732-nn2734-nn2736-nn2738-nn2740-nn2742+17
+-nn2430+nn2424-nn2432-nn2434-nn2436-nn2438-nn2440-nn2442-nn2444-nn2446-nn2448-nn2450-nn2452-nn2454-nn2456-nn2458-nn2460+16
+-nn2166+nn2160-nn2168-nn2170-nn2172-nn2174-nn2176-nn2178-nn2180-nn2182-nn2184-nn2186-nn2188-nn2190-nn2192-nn2194+15
+-nn1918+nn1912-nn1920-nn1922-nn1924-nn1926-nn1928-nn1930-nn1932-nn1934-nn1936-nn1938-nn1940-nn1942-nn1944+14
+-nn1686+nn1680-nn1688-nn1690-nn1692-nn1694-nn1696-nn1698-nn1700-nn1702-nn1704-nn1706-nn1708-nn1710+13
+-nn1470+nn1464-nn1472-nn1474-nn1476-nn1478-nn1480-nn1482-nn1484-nn1486-nn1488-nn1490-nn1492+12
+-nn1270+nn1264-nn1272-nn1274-nn1276-nn1278-nn1280-nn1282-nn1284-nn1286-nn1288-nn1290+11
+-nn1086+nn1080-nn1088-nn1090-nn1092-nn1094-nn1096-nn1098-nn1100-nn1102-nn1104+10
+-nn918+nn912-nn920-nn922-nn924-nn926-nn928-nn930-nn932-nn934+9
+-nn766+nn760-nn768-nn770-nn772-nn774-nn776-nn778-nn780+8
+-nn630+nn624-nn632-nn634-nn636-nn638-nn640-nn642+7
+-nn510+nn504-nn512-nn514-nn516-nn518-nn520+6
+-nn406+nn400-nn408-nn410-nn412-nn414+5
+-nn318+nn312-nn320-nn322-nn324+4
+-nn246+nn240-nn248-nn250+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+0
+0
+0
+list of coefficients from remainder [1]:
+   32
+[2]:
+   96
+list of affected outputs [1]:
+   32
+[2]:
+   96
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn12040+1
+-nn12022-nn12024+2
+-nn11988-nn11990-nn11992+3
+-nn11938-nn11940-nn11942-nn11944+4
+-nn11872-nn11874-nn11876-nn11878-nn11880+5
+-nn11790-nn11792-nn11794-nn11796-nn11798-nn11800+6
+-nn11692-nn11694-nn11696-nn11698-nn11700-nn11702-nn11704+7
+-nn11578-nn11580-nn11582-nn11584-nn11586-nn11588-nn11590-nn11592+8
+-nn11448-nn11450-nn11452-nn11454-nn11456-nn11458-nn11460-nn11462-nn11464+9
+-nn11302-nn11304-nn11306-nn11308-nn11310-nn11312-nn11314-nn11316-nn11318-nn11320+10
+-nn11140-nn11142-nn11144-nn11146-nn11148-nn11150-nn11152-nn11154-nn11156-nn11158-nn11160+11
+-nn10962-nn10964-nn10966-nn10968-nn10970-nn10972-nn10974-nn10976-nn10978-nn10980-nn10982-nn10984+12
+-nn10768-nn10770-nn10772-nn10774-nn10776-nn10778-nn10780-nn10782-nn10784-nn10786-nn10788-nn10790-nn10792+13
+-nn10558-nn10560-nn10562-nn10564-nn10566-nn10568-nn10570-nn10572-nn10574-nn10576-nn10578-nn10580-nn10582-nn10584+14
+-nn10332-nn10334-nn10336-nn10338-nn10340-nn10342-nn10344-nn10346-nn10348-nn10350-nn10352-nn10354-nn10356-nn10358-nn10360+15
+-nn10090-nn10092-nn10094-nn10096-nn10098-nn10100-nn10102-nn10104-nn10106-nn10108-nn10110-nn10112-nn10114-nn10116-nn10118-nn10120+16
+-nn9832-nn9834-nn9836-nn9838-nn9840-nn9842-nn9844-nn9846-nn9848-nn9850-nn9852-nn9854-nn9856-nn9858-nn9860-nn9862-nn9864+17
+-nn9558-nn9560-nn9562-nn9564-nn9566-nn9568-nn9570-nn9572-nn9574-nn9576-nn9578-nn9580-nn9582-nn9584-nn9586-nn9588-nn9590-nn9592+18
+-nn9268-nn9270-nn9272-nn9274-nn9276-nn9278-nn9280-nn9282-nn9284-nn9286-nn9288-nn9290-nn9292-nn9294-nn9296-nn9298-nn9300-nn9302-nn9304+19
+-nn8962-nn8964-nn8966-nn8968-nn8970-nn8972-nn8974-nn8976-nn8978-nn8980-nn8982-nn8984-nn8986-nn8988-nn8990-nn8992-nn8994-nn8996-nn8998-nn9000+20
+-nn8640-nn8642-nn8644-nn8646-nn8648-nn8650-nn8652-nn8654-nn8656-nn8658-nn8660-nn8662-nn8664-nn8666-nn8668-nn8670-nn8672-nn8674-nn8676-nn8678-nn8680+21
+-nn8302-nn8304-nn8306-nn8308-nn8310-nn8312-nn8314-nn8316-nn8318-nn8320-nn8322-nn8324-nn8326-nn8328-nn8330-nn8332-nn8334-nn8336-nn8338-nn8340-nn8342-nn8344+22
+-nn7948-nn7950-nn7952-nn7954-nn7956-nn7958-nn7960-nn7962-nn7964-nn7966-nn7968-nn7970-nn7972-nn7974-nn7976-nn7978-nn7980-nn7982-nn7984-nn7986-nn7988-nn7990-nn7992+23
+-nn7578-nn7580-nn7582-nn7584-nn7586-nn7588-nn7590-nn7592-nn7594-nn7596-nn7598-nn7600-nn7602-nn7604-nn7606-nn7608-nn7610-nn7612-nn7614-nn7616-nn7618-nn7620-nn7622-nn7624+24
+-nn7192-nn7194-nn7196-nn7198-nn7200-nn7202-nn7204-nn7206-nn7208-nn7210-nn7212-nn7214-nn7216-nn7218-nn7220-nn7222-nn7224-nn7226-nn7228-nn7230-nn7232-nn7234-nn7236-nn7238-nn7240+25
+-nn6790-nn6792-nn6794-nn6796-nn6798-nn6800-nn6802-nn6804-nn6806-nn6808-nn6810-nn6812-nn6814-nn6816-nn6818-nn6820-nn6822-nn6824-nn6826-nn6828-nn6830-nn6832-nn6834-nn6836-nn6838-nn6840+26
+-nn6374-nn6376-nn6378-nn6380-nn6382-nn6384-nn6386-nn6388-nn6390-nn6392-nn6394-nn6396-nn6398-nn6400-nn6402-nn6404-nn6406-nn6408-nn6410-nn6412-nn6414-nn6416-nn6418-nn6420-nn6422-nn6424+nn6004+26
+-nn5950+nn5944-nn5952-nn5954-nn5956-nn5958-nn5960-nn5962-nn5964-nn5966-nn5968-nn5970-nn5972-nn5974-nn5976-nn5978-nn5980-nn5982-nn5984-nn5986-nn5988-nn5990-nn5992-nn5994-nn5996-nn5998-nn6000+26
+-nn5526+nn5520-nn5528-nn5530-nn5532-nn5534-nn5536-nn5538-nn5540-nn5542-nn5544-nn5546-nn5548-nn5550-nn5552-nn5554-nn5556-nn5558-nn5560-nn5562-nn5564-nn5566-nn5568-nn5570-nn5572-nn5574+25
+-nn5118+nn5112-nn5120-nn5122-nn5124-nn5126-nn5128-nn5130-nn5132-nn5134-nn5136-nn5138-nn5140-nn5142-nn5144-nn5146-nn5148-nn5150-nn5152-nn5154-nn5156-nn5158-nn5160-nn5162-nn5164+24
+-nn4726+nn4720-nn4728-nn4730-nn4732-nn4734-nn4736-nn4738-nn4740-nn4742-nn4744-nn4746-nn4748-nn4750-nn4752-nn4754-nn4756-nn4758-nn4760-nn4762-nn4764-nn4766-nn4768-nn4770+23
+-nn4350+nn4344-nn4352-nn4354-nn4356-nn4358-nn4360-nn4362-nn4364-nn4366-nn4368-nn4370-nn4372-nn4374-nn4376-nn4378-nn4380-nn4382-nn4384-nn4386-nn4388-nn4390-nn4392+22
+-nn3990+nn3984-nn3992-nn3994-nn3996-nn3998-nn4000-nn4002-nn4004-nn4006-nn4008-nn4010-nn4012-nn4014-nn4016-nn4018-nn4020-nn4022-nn4024-nn4026-nn4028-nn4030+21
+-nn3646+nn3640-nn3648-nn3650-nn3652-nn3654-nn3656-nn3658-nn3660-nn3662-nn3664-nn3666-nn3668-nn3670-nn3672-nn3674-nn3676-nn3678-nn3680-nn3682-nn3684+20
+-nn3318+nn3312-nn3320-nn3322-nn3324-nn3326-nn3328-nn3330-nn3332-nn3334-nn3336-nn3338-nn3340-nn3342-nn3344-nn3346-nn3348-nn3350-nn3352-nn3354+19
+-nn3006+nn3000-nn3008-nn3010-nn3012-nn3014-nn3016-nn3018-nn3020-nn3022-nn3024-nn3026-nn3028-nn3030-nn3032-nn3034-nn3036-nn3038-nn3040+18
+-nn2710+nn2704-nn2712-nn2714-nn2716-nn2718-nn2720-nn2722-nn2724-nn2726-nn2728-nn2730-nn2732-nn2734-nn2736-nn2738-nn2740-nn2742+17
+-nn2430+nn2424-nn2432-nn2434-nn2436-nn2438-nn2440-nn2442-nn2444-nn2446-nn2448-nn2450-nn2452-nn2454-nn2456-nn2458-nn2460+16
+-nn2166+nn2160-nn2168-nn2170-nn2172-nn2174-nn2176-nn2178-nn2180-nn2182-nn2184-nn2186-nn2188-nn2190-nn2192-nn2194+15
+-nn1918+nn1912-nn1920-nn1922-nn1924-nn1926-nn1928-nn1930-nn1932-nn1934-nn1936-nn1938-nn1940-nn1942-nn1944+14
+-nn1686+nn1680-nn1688-nn1690-nn1692-nn1694-nn1696-nn1698-nn1700-nn1702-nn1704-nn1706-nn1708-nn1710+13
+-nn1470+nn1464-nn1472-nn1474-nn1476-nn1478-nn1480-nn1482-nn1484-nn1486-nn1488-nn1490-nn1492+12
+-nn1270+nn1264-nn1272-nn1274-nn1276-nn1278-nn1280-nn1282-nn1284-nn1286-nn1288-nn1290+11
+-nn1086+nn1080-nn1088-nn1090-nn1092-nn1094-nn1096-nn1098-nn1100-nn1102-nn1104+10
+-nn918+nn912-nn920-nn922-nn924-nn926-nn928-nn930-nn932-nn934+9
+-nn766+nn760-nn768-nn770-nn772-nn774-nn776-nn778-nn780+8
+-nn630+nn624-nn632-nn634-nn636-nn638-nn640-nn642+7
+-nn510+nn504-nn512-nn514-nn516-nn518-nn520+6
+-nn406+nn400-nn408-nn410-nn412-nn414+5
+-nn318+nn312-nn320-nn322-nn324+4
+-nn246+nn240-nn248-nn250+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+0
+0
+0
+list of coefficients from remainder [1]:
+   32
+[2]:
+   96
+list of affected outputs [1]:
+   32
+[2]:
+   96
+logical cone of output -s(5) [1]:
+   -nn254
+[2]:
+   -nn252
+[3]:
+   -nn268
+[4]:
+   -nn282
+[5]:
+   -nn296
+[6]:
+   -nn310
+[7]:
+   -nn260
+[8]:
+   -nn266
+[9]:
+   -nn274
+[10]:
+   -nn280
+[11]:
+   -nn288
+[12]:
+   -nn294
+[13]:
+   -nn302
+[14]:
+   -nn308
+[15]:
+   -nn316
+[16]:
+   -s(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)+2*b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)+4*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)+8*b(0)*a(5)+1
+nn120-8*b(1)*a(4)+16*b(0)*a(5)
+-16*b(1)*a(4)+32*b(0)*a(5)
+-32*b(1)*a(4)+64*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250+2*b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+4*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+8*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+16*b(1)*a(4)-8*b(0)*a(5)
+32*b(1)*a(4)-16*b(0)*a(5)
+64*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(2)*a(3)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(2)*a(3)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(2)*a(3)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(2)*a(3)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(2)*a(3)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(2)*a(3)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(2)*a(3)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(2)*a(3)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(2)*a(3)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(2)*a(3)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(2)*a(3)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(2)*a(3)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(3)*a(2)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(3)*a(2)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(3)*a(2)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(3)*a(2)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(3)*a(2)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(3)*a(2)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(3)*a(2)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(3)*a(2)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(3)*a(2)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(3)*a(2)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(3)*a(2)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(3)*a(2)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(4)*a(1)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(4)*a(1)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(4)*a(1)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(4)*a(1)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(4)*a(1)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(4)*a(1)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(4)*a(1)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(4)*a(1)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(4)*a(1)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(4)*a(1)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(4)*a(1)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(4)*a(1)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(5)*a(0)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(5)*a(0)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(5)*a(0)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(5)*a(0)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(5)*a(0)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(5)*a(0)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(5)*a(0)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(5)*a(0)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(5)*a(0)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(5)*a(0)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(5)*a(0)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(5)*a(0)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250+2*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192+4*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144+8*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120+16*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+32*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+64*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250+2*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+4*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+8*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+16*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+32*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+64*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+nn260+nn310+nn296+nn282+nn268+2*nn254*nn252-nn246+nn240-nn248-nn250-b(5)*a(0)-b(4)*a(1)-b(3)*a(2)-b(2)*a(3)-b(1)*a(4)-b(0)*a(5)+3
+2*nn260+2*nn310+2*nn296+2*nn282+2*nn268+4*nn254*nn252-nn190+nn184-nn192-2*b(5)*a(0)-2*b(4)*a(1)-2*b(3)*a(2)-2*b(2)*a(3)-2*b(1)*a(4)-2*b(0)*a(5)+2
+4*nn260+4*nn310+4*nn296+4*nn282+4*nn268+8*nn254*nn252-nn150+nn144-4*b(5)*a(0)-4*b(4)*a(1)-4*b(3)*a(2)-4*b(2)*a(3)-4*b(1)*a(4)-4*b(0)*a(5)+1
+8*nn260+8*nn310+8*nn296+8*nn282+8*nn268+16*nn254*nn252+nn120-8*b(5)*a(0)-8*b(4)*a(1)-8*b(3)*a(2)-8*b(2)*a(3)-8*b(1)*a(4)-8*b(0)*a(5)
+16*nn260+16*nn310+16*nn296+16*nn282+16*nn268+32*nn254*nn252-16*b(5)*a(0)-16*b(4)*a(1)-16*b(3)*a(2)-16*b(2)*a(3)-16*b(1)*a(4)-16*b(0)*a(5)
+32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+prem: 32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+dividend- 32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+quotient- -32
+divisor- -nn260
+residue- 32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+quotient is a constant
+-nn12040+1
+-nn12022-nn12024+2
+-nn11988-nn11990-nn11992+3
+-nn11938-nn11940-nn11942-nn11944+4
+-nn11872-nn11874-nn11876-nn11878-nn11880+5
+-nn11790-nn11792-nn11794-nn11796-nn11798-nn11800+6
+-nn11692-nn11694-nn11696-nn11698-nn11700-nn11702-nn11704+7
+-nn11578-nn11580-nn11582-nn11584-nn11586-nn11588-nn11590-nn11592+8
+-nn11448-nn11450-nn11452-nn11454-nn11456-nn11458-nn11460-nn11462-nn11464+9
+-nn11302-nn11304-nn11306-nn11308-nn11310-nn11312-nn11314-nn11316-nn11318-nn11320+10
+-nn11140-nn11142-nn11144-nn11146-nn11148-nn11150-nn11152-nn11154-nn11156-nn11158-nn11160+11
+-nn10962-nn10964-nn10966-nn10968-nn10970-nn10972-nn10974-nn10976-nn10978-nn10980-nn10982-nn10984+12
+-nn10768-nn10770-nn10772-nn10774-nn10776-nn10778-nn10780-nn10782-nn10784-nn10786-nn10788-nn10790-nn10792+13
+-nn10558-nn10560-nn10562-nn10564-nn10566-nn10568-nn10570-nn10572-nn10574-nn10576-nn10578-nn10580-nn10582-nn10584+14
+-nn10332-nn10334-nn10336-nn10338-nn10340-nn10342-nn10344-nn10346-nn10348-nn10350-nn10352-nn10354-nn10356-nn10358-nn10360+15
+-nn10090-nn10092-nn10094-nn10096-nn10098-nn10100-nn10102-nn10104-nn10106-nn10108-nn10110-nn10112-nn10114-nn10116-nn10118-nn10120+16
+-nn9832-nn9834-nn9836-nn9838-nn9840-nn9842-nn9844-nn9846-nn9848-nn9850-nn9852-nn9854-nn9856-nn9858-nn9860-nn9862-nn9864+17
+-nn9558-nn9560-nn9562-nn9564-nn9566-nn9568-nn9570-nn9572-nn9574-nn9576-nn9578-nn9580-nn9582-nn9584-nn9586-nn9588-nn9590-nn9592+18
+-nn9268-nn9270-nn9272-nn9274-nn9276-nn9278-nn9280-nn9282-nn9284-nn9286-nn9288-nn9290-nn9292-nn9294-nn9296-nn9298-nn9300-nn9302-nn9304+19
+-nn8962-nn8964-nn8966-nn8968-nn8970-nn8972-nn8974-nn8976-nn8978-nn8980-nn8982-nn8984-nn8986-nn8988-nn8990-nn8992-nn8994-nn8996-nn8998-nn9000+20
+-nn8640-nn8642-nn8644-nn8646-nn8648-nn8650-nn8652-nn8654-nn8656-nn8658-nn8660-nn8662-nn8664-nn8666-nn8668-nn8670-nn8672-nn8674-nn8676-nn8678-nn8680+21
+-nn8302-nn8304-nn8306-nn8308-nn8310-nn8312-nn8314-nn8316-nn8318-nn8320-nn8322-nn8324-nn8326-nn8328-nn8330-nn8332-nn8334-nn8336-nn8338-nn8340-nn8342-nn8344+22
+-nn7948-nn7950-nn7952-nn7954-nn7956-nn7958-nn7960-nn7962-nn7964-nn7966-nn7968-nn7970-nn7972-nn7974-nn7976-nn7978-nn7980-nn7982-nn7984-nn7986-nn7988-nn7990-nn7992+23
+-nn7578-nn7580-nn7582-nn7584-nn7586-nn7588-nn7590-nn7592-nn7594-nn7596-nn7598-nn7600-nn7602-nn7604-nn7606-nn7608-nn7610-nn7612-nn7614-nn7616-nn7618-nn7620-nn7622-nn7624+24
+-nn7192-nn7194-nn7196-nn7198-nn7200-nn7202-nn7204-nn7206-nn7208-nn7210-nn7212-nn7214-nn7216-nn7218-nn7220-nn7222-nn7224-nn7226-nn7228-nn7230-nn7232-nn7234-nn7236-nn7238-nn7240+25
+-nn6790-nn6792-nn6794-nn6796-nn6798-nn6800-nn6802-nn6804-nn6806-nn6808-nn6810-nn6812-nn6814-nn6816-nn6818-nn6820-nn6822-nn6824-nn6826-nn6828-nn6830-nn6832-nn6834-nn6836-nn6838-nn6840+26
+-nn6374-nn6376-nn6378-nn6380-nn6382-nn6384-nn6386-nn6388-nn6390-nn6392-nn6394-nn6396-nn6398-nn6400-nn6402-nn6404-nn6406-nn6408-nn6410-nn6412-nn6414-nn6416-nn6418-nn6420-nn6422-nn6424+nn6004+26
+-nn5950+nn5944-nn5952-nn5954-nn5956-nn5958-nn5960-nn5962-nn5964-nn5966-nn5968-nn5970-nn5972-nn5974-nn5976-nn5978-nn5980-nn5982-nn5984-nn5986-nn5988-nn5990-nn5992-nn5994-nn5996-nn5998-nn6000+26
+-nn5526+nn5520-nn5528-nn5530-nn5532-nn5534-nn5536-nn5538-nn5540-nn5542-nn5544-nn5546-nn5548-nn5550-nn5552-nn5554-nn5556-nn5558-nn5560-nn5562-nn5564-nn5566-nn5568-nn5570-nn5572-nn5574+25
+-nn5118+nn5112-nn5120-nn5122-nn5124-nn5126-nn5128-nn5130-nn5132-nn5134-nn5136-nn5138-nn5140-nn5142-nn5144-nn5146-nn5148-nn5150-nn5152-nn5154-nn5156-nn5158-nn5160-nn5162-nn5164+24
+-nn4726+nn4720-nn4728-nn4730-nn4732-nn4734-nn4736-nn4738-nn4740-nn4742-nn4744-nn4746-nn4748-nn4750-nn4752-nn4754-nn4756-nn4758-nn4760-nn4762-nn4764-nn4766-nn4768-nn4770+23
+-nn4350+nn4344-nn4352-nn4354-nn4356-nn4358-nn4360-nn4362-nn4364-nn4366-nn4368-nn4370-nn4372-nn4374-nn4376-nn4378-nn4380-nn4382-nn4384-nn4386-nn4388-nn4390-nn4392+22
+-nn3990+nn3984-nn3992-nn3994-nn3996-nn3998-nn4000-nn4002-nn4004-nn4006-nn4008-nn4010-nn4012-nn4014-nn4016-nn4018-nn4020-nn4022-nn4024-nn4026-nn4028-nn4030+21
+-nn3646+nn3640-nn3648-nn3650-nn3652-nn3654-nn3656-nn3658-nn3660-nn3662-nn3664-nn3666-nn3668-nn3670-nn3672-nn3674-nn3676-nn3678-nn3680-nn3682-nn3684+20
+-nn3318+nn3312-nn3320-nn3322-nn3324-nn3326-nn3328-nn3330-nn3332-nn3334-nn3336-nn3338-nn3340-nn3342-nn3344-nn3346-nn3348-nn3350-nn3352-nn3354+19
+-nn3006+nn3000-nn3008-nn3010-nn3012-nn3014-nn3016-nn3018-nn3020-nn3022-nn3024-nn3026-nn3028-nn3030-nn3032-nn3034-nn3036-nn3038-nn3040+18
+-nn2710+nn2704-nn2712-nn2714-nn2716-nn2718-nn2720-nn2722-nn2724-nn2726-nn2728-nn2730-nn2732-nn2734-nn2736-nn2738-nn2740-nn2742+17
+-nn2430+nn2424-nn2432-nn2434-nn2436-nn2438-nn2440-nn2442-nn2444-nn2446-nn2448-nn2450-nn2452-nn2454-nn2456-nn2458-nn2460+16
+-nn2166+nn2160-nn2168-nn2170-nn2172-nn2174-nn2176-nn2178-nn2180-nn2182-nn2184-nn2186-nn2188-nn2190-nn2192-nn2194+15
+-nn1918+nn1912-nn1920-nn1922-nn1924-nn1926-nn1928-nn1930-nn1932-nn1934-nn1936-nn1938-nn1940-nn1942-nn1944+14
+-nn1686+nn1680-nn1688-nn1690-nn1692-nn1694-nn1696-nn1698-nn1700-nn1702-nn1704-nn1706-nn1708-nn1710+13
+-nn1470+nn1464-nn1472-nn1474-nn1476-nn1478-nn1480-nn1482-nn1484-nn1486-nn1488-nn1490-nn1492+12
+-nn1270+nn1264-nn1272-nn1274-nn1276-nn1278-nn1280-nn1282-nn1284-nn1286-nn1288-nn1290+11
+-nn1086+nn1080-nn1088-nn1090-nn1092-nn1094-nn1096-nn1098-nn1100-nn1102-nn1104+10
+-nn918+nn912-nn920-nn922-nn924-nn926-nn928-nn930-nn932-nn934+9
+-nn766+nn760-nn768-nn770-nn772-nn774-nn776-nn778-nn780+8
+-nn630+nn624-nn632-nn634-nn636-nn638-nn640-nn642+7
+-nn510+nn504-nn512-nn514-nn516-nn518-nn520+6
+-nn406+nn400-nn408-nn410-nn412-nn414+5
+-nn318+nn312-nn320-nn322-nn324+4
+-nn246+nn240-nn248-nn250+3
+-nn190+nn184-nn192+2
+-nn150+nn144+1
+nn120
+0
+0
+   ? `abc28` is not defined
+Auf Wiedersehen.
+	Command being timed: "Singular 28/abc28.sing --no-warn"
+	User time (seconds): 55.10
+	System time (seconds): 7.69
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:02.80
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3002752
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 9936421
+	Voluntary context switches: 1
+	Involuntary context switches: 166
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 80
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn12040+1
+-nn12022-nn12024+2
+-nn11988-nn11990-nn11992+3
+-nn11938-nn11940-nn11942-nn11944+4
+-nn11872-nn11874-nn11876-nn11878-nn11880+5
+-nn11790-nn11792-nn11794-nn11796-nn11798-nn11800+6
+-nn11692-nn11694-nn11696-nn11698-nn11700-nn11702-nn11704+7
+-nn11578-nn11580-nn11582-nn11584-nn11586-nn11588-nn11590-nn11592+8
+-nn11448-nn11450-nn11452-nn11454-nn11456-nn11458-nn11460-nn11462-nn11464+9
+-nn11302-nn11304-nn11306-nn11308-nn11310-nn11312-nn11314-nn11316-nn11318-nn11320+10
+-nn11140-nn11142-nn11144-nn11146-nn11148-nn11150-nn11152-nn11154-nn11156-nn11158-nn11160+11
+-nn10962-nn10964-nn10966-nn10968-nn10970-nn10972-nn10974-nn10976-nn10978-nn10980-nn10982-nn10984+12
+-nn10768-nn10770-nn10772-nn10774-nn10776-nn10778-nn10780-nn10782-nn10784-nn10786-nn10788-nn10790-nn10792+13
+-nn10558-nn10560-nn10562-nn10564-nn10566-nn10568-nn10570-nn10572-nn10574-nn10576-nn10578-nn10580-nn10582-nn10584+14
+-nn10332-nn10334-nn10336-nn10338-nn10340-nn10342-nn10344-nn10346-nn10348-nn10350-nn10352-nn10354-nn10356-nn10358-nn10360+15
+-nn10090-nn10092-nn10094-nn10096-nn10098-nn10100-nn10102-nn10104-nn10106-nn10108-nn10110-nn10112-nn10114-nn10116-nn10118-nn10120+16
+-nn9832-nn9834-nn9836-nn9838-nn9840-nn9842-nn9844-nn9846-nn9848-nn9850-nn9852-nn9854-nn9856-nn9858-nn9860-nn9862-nn9864+17
+-nn9558-nn9560-nn9562-nn9564-nn9566-nn9568-nn9570-nn9572-nn9574-nn9576-nn9578-nn9580-nn9582-nn9584-nn9586-nn9588-nn9590-nn9592+18
+-nn9268-nn9270-nn9272-nn9274-nn9276-nn9278-nn9280-nn9282-nn9284-nn9286-nn9288-nn9290-nn9292-nn9294-nn9296-nn9298-nn9300-nn9302-nn9304+19
+-nn8962-nn8964-nn8966-nn8968-nn8970-nn8972-nn8974-nn8976-nn8978-nn8980-nn8982-nn8984-nn8986-nn8988-nn8990-nn8992-nn8994-nn8996-nn8998-nn9000+20
+-nn8640-nn8642-nn8644-nn8646-nn8648-nn8650-nn8652-nn8654-nn8656-nn8658-nn8660-nn8662-nn8664-nn8666-nn8668-nn8670-nn8672-nn8674-nn8676-nn8678-nn8680+21
+-nn8302-nn8304-nn8306-nn8308-nn8310-nn8312-nn8314-nn8316-nn8318-nn8320-nn8322-nn8324-nn8326-nn8328-nn8330-nn8332-nn8334-nn8336-nn8338-nn8340-nn8342-nn8344+22
+-nn7948-nn7950-nn7952-nn7954-nn7956-nn7958-nn7960-nn7962-nn7964-nn7966-nn7968-nn7970-nn7972-nn7974-nn7976-nn7978-nn7980-nn7982-nn7984-nn7986-nn7988-nn7990-nn7992+23
+-nn7578-nn7580-nn7582-nn7584-nn7586-nn7588-nn7590-nn7592-nn7594-nn7596-nn7598-nn7600-nn7602-nn7604-nn7606-nn7608-nn7610-nn7612-nn7614-nn7616-nn7618-nn7620-nn7622-nn7624+24
+-nn7192-nn7194-nn7196-nn7198-nn7200-nn7202-nn7204-nn7206-nn7208-nn7210-nn7212-nn7214-nn7216-nn7218-nn7220-nn7222-nn7224-nn7226-nn7228-nn7230-nn7232-nn7234-nn7236-nn7238-nn7240+25
+-nn6790-nn6792-nn6794-nn6796-nn6798-nn6800-nn6802-nn6804-nn6806-nn6808-nn6810-nn6812-nn6814-nn6816-nn6818-nn6820-nn6822-nn6824-nn6826-nn6828-nn6830-nn6832-nn6834-nn6836-nn6838-nn6840+26
+-nn6374-nn6376-nn6378-nn6380-nn6382-nn6384-nn6386-nn6388-nn6390-nn6392-nn6394-nn6396-nn6398-nn6400-nn6402-nn6404-nn6406-nn6408-nn6410-nn6412-nn6414-nn6416-nn6418-nn6420-nn6422-nn6424+nn6004+26
+-nn5950+nn5944-nn5952-nn5954-nn5956-nn5958-nn5960-nn5962-nn5964-nn5966-nn5968-nn5970-nn5972-nn5974-nn5976-nn5978-nn5980-nn5982-nn5984-nn5986-nn5988-nn5990-nn5992-nn5994-nn5996-nn5998-nn6000+26
+-nn5526+nn5520-nn5528-nn5530-nn5532-nn5534-nn5536-nn5538-nn5540-nn5542-nn5544-nn5546-nn5548-nn5550-nn5552-nn5554-nn5556-nn5558-nn5560-nn5562-nn5564-nn5566-nn5568-nn5570-nn5572-nn5574+25
+-nn5118+nn5112-nn5120-nn5122-nn5124-nn5126-nn5128-nn5130-nn5132-nn5134-nn5136-nn5138-nn5140-nn5142-nn5144-nn5146-nn5148-nn5150-nn5152-nn5154-nn5156-nn5158-nn5160-nn5162-nn5164+24
+-nn4726+nn4720-nn4728-nn4730-nn4732-nn4734-nn4736-nn4738-nn4740-nn4742-nn4744-nn4746-nn4748-nn4750-nn4752-nn4754-nn4756-nn4758-nn4760-nn4762-nn4764-nn4766-nn4768-nn4770+23
+-nn4350+nn4344-nn4352-nn4354-nn4356-nn4358-nn4360-nn4362-nn4364-nn4366-nn4368-nn4370-nn4372-nn4374-nn4376-nn4378-nn4380-nn4382-nn4384-nn4386-nn4388-nn4390-nn4392+22
+-nn3990+nn3984-nn3992-nn3994-nn3996-nn3998-nn4000-nn4002-nn4004-nn4006-nn4008-nn4010-nn4012-nn4014-nn4016-nn4018-nn4020-nn4022-nn4024-nn4026-nn4028-nn4030+21
+-nn3646+nn3640-nn3648-nn3650-nn3652-nn3654-nn3656-nn3658-nn3660-nn3662-nn3664-nn3666-nn3668-nn3670-nn3672-nn3674-nn3676-nn3678-nn3680-nn3682-nn3684+20
+-nn3318+nn3312-nn3320-nn3322-nn3324-nn3326-nn3328-nn3330-nn3332-nn3334-nn3336-nn3338-nn3340-nn3342-nn3344-nn3346-nn3348-nn3350-nn3352-nn3354+19
+-nn3006+nn3000-nn3008-nn3010-nn3012-nn3014-nn3016-nn3018-nn3020-nn3022-nn3024-nn3026-nn3028-nn3030-nn3032-nn3034-nn3036-nn3038-nn3040+18
+-nn2710+nn2704-nn2712-nn2714-nn2716-nn2718-nn2720-nn2722-nn2724-nn2726-nn2728-nn2730-nn2732-nn2734-nn2736-nn2738-nn2740-nn2742+17
+-nn2430+nn2424-nn2432-nn2434-nn2436-nn2438-nn2440-nn2442-nn2444-nn2446-nn2448-nn2450-nn2452-nn2454-nn2456-nn2458-nn2460+16
+-nn2166+nn2160-nn2168-nn2170-nn2172-nn2174-nn2176-nn2178-nn2180-nn2182-nn2184-nn2186-nn2188-nn2190-nn2192-nn2194+15
+-nn1918+nn1912-nn1920-nn1922-nn1924-nn1926-nn1928-nn1930-nn1932-nn1934-nn1936-nn1938-nn1940-nn1942-nn1944+14
+-nn1686+nn1680-nn1688-nn1690-nn1692-nn1694-nn1696-nn1698-nn1700-nn1702-nn1704-nn1706-nn1708-nn1710+13
+-nn1470+nn1464-nn1472-nn1474-nn1476-nn1478-nn1480-nn1482-nn1484-nn1486-nn1488-nn1490-nn1492+12
+-nn1270+nn1264-nn1272-nn1274-nn1276-nn1278-nn1280-nn1282-nn1284-nn1286-nn1288-nn1290+11
+-nn1086+nn1080-nn1088-nn1090-nn1092-nn1094-nn1096-nn1098-nn1100-nn1102-nn1104+10
+-nn918+nn912-nn920-nn922-nn924-nn926-nn928-nn930-nn932-nn934+9
+-nn766+nn760-nn768-nn770-nn772-nn774-nn776-nn778-nn780+8
+-nn630+nn624-nn632-nn634-nn636-nn638-nn640-nn642+7
+-nn510+nn504-nn512-nn514-nn516-nn518-nn520+6
+-nn406+nn400-nn408-nn410-nn412-nn414+5
+-nn318+nn312-nn320-nn322-nn324+4
+-nn246+nn240-nn248-nn250+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+0
+0
+0
+list of coefficients from remainder [1]:
+   32
+[2]:
+   96
+list of affected outputs [1]:
+   32
+[2]:
+   96
+[1]:
+   6
+[2]:
+   5
+logical cone of output -s(5) [1]:
+   -nn254
+[2]:
+   -nn252
+[3]:
+   -nn268
+[4]:
+   -nn282
+[5]:
+   -nn296
+[6]:
+   -nn310
+[7]:
+   -nn260
+[8]:
+   -nn266
+[9]:
+   -nn274
+[10]:
+   -nn280
+[11]:
+   -nn288
+[12]:
+   -nn294
+[13]:
+   -nn302
+[14]:
+   -nn308
+[15]:
+   -nn316
+[16]:
+   -s(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)+2*b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)+4*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)+8*b(0)*a(5)+1
+nn120-8*b(1)*a(4)+16*b(0)*a(5)
+-16*b(1)*a(4)+32*b(0)*a(5)
+-32*b(1)*a(4)+64*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250+2*b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+4*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+8*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+16*b(1)*a(4)-8*b(0)*a(5)
+32*b(1)*a(4)-16*b(0)*a(5)
+64*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(2)*a(3)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(2)*a(3)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(2)*a(3)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(2)*a(3)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(2)*a(3)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(2)*a(3)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(2)*a(3)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(2)*a(3)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(2)*a(3)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(2)*a(3)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(2)*a(3)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(2)*a(3)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(3)*a(2)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(3)*a(2)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(3)*a(2)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(3)*a(2)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(3)*a(2)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(3)*a(2)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(3)*a(2)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(3)*a(2)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(3)*a(2)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(3)*a(2)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(3)*a(2)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(3)*a(2)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(4)*a(1)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(4)*a(1)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(4)*a(1)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(4)*a(1)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(4)*a(1)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(4)*a(1)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(4)*a(1)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(4)*a(1)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(4)*a(1)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(4)*a(1)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(4)*a(1)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(4)*a(1)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250-b(5)*a(0)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192-2*b(5)*a(0)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144-4*b(5)*a(0)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120-8*b(5)*a(0)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+-16*b(5)*a(0)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+-32*b(5)*a(0)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250-b(5)*a(0)+3*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192-2*b(5)*a(0)+6*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144-4*b(5)*a(0)+12*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120-8*b(5)*a(0)+24*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+-16*b(5)*a(0)+48*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+-32*b(5)*a(0)+96*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+-nn246+nn240-nn248-nn250+2*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+4
+-nn190+nn184-nn192+4*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+4
+-nn150+nn144+8*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+5
+nn120+16*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)+8
+32*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)+16
+64*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)+32
+-nn246+nn240-nn248-nn250+2*b(1)*b(0)*a(5)*a(4)-b(1)*a(4)-b(0)*a(5)+3
+-nn190+nn184-nn192+4*b(1)*b(0)*a(5)*a(4)-2*b(1)*a(4)-2*b(0)*a(5)+2
+-nn150+nn144+8*b(1)*b(0)*a(5)*a(4)-4*b(1)*a(4)-4*b(0)*a(5)+1
+nn120+16*b(1)*b(0)*a(5)*a(4)-8*b(1)*a(4)-8*b(0)*a(5)
+32*b(1)*b(0)*a(5)*a(4)-16*b(1)*a(4)-16*b(0)*a(5)
+64*b(1)*b(0)*a(5)*a(4)-32*b(1)*a(4)-32*b(0)*a(5)
+nn260+nn310+nn296+nn282+nn268+2*nn254*nn252-nn246+nn240-nn248-nn250-b(5)*a(0)-b(4)*a(1)-b(3)*a(2)-b(2)*a(3)-b(1)*a(4)-b(0)*a(5)+3
+2*nn260+2*nn310+2*nn296+2*nn282+2*nn268+4*nn254*nn252-nn190+nn184-nn192-2*b(5)*a(0)-2*b(4)*a(1)-2*b(3)*a(2)-2*b(2)*a(3)-2*b(1)*a(4)-2*b(0)*a(5)+2
+4*nn260+4*nn310+4*nn296+4*nn282+4*nn268+8*nn254*nn252-nn150+nn144-4*b(5)*a(0)-4*b(4)*a(1)-4*b(3)*a(2)-4*b(2)*a(3)-4*b(1)*a(4)-4*b(0)*a(5)+1
+8*nn260+8*nn310+8*nn296+8*nn282+8*nn268+16*nn254*nn252+nn120-8*b(5)*a(0)-8*b(4)*a(1)-8*b(3)*a(2)-8*b(2)*a(3)-8*b(1)*a(4)-8*b(0)*a(5)
+16*nn260+16*nn310+16*nn296+16*nn282+16*nn268+32*nn254*nn252-16*b(5)*a(0)-16*b(4)*a(1)-16*b(3)*a(2)-16*b(2)*a(3)-16*b(1)*a(4)-16*b(0)*a(5)
+32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+prem: 32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+dividend- 32*nn260+32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+quotient- -32
+divisor- -nn260
+residue- 32*nn310+32*nn296+32*nn282+32*nn268+64*nn254*nn252-32*b(5)*a(0)-32*b(4)*a(1)-32*b(3)*a(2)-32*b(2)*a(3)-32*b(1)*a(4)-32*b(0)*a(5)
+quotient is a constant
+   ? `abc28` is not defined
+Auf Wiedersehen.
+	Command being timed: "Singular 28/abc28.sing --no-warn"
+	User time (seconds): 48.52
+	System time (seconds): 7.86
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:56.38
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3001500
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 9785342
+	Voluntary context switches: 2
+	Involuntary context switches: 173
+	Swaps: 0
+	File system inputs: 784
+	File system outputs: 72
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn12040+1
+-nn12022-nn12024+2
+-nn11988-nn11990-nn11992+3
+-nn11938-nn11940-nn11942-nn11944+4
+-nn11872-nn11874-nn11876-nn11878-nn11880+5
+-nn11790-nn11792-nn11794-nn11796-nn11798-nn11800+6
+-nn11692-nn11694-nn11696-nn11698-nn11700-nn11702-nn11704+7
+-nn11578-nn11580-nn11582-nn11584-nn11586-nn11588-nn11590-nn11592+8
+-nn11448-nn11450-nn11452-nn11454-nn11456-nn11458-nn11460-nn11462-nn11464+9
+-nn11302-nn11304-nn11306-nn11308-nn11310-nn11312-nn11314-nn11316-nn11318-nn11320+10
+-nn11140-nn11142-nn11144-nn11146-nn11148-nn11150-nn11152-nn11154-nn11156-nn11158-nn11160+11
+-nn10962-nn10964-nn10966-nn10968-nn10970-nn10972-nn10974-nn10976-nn10978-nn10980-nn10982-nn10984+12
+-nn10768-nn10770-nn10772-nn10774-nn10776-nn10778-nn10780-nn10782-nn10784-nn10786-nn10788-nn10790-nn10792+13
+-nn10558-nn10560-nn10562-nn10564-nn10566-nn10568-nn10570-nn10572-nn10574-nn10576-nn10578-nn10580-nn10582-nn10584+14
+-nn10332-nn10334-nn10336-nn10338-nn10340-nn10342-nn10344-nn10346-nn10348-nn10350-nn10352-nn10354-nn10356-nn10358-nn10360+15
+-nn10090-nn10092-nn10094-nn10096-nn10098-nn10100-nn10102-nn10104-nn10106-nn10108-nn10110-nn10112-nn10114-nn10116-nn10118-nn10120+16
+-nn9832-nn9834-nn9836-nn9838-nn9840-nn9842-nn9844-nn9846-nn9848-nn9850-nn9852-nn9854-nn9856-nn9858-nn9860-nn9862-nn9864+17
+-nn9558-nn9560-nn9562-nn9564-nn9566-nn9568-nn9570-nn9572-nn9574-nn9576-nn9578-nn9580-nn9582-nn9584-nn9586-nn9588-nn9590-nn9592+18
+-nn9268-nn9270-nn9272-nn9274-nn9276-nn9278-nn9280-nn9282-nn9284-nn9286-nn9288-nn9290-nn9292-nn9294-nn9296-nn9298-nn9300-nn9302-nn9304+19
+-nn8962-nn8964-nn8966-nn8968-nn8970-nn8972-nn8974-nn8976-nn8978-nn8980-nn8982-nn8984-nn8986-nn8988-nn8990-nn8992-nn8994-nn8996-nn8998-nn9000+20
+-nn8640-nn8642-nn8644-nn8646-nn8648-nn8650-nn8652-nn8654-nn8656-nn8658-nn8660-nn8662-nn8664-nn8666-nn8668-nn8670-nn8672-nn8674-nn8676-nn8678-nn8680+21
+-nn8302-nn8304-nn8306-nn8308-nn8310-nn8312-nn8314-nn8316-nn8318-nn8320-nn8322-nn8324-nn8326-nn8328-nn8330-nn8332-nn8334-nn8336-nn8338-nn8340-nn8342-nn8344+22
+-nn7948-nn7950-nn7952-nn7954-nn7956-nn7958-nn7960-nn7962-nn7964-nn7966-nn7968-nn7970-nn7972-nn7974-nn7976-nn7978-nn7980-nn7982-nn7984-nn7986-nn7988-nn7990-nn7992+23
+-nn7578-nn7580-nn7582-nn7584-nn7586-nn7588-nn7590-nn7592-nn7594-nn7596-nn7598-nn7600-nn7602-nn7604-nn7606-nn7608-nn7610-nn7612-nn7614-nn7616-nn7618-nn7620-nn7622-nn7624+24
+-nn7192-nn7194-nn7196-nn7198-nn7200-nn7202-nn7204-nn7206-nn7208-nn7210-nn7212-nn7214-nn7216-nn7218-nn7220-nn7222-nn7224-nn7226-nn7228-nn7230-nn7232-nn7234-nn7236-nn7238-nn7240+25
+-nn6790-nn6792-nn6794-nn6796-nn6798-nn6800-nn6802-nn6804-nn6806-nn6808-nn6810-nn6812-nn6814-nn6816-nn6818-nn6820-nn6822-nn6824-nn6826-nn6828-nn6830-nn6832-nn6834-nn6836-nn6838-nn6840+26
+-nn6374-nn6376-nn6378-nn6380-nn6382-nn6384-nn6386-nn6388-nn6390-nn6392-nn6394-nn6396-nn6398-nn6400-nn6402-nn6404-nn6406-nn6408-nn6410-nn6412-nn6414-nn6416-nn6418-nn6420-nn6422-nn6424+nn6004+26
+-nn5950+nn5944-nn5952-nn5954-nn5956-nn5958-nn5960-nn5962-nn5964-nn5966-nn5968-nn5970-nn5972-nn5974-nn5976-nn5978-nn5980-nn5982-nn5984-nn5986-nn5988-nn5990-nn5992-nn5994-nn5996-nn5998-nn6000+26
+-nn5526+nn5520-nn5528-nn5530-nn5532-nn5534-nn5536-nn5538-nn5540-nn5542-nn5544-nn5546-nn5548-nn5550-nn5552-nn5554-nn5556-nn5558-nn5560-nn5562-nn5564-nn5566-nn5568-nn5570-nn5572-nn5574+25
+-nn5118+nn5112-nn5120-nn5122-nn5124-nn5126-nn5128-nn5130-nn5132-nn5134-nn5136-nn5138-nn5140-nn5142-nn5144-nn5146-nn5148-nn5150-nn5152-nn5154-nn5156-nn5158-nn5160-nn5162-nn5164+24
+-nn4726+nn4720-nn4728-nn4730-nn4732-nn4734-nn4736-nn4738-nn4740-nn4742-nn4744-nn4746-nn4748-nn4750-nn4752-nn4754-nn4756-nn4758-nn4760-nn4762-nn4764-nn4766-nn4768-nn4770+23
+-nn4350+nn4344-nn4352-nn4354-nn4356-nn4358-nn4360-nn4362-nn4364-nn4366-nn4368-nn4370-nn4372-nn4374-nn4376-nn4378-nn4380-nn4382-nn4384-nn4386-nn4388-nn4390-nn4392+22
+-nn3990+nn3984-nn3992-nn3994-nn3996-nn3998-nn4000-nn4002-nn4004-nn4006-nn4008-nn4010-nn4012-nn4014-nn4016-nn4018-nn4020-nn4022-nn4024-nn4026-nn4028-nn4030+21
+-nn3646+nn3640-nn3648-nn3650-nn3652-nn3654-nn3656-nn3658-nn3660-nn3662-nn3664-nn3666-nn3668-nn3670-nn3672-nn3674-nn3676-nn3678-nn3680-nn3682-nn3684+20
+-nn3318+nn3312-nn3320-nn3322-nn3324-nn3326-nn3328-nn3330-nn3332-nn3334-nn3336-nn3338-nn3340-nn3342-nn3344-nn3346-nn3348-nn3350-nn3352-nn3354+19
+-nn3006+nn3000-nn3008-nn3010-nn3012-nn3014-nn3016-nn3018-nn3020-nn3022-nn3024-nn3026-nn3028-nn3030-nn3032-nn3034-nn3036-nn3038-nn3040+18
+-nn2710+nn2704-nn2712-nn2714-nn2716-nn2718-nn2720-nn2722-nn2724-nn2726-nn2728-nn2730-nn2732-nn2734-nn2736-nn2738-nn2740-nn2742+17
+-nn2430+nn2424-nn2432-nn2434-nn2436-nn2438-nn2440-nn2442-nn2444-nn2446-nn2448-nn2450-nn2452-nn2454-nn2456-nn2458-nn2460+16
+-nn2166+nn2160-nn2168-nn2170-nn2172-nn2174-nn2176-nn2178-nn2180-nn2182-nn2184-nn2186-nn2188-nn2190-nn2192-nn2194+15
+-nn1918+nn1912-nn1920-nn1922-nn1924-nn1926-nn1928-nn1930-nn1932-nn1934-nn1936-nn1938-nn1940-nn1942-nn1944+14
+-nn1686+nn1680-nn1688-nn1690-nn1692-nn1694-nn1696-nn1698-nn1700-nn1702-nn1704-nn1706-nn1708-nn1710+13
+-nn1470+nn1464-nn1472-nn1474-nn1476-nn1478-nn1480-nn1482-nn1484-nn1486-nn1488-nn1490-nn1492+12
+-nn1270+nn1264-nn1272-nn1274-nn1276-nn1278-nn1280-nn1282-nn1284-nn1286-nn1288-nn1290+11
+-nn1086+nn1080-nn1088-nn1090-nn1092-nn1094-nn1096-nn1098-nn1100-nn1102-nn1104+10
+-nn918+nn912-nn920-nn922-nn924-nn926-nn928-nn930-nn932-nn934+9
+-nn766+nn760-nn768-nn770-nn772-nn774-nn776-nn778-nn780+8
+-nn630+nn624-nn632-nn634-nn636-nn638-nn640-nn642+7
+-nn510+nn504-nn512-nn514-nn516-nn518-nn520+6
+-nn406+nn400-nn408-nn410-nn412-nn414+5
+-nn318+nn312-nn320-nn322-nn324+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+0
+0
+0
+list of coefficients from remainder [1]:
+   64
+[2]:
+   192
+list of affected outputs [1]:
+   64
+[2]:
+   192
+[1]:
+   7
+[2]:
+   6
+logical cone of output -s(6) [1]:
+   -nn328
+[2]:
+   -nn326
+[3]:
+   -nn342
+[4]:
+   -nn356
+[5]:
+   -nn370
+[6]:
+   -nn384
+[7]:
+   -nn398
+[8]:
+   -nn334
+[9]:
+   -nn340
+[10]:
+   -nn348
+[11]:
+   -nn354
+[12]:
+   -nn362
+[13]:
+   -nn368
+[14]:
+   -nn376
+[15]:
+   -nn382
+[16]:
+   -nn390
+[17]:
+   -nn396
+[18]:
+   -nn404
+[19]:
+   -s(6)
+-nn318+nn312-nn320-nn322-nn324-b(1)*a(5)+2*b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(1)*a(5)+4*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(1)*a(5)+8*b(0)*a(6)+2
+-nn150+nn144-8*b(1)*a(5)+16*b(0)*a(6)+1
+nn120-16*b(1)*a(5)+32*b(0)*a(6)
+-32*b(1)*a(5)+64*b(0)*a(6)
+-64*b(1)*a(5)+128*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324+2*b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250+4*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192+8*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144+16*b(1)*a(5)-8*b(0)*a(6)+1
+nn120+32*b(1)*a(5)-16*b(0)*a(6)
+64*b(1)*a(5)-32*b(0)*a(6)
+128*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(2)*a(4)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250-2*b(2)*a(4)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192-4*b(2)*a(4)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144-8*b(2)*a(4)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120-16*b(2)*a(4)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(2)*a(4)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(2)*a(4)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324-b(2)*a(4)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(2)*a(4)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(2)*a(4)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(2)*a(4)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(2)*a(4)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(2)*a(4)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(2)*a(4)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(3)*a(3)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250-2*b(3)*a(3)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192-4*b(3)*a(3)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144-8*b(3)*a(3)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120-16*b(3)*a(3)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(3)*a(3)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(3)*a(3)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324-b(3)*a(3)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(3)*a(3)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(3)*a(3)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(3)*a(3)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(3)*a(3)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(3)*a(3)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(3)*a(3)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(4)*a(2)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250-2*b(4)*a(2)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192-4*b(4)*a(2)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144-8*b(4)*a(2)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120-16*b(4)*a(2)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(4)*a(2)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(4)*a(2)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324-b(4)*a(2)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(4)*a(2)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(4)*a(2)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(4)*a(2)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(4)*a(2)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(4)*a(2)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(4)*a(2)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(5)*a(1)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250-2*b(5)*a(1)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192-4*b(5)*a(1)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144-8*b(5)*a(1)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120-16*b(5)*a(1)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(5)*a(1)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(5)*a(1)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324-b(5)*a(1)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(5)*a(1)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(5)*a(1)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(5)*a(1)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(5)*a(1)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(5)*a(1)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(5)*a(1)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324-b(6)*a(0)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250-2*b(6)*a(0)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192-4*b(6)*a(0)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144-8*b(6)*a(0)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120-16*b(6)*a(0)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(6)*a(0)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(6)*a(0)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324-b(6)*a(0)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250-2*b(6)*a(0)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192-4*b(6)*a(0)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144-8*b(6)*a(0)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120-16*b(6)*a(0)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(6)*a(0)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(6)*a(0)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn318+nn312-nn320-nn322-nn324+2*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn246+nn240-nn248-nn250+4*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn190+nn184-nn192+8*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn150+nn144+16*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn120+32*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+64*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+128*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn318+nn312-nn320-nn322-nn324+2*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn246+nn240-nn248-nn250+4*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn190+nn184-nn192+8*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn150+nn144+16*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn120+32*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+64*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+128*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+nn334+nn398+nn384+nn370+nn356+nn342+2*nn328*nn326-nn318+nn312-nn320-nn322-nn324-b(6)*a(0)-b(5)*a(1)-b(4)*a(2)-b(3)*a(3)-b(2)*a(4)-b(1)*a(5)-b(0)*a(6)+4
+2*nn334+2*nn398+2*nn384+2*nn370+2*nn356+2*nn342+4*nn328*nn326-nn246+nn240-nn248-nn250-2*b(6)*a(0)-2*b(5)*a(1)-2*b(4)*a(2)-2*b(3)*a(3)-2*b(2)*a(4)-2*b(1)*a(5)-2*b(0)*a(6)+3
+4*nn334+4*nn398+4*nn384+4*nn370+4*nn356+4*nn342+8*nn328*nn326-nn190+nn184-nn192-4*b(6)*a(0)-4*b(5)*a(1)-4*b(4)*a(2)-4*b(3)*a(3)-4*b(2)*a(4)-4*b(1)*a(5)-4*b(0)*a(6)+2
+8*nn334+8*nn398+8*nn384+8*nn370+8*nn356+8*nn342+16*nn328*nn326-nn150+nn144-8*b(6)*a(0)-8*b(5)*a(1)-8*b(4)*a(2)-8*b(3)*a(3)-8*b(2)*a(4)-8*b(1)*a(5)-8*b(0)*a(6)+1
+16*nn334+16*nn398+16*nn384+16*nn370+16*nn356+16*nn342+32*nn328*nn326+nn120-16*b(6)*a(0)-16*b(5)*a(1)-16*b(4)*a(2)-16*b(3)*a(3)-16*b(2)*a(4)-16*b(1)*a(5)-16*b(0)*a(6)
+32*nn334+32*nn398+32*nn384+32*nn370+32*nn356+32*nn342+64*nn328*nn326-32*b(6)*a(0)-32*b(5)*a(1)-32*b(4)*a(2)-32*b(3)*a(3)-32*b(2)*a(4)-32*b(1)*a(5)-32*b(0)*a(6)
+64*nn334+64*nn398+64*nn384+64*nn370+64*nn356+64*nn342+128*nn328*nn326-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+prem: 64*nn334+64*nn398+64*nn384+64*nn370+64*nn356+64*nn342+128*nn328*nn326-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+dividend- 64*nn334+64*nn398+64*nn384+64*nn370+64*nn356+64*nn342+128*nn328*nn326-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+quotient- -64
+divisor- -nn334
+residue- 64*nn398+64*nn384+64*nn370+64*nn356+64*nn342+128*nn328*nn326-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+quotient is a constant
+   ? `abc28` is not defined
+Auf Wiedersehen.
+	Command being timed: "Singular 28/abc28.sing --no-warn"
+	User time (seconds): 301.83
+	System time (seconds): 14.80
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:16.64
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3002884
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 18715995
+	Voluntary context switches: 2
+	Involuntary context switches: 583
+	Swaps: 0
+	File system inputs: 792
+	File system outputs: 80
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

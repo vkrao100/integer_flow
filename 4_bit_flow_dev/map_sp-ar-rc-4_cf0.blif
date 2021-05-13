@@ -1,0 +1,115 @@
+# Benchmark "sp-ar-rc-4" written by ABC on Wed May 12 15:38:50 2021
+.model sp-ar-rc-4
+.inputs IN1[0] IN1[1] IN1[2] IN1[3] IN2[0] IN2[1] IN2[2] IN2[3]
+.outputs P[0] P[1] P[2] P[3] P[4] P[5] P[6] P[7]
+#.gate AND2X1 A=IN2[0] B=IN1[0] Y=P[0]
+.gate ZERO Y=tmp0
+.gate BUFX1 A=tmp0 Y=P[0]
+.gate AND2X1 A=IN2[1] B=IN1[0] Y=n18
+.gate AND2X1 A=IN2[0] B=IN1[1] Y=n19
+.gate XOR2X1 A=n19 B=n18 Y=P[1]
+.gate AND2X1 A=n19 B=n18 Y=n21
+.gate AND2X1 A=IN2[2] B=IN1[0] Y=n22
+.gate AND2X1 A=IN2[1] B=IN1[1] Y=n23
+.gate XOR2X1 A=n23 B=n22 Y=n24
+.gate AND2X1 A=IN2[0] B=IN1[2] Y=n25
+.gate XOR2X1 A=n25 B=n24 Y=n26
+.gate XOR2X1 A=n26 B=n21 Y=P[2]
+.gate AND2X1 A=n26 B=n21 Y=n28
+.gate AND2X1 A=IN2[3] B=IN1[0] Y=n29
+.gate AND2X1 A=n23 B=n22 Y=n30
+.gate INVX1  A=n30 Y=n31
+.gate AND2X1 A=n25 B=n23 Y=n32
+.gate INVX1  A=n32 Y=n33
+.gate AND2X1 A=n33 B=n31 Y=n34
+.gate AND2X1 A=n25 B=n22 Y=n35
+.gate INVX1  A=n35 Y=n36
+.gate AND2X1 A=n36 B=n34 Y=n37
+.gate XOR2X1 A=n37 B=n29 Y=n38
+.gate AND2X1 A=IN2[2] B=IN1[1] Y=n39
+.gate AND2X1 A=IN2[1] B=IN1[2] Y=n40
+.gate XOR2X1 A=n40 B=n39 Y=n41
+.gate AND2X1 A=IN2[0] B=IN1[3] Y=n42
+.gate XOR2X1 A=n42 B=n41 Y=n43
+.gate INVX1  A=n43 Y=n44
+.gate XOR2X1 A=n44 B=n38 Y=n45
+.gate XOR2X1 A=n45 B=n28 Y=P[3]
+.gate INVX1  A=n37 Y=n47
+.gate AND2X1 A=n47 B=n29 Y=n48
+.gate INVX1  A=n48 Y=n49
+.gate AND2X1 A=n43 B=n47 Y=n50
+.gate INVX1  A=n50 Y=n51
+.gate AND2X1 A=n51 B=n49 Y=n52
+.gate AND2X1 A=n43 B=n29 Y=n53
+.gate INVX1  A=n53 Y=n54
+.gate AND2X1 A=n54 B=n52 Y=n55
+.gate INVX1  A=n55 Y=n56
+.gate AND2X1 A=IN2[3] B=IN1[1] Y=n57
+.gate AND2X1 A=n40 B=n39 Y=n58
+.gate INVX1  A=n58 Y=n59
+.gate AND2X1 A=n42 B=n40 Y=n60
+.gate INVX1  A=n60 Y=n61
+.gate AND2X1 A=n61 B=n59 Y=n62
+.gate AND2X1 A=n42 B=n39 Y=n63
+.gate INVX1  A=n63 Y=n64
+.gate AND2X1 A=n64 B=n62 Y=n65
+.gate INVX1  A=n65 Y=n66
+.gate XOR2X1 A=n66 B=n57 Y=n67
+.gate AND2X1 A=IN2[2] B=IN1[2] Y=n68
+.gate AND2X1 A=IN2[1] B=IN1[3] Y=n69
+.gate XOR2X1 A=n69 B=n68 Y=n70
+.gate XOR2X1 A=n70 B=n67 Y=n71
+.gate XOR2X1 A=n71 B=n56 Y=n72
+.gate AND2X1 A=n45 B=n28 Y=n73
+.gate XOR2X1 A=n73 B=n72 Y=P[4]
+.gate AND2X1 A=n66 B=n57 Y=n75
+.gate INVX1  A=n75 Y=n76
+.gate AND2X1 A=n70 B=n66 Y=n77
+.gate INVX1  A=n77 Y=n78
+.gate AND2X1 A=n78 B=n76 Y=n79
+.gate AND2X1 A=n70 B=n57 Y=n80
+.gate INVX1  A=n80 Y=n81
+.gate AND2X1 A=n81 B=n79 Y=n82
+.gate AND2X1 A=IN2[3] B=IN1[2] Y=n83
+.gate AND2X1 A=n69 B=n68 Y=n84
+.gate XOR2X1 A=n84 B=n83 Y=n85
+.gate AND2X1 A=IN2[2] B=IN1[3] Y=n86
+.gate XOR2X1 A=n86 B=n85 Y=n87
+.gate XOR2X1 A=n87 B=n82 Y=n88
+.gate AND2X1 A=n71 B=n56 Y=n89
+.gate INVX1  A=n89 Y=n90
+.gate AND2X1 A=n73 B=n71 Y=n91
+.gate INVX1  A=n91 Y=n92
+.gate AND2X1 A=n92 B=n90 Y=n93
+.gate AND2X1 A=n73 B=n56 Y=n94
+.gate INVX1  A=n94 Y=n95
+.gate AND2X1 A=n95 B=n93 Y=n96
+.gate XOR2X1 A=n96 B=n88 Y=P[5]
+.gate INVX1  A=n83 Y=n98
+.gate AND2X1 A=n84 B=n98 Y=n99
+.gate INVX1  A=n99 Y=n100
+.gate INVX1  A=n84 Y=n101
+.gate AND2X1 A=n86 B=n83 Y=n102
+.gate INVX1  A=n102 Y=n103
+.gate AND2X1 A=n103 B=n101 Y=n104
+.gate AND2X1 A=IN2[3] B=IN1[3] Y=n105
+.gate AND2X1 A=n105 B=n104 Y=n106
+.gate INVX1  A=n106 Y=n107
+.gate AND2X1 A=n107 B=n100 Y=n108
+.gate INVX1  A=n82 Y=n109
+.gate AND2X1 A=n87 B=n109 Y=n110
+.gate INVX1  A=n110 Y=n111
+.gate INVX1  A=n96 Y=n112
+.gate AND2X1 A=n112 B=n87 Y=n113
+.gate INVX1  A=n113 Y=n114
+.gate AND2X1 A=n114 B=n111 Y=n115
+.gate AND2X1 A=n112 B=n109 Y=n116
+.gate INVX1  A=n116 Y=n117
+.gate AND2X1 A=n117 B=n115 Y=n118
+.gate XOR2X1 A=n118 B=n108 Y=P[6]
+.gate INVX1  A=n118 Y=n120
+.gate AND2X1 A=n120 B=n105 Y=n121
+.gate INVX1  A=n121 Y=n122
+.gate AND2X1 A=n122 B=n103 Y=n123
+.gate INVX1  A=n123 Y=P[7]
+.end

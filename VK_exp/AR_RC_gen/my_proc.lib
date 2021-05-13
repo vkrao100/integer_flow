@@ -1,0 +1,302 @@
+LIB "crypto.lib";
+LIB "normaliz.lib";
+LIB "ring.lib";
+//LIB "gate2poly.lib";
+LIB "teachstd.lib";
+
+/* 
+proc inter_JS(ideal g_JA, ideal J0C, ideal XA)
+{
+	ideal JS = J0C;
+	list tmp_JS;
+	for(int i=1; i<=size(g_JA); i=i+1)
+	{
+		if(reduce(g_JA[i],XA) == g_JA[i])
+		{
+			tmp_JS = insert(tmp_JS,g_JA[i]);
+		}
+	}
+	for(i=1; i<=size(tmp_JS); i=i+1)
+	{
+		JS = JS + tmp_JS[i];
+	}
+	return(JS);
+}
+*/
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+
+// Compute vanishing polynomials for every variable
+proc van_id()
+{
+	ideal I = 0;
+	list L = ringlist(R);
+
+	for(int i=1; i<=size(L[2]); i=i+1)
+	{
+		I = I + (var(i)^2 - var(i));
+	}
+	return(I);
+}
+
+//Find ring indices of variables in the (nested) list L 
+proc var2index(list L)
+{
+	list V;
+	for(int i=1; i<=size(L[1]); i=i+1)
+	{
+		V = insert(V,rvar(L[1][i]),size(V));
+	}
+	return(V);
+}
+
+//Find XA, XB, XC
+proc find_var_part(list tmp_XA, list tmp_XB)
+{
+	list XA,XB,XC;
+	int ind;
+	list ind_xa = var2index(tmp_XA);
+	list ind_xb = var2index(tmp_XB);
+
+	for(int i=1; i<=size(ind_xa); i=i+1)
+	{	
+		ind = find_index(ind_xb,ind_xa[i]);
+		if(ind != 0)
+		{
+			XC = insert(XC,var(ind_xa[i]),size(XC) );
+			ind_xb = delete(ind_xb,ind);
+		}
+		else
+		{
+			XA = insert(XA,var(ind_xa[i]), size(XA) );
+		}
+	} 
+	
+	for(i=1;i<=size(ind_xb);i=i+1)
+	{
+		XB = insert(XB, var(ind_xb[i]), size(XB));
+	}	
+	return(XA,XB,XC);
+}
+
+//Convert a list to an ideal
+proc list2ideal(list L)
+{
+	ideal I;
+	for(int i=2; i<=size(L); i=i+1)
+	{
+		I = I + L[i];
+	}
+	return(I);
+}
+
+//Return list of zero elements
+proc zero_list(int n);
+{	
+	list l;
+	for(int i=1; i<=n; i=i+1)
+	{
+		l = insert(l,0);
+	}
+	return(l);
+}
+
+//Compute Standard Monomials
+proc comp_sm(ideal I, list XC, int sab)
+{
+	list sm; 
+	list bl = zero_list(size(XC));
+	intmat N[1][sab+size(XC)];
+	poly tmp;
+	int i,j;
+
+	for(i=1; i<=2^size(XC); i=i+1 )
+	{		
+		tmp = intmat2mons(N)[1];
+		
+		if(reduce(tmp,lead(I)) != 0)
+		{
+			sm = insert(sm,tmp);
+		}
+
+		bl = binary_add(bl);
+
+		for(j=1; j<=size(XC); j=j+1)
+		{
+			N[1,sab+j] = bl[j];
+		}
+
+	}
+	return(sm);
+}
+
+
+// Compute JS
+proc inter_JS(ideal JA, list XA, ideal J0C)
+{
+	poly elm = 1;
+	for(int i=1; i<=size(XA); i=i+1)
+	{
+		elm = elm*XA[i];
+	}
+	ideal JS = eliminate(JA,elm);
+	return(JS);
+}
+
+// Compute JL
+proc inter_JL(ideal JB, list XB, ideal J0C)
+{
+	poly elm = 1;
+	for(int i=1; i<=size(XB); i=i+1)
+	{
+		elm = elm*XB[i];
+	}
+	ideal tmp_JL = eliminate(JB,elm);
+	"computing quotient J0C:tmp_JL";
+	ideal JL = quotient(J0C,tmp_JL);
+	return(JL);
+}
+
+// Write the new ring with XA,XB,XC variable order
+proc new_ring(list XA, list XB, list XC)
+{
+	string rr; int i;
+	rr = "ring Q = 2, (";
+
+	if(size(XA) != 0)
+	{rr = rr + string(XA[1]);}
+	for(i=2; i<=size(XA); i=i+1)
+	{
+		rr = rr + "," + string(XA[i]);
+	}
+	
+	if(size(XB) != 0)
+	{rr = rr + "," + string(XB[1]);}
+	for(i=2; i<=size(XB); i=i+1)
+	{
+		rr = rr + "," + string(XB[i]);
+	}
+	
+	if(size(XC) != 0)
+	{rr = rr + "," + string(XC[1]);}
+	for(i=2; i<=size(XC); i=i+1)
+	{
+		rr = rr + "," + string(XC[i]);
+	}
+
+	rr = rr + "), lp;";
+	write(":w new.ring", rr);
+}
+
+//Pick appropriate polynomials
+proc pick_g(ideal GD, list sm, poly curr)
+{
+	int i,j;
+	poly gdi;
+	for(i=1; i<=size(GD); i++)
+	{
+		gdi = GD[i];
+		for(j=1; j<=size(sm); j=j+1)
+		{
+			if(lead(gdi) == sm[j])
+			{
+				gdi = gdi - lead(gdi);
+				if((gdi == 1 || gdi == 0) && GD[i] != curr)
+				{
+					return(GD[i]);
+				}	
+			}
+		}
+	}
+
+	if(i == size(GD)+1)
+	{
+		return(0);
+	}	
+}
+
+//Returns Interpolants of increasing size
+proc get_larger_interpolants(ideal JS, ideal JL, ideal JD, ideal J0C, list sm, int max_no)
+{
+	list L; int count;
+	int br;
+	L = insert(L,JS,size(L));
+	poly gdi = sm[size(sm) div 2]+1; //Last element of sm is 1
+	ideal GD;
+	count=1;
+
+	while(1)
+	{
+		if(count > max_no){break;}
+
+		GD = groebner(JD + gdi);
+		L = insert(L,JS*GD,size(L));
+		gdi = pick_g(GD, sm, gdi);
+		if(gdi == 0)
+		{
+			L = insert(L,JL,size(L));
+			return(L);
+		}
+
+		count = count + 1;
+	}
+
+	return(L);
+}
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+// ECO work
+
+proc get_index(ideal J, poly f)
+{
+	int i;
+	for(i=1;i<=size(J); i++)
+	{
+		if(lead(J[i]) == f)
+		{
+			return(i);
+		}
+	}
+}
+
+//Author of return_primary_var_ideals: Vikas
+proc elm_PI(ideal g, int num)
+{
+	list L = ringlist(R);
+	int i;
+	int j;
+    int nu = size(L[2]);
+    int nidx = nu-2*num+1;
+    ideal searching;
+    ideal solution;
+    list idxmatch;
+    for(i=1;i<=size(g);i=i+1)
+    {	
+    	searching = variables(g[i]);
+    	idxmatch  = var2index(searching);
+    	for(j=1;j<=size(idxmatch);j=j+1)
+    	{	
+    		if(idxmatch[j]<nidx)
+    		{
+    			break;
+    		}
+    	}
+    	if (j > size(idxmatch))
+    	{
+    		solution = solution + g[i];
+    	} 
+    }
+    return(solution);
+}
+
+
+proc Spoly(poly f1, poly f2)
+{
+	
+}

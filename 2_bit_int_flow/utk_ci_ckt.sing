@@ -1,0 +1,99 @@
+LIB "../my_proc_utk.lib";
+
+ring R = 0, (t, Z, Zs, A, B, z_3_, z_2_, z_1_, z_0_, x_1, x_5, x_2, x_3, a_0_, a_1_, b_0_, b_1_), lp; 
+
+proc ixorgate(poly g, poly h)
+{
+	return(g+h-2*g*h);
+}
+proc iorgate(poly g, poly h)
+{
+	return(g+h-g*h);
+}
+
+//circuit -  2 bit integer multiplier poly's
+ideal J1 = 
+Z -(8*z_3_ + 4*z_2_ + 2*z_1_ + z_0_),
+A -(2*a_1_+a_0_),
+B -(2*b_1_+b_0_),
+z_3_ - x_1*x_5,
+z_2_ - ixorgate(x_1,x_5),
+//correct
+//z_1_ - ixorgate(x_3,x_2),
+//buggy
+z_1_ - x_3*x_2,
+z_0_ - a_0_*b_0_,
+x_1 - a_1_*b_1_,
+x_5 - x_3*x_2,
+x_2 - a_1_*b_0_,
+x_3 - a_0_*b_1_;
+
+//vanishing polynomials
+ideal J0 = 
+a_0_^2 - a_0_,
+a_1_^2 - a_1_,
+b_0_^2 - b_0_,
+b_1_^2 - b_1_;
+
+poly spec = Z - A*B;
+
+poly miter = t*(Z-Zs)-1;
+
+ideal J2 = Zs - A*B;
+
+ideal ckt_imp = J1 + J2 + J0 + spec;
+
+poly rf = z_1_;
+"rf:",rf;
+
+int dpSize = 2;
+
+int t1;
+int ind_r = get_index(J1+J2, rf);
+int ind_Z = get_index(J1+J2, Z);
+
+ideal IL = ckt_imp + miter;
+IL[ind_r] = rf-1;
+ideal IH = ckt_imp + miter;
+IH[ind_r] = rf-0;
+
+poly sp0 = spoly(miter,IL[ind_Z]);
+poly rsp0 = reduce(sp0,IL);
+ideal EL = normalize(elm_PI(slimgb(rsp0+J0),dpSize*2));
+
+poly sp1 = spoly(miter,IH[ind_Z]);
+poly rsp1 = reduce(sp1,IH);
+ideal EH = normalize(elm_PI(slimgb(rsp1+J0),dpSize*2));
+
+ideal crp = slimgb(EL+EH);
+
+// ideal EH0 = reduce(EH,J0)+0; //remove all vanishing polys
+// ideal EL0 = reduce(EL,J0)+0; //remove all vanishing polys
+poly corr = id2poly_itr(EL,J0);
+
+poly corr_off = id2poly_itr(EH,J0);
+
+poly corr_sm = corr;
+poly corr_lg = corr_off+1;
+// ideal lg_ideal = quotient(J0,EH);
+// ideal lg0 = reduce(lg_ideal,J0)+0;
+// poly lg = id2poly_fast2(lg0,J0);
+// ideal dc_ideal = quotient(lg_ideal,EL);
+// ideal dc0 = reduce(dc_ideal,J0)+0;
+// poly dc1 = id2poly_fast2(dc0,J0);
+poly dc2 = reduce(1+((corr_sm)*(corr_off)), J0);
+
+"time here #####################", rtimer-t0;
+
+ideal CHK = ckt_imp;
+CHK[ind_r] = rf+corr;
+
+poly verify = reduce(spec, CHK+J0);
+if(verify == 0)
+{
+	"We found the correct function";
+}
+else
+{
+	"Something Wrong";
+}

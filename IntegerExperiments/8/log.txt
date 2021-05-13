@@ -1,0 +1,10 @@
+Log file for abc8.sing
+
+Time taken for verification is
+108
+
+The remainder is 
+384*b(1)*b(0)*a(7)*a(6)-128*b(1)*a(6)-128*b(0)*a(7)
+
+Circuit doesn't implement specification. Attempting rectification now.
+

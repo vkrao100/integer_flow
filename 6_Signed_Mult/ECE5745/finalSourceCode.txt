@@ -1,0 +1,230 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+
+\IEEEoverridecommandlockouts                              % This command is only
+                                                          % needed if you want to
+                                                          % use the \thanks command
+\overrideIEEEmargins
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphicx} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% added packages 
+%\usepackage {hyperref}
+\usepackage {subfig}
+\usepackage {xspace}
+%% Math and symbol packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+%%% for kmap tables:
+%\usepackage{hhline}
+\usepackage{multicol}
+%%% for \dashline
+%\usepackage{epic}
+\usepackage {enumerate}
+\usepackage{scalefnt}
+%\usepackage{enumitem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% for cool graphics
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows,shapes.symbols,shapes.callouts,snakes,shapes.geometric}
+\hyphenation{}
+
+
+
+% Process this with:
+% pdflatex latex-template.tex
+% bibtex latex-template.bib
+% pdflatex latex-template.tex
+% pdflatex latex-template.tex
+\begin{document}
+
+
+
+\title{
+Gr{\H o}bner Basis Computation for Boolean Rings Using Zero Suppressed Binary Decision Diagrams
+}
+
+\author{Revanth Rajalbandi, Harsha Gadiraju and Ian Noy\\
+ 	\textit{Dept. of Electrical and Computer Engineering, University of Utah}\\
+ 	\textit{revanth.rajalbandi@utah.edu, harsha.gadiraju@utah.edu, ian.noy@utah.edu}
+}
+\maketitle
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{abstract}
+Zero Suppressed Binary Decision Diagrams (ZBDDs) are an efficient way to solve set of sets problems; such as an ideal is a set of polynomials and each polynomial is a set of monomials. ZBDDs can manipulate these sets and yield faster results when compared to traditional BDDs used in equivalence checking of circuits.  
+ZBDDs encodes the functionality of the circuit and so does the Gr{\H o}bner basis. Here the overall idea is to implement Gr{\H o}bner basis using ZBDDs with the help of CUDD package (CUDD is a BDD package written in C which implements BDDs and ZBDDs) \cite{somenzi1998cudd}. 
+(try to add more if u have thought of something)
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Introduction}
+\label{sec:intro}
+Zero-suppressed BDDs are a new type of BDD adapted for representing sets of combinations. They are based on the following reduction rules.
+
+\begin{itemize}
+	\item Eliminate all nodes with the 1-edge pointing to the 0-terminal node. Then connect the edge to the other subgraph directly.
+	\item Share all the equivalent sub-graphs in the same manner as with the conventional BDDs.
+\end{itemize}
+
+Notice that, contrary to conventional BDDs, we do not eliminate nodes whose two edges both point to the same node. This reduction rule is asymmetric for the two edges because the nodes remain when their 0-edge points to a terminal node. When the number and order of the variables are fixed, 0-suppressed BDDs provide canonical forms of Boolean Functions.
+
+\section{CUDD Package}
+\label{sec:cudd}
+
+Colorado University Decision Diagram (CUDD) is a software package that was developed by Fabio Somenzi at the University of Colorado at Boulder \cite{somenzi1998cudd}.  The package is capable of manipulating BDDs, Algebraic Decision Diagrams (ADDs) and ZBDDs with many sets of operations.  These objects can also be converted from one form to another in a seamless manner.  When building a ZBDD it is important to treat the function as a set.  Here is an example of how a ZBDD is built in CUDD.
+\begin{align*}
+&//\ First\ create\ a\ DdManager\ object \\
+&//\ Next\ a\ node\ representing\ 1\ must\ be\ built \\
+&DdNode*\ one\ =\ Cudd\_ReadZddOne(manager,\ 0); \\
+&//\ From\ here\ a\ list\ of\ variables\ can\ be\ assigned \\		
+&for(int\ i = 0,\ i\textless 4,\ i++) \\
+&\hspace{5mm}x[i] = Cudd\_zddChange(manager,\ one,\ i); \\ 
+&\hspace{5mm}Cudd\_Ref(x[i]); \\
+\end{align*}	 
+
+The code above creates three ZBDD variables that can represent x, y, and z.  From here, there are several functions that can be performed on the variables to generate sets of polynomials.
+
+\begin{figure}[b]\centering
+\includegraphics[scale=.90]{construction}
+\caption{Construction of ZBDDs for sets of combination \cite{minato2001zero}}.
+\label{fig:construction}
+\end{figure}
+
+ZBDDs support many operations for sets of combinations. Here we show the most of basic operations. In the following, \textbf{P} and \textbf{Q} indicate the instances of sets of combinations represented by ZBDDs and \textbf{v} means an input variables. The flowchart shown in the figure 1 is the method in which the polynomials are built. Here the polynomials are treated as sets. Any set of combinations can be generated by a sequence of these basic operations. In ZBDDs there is no support for the unary complement operation but it is essential in OBDDs. In case there is a need to compute the complement we first define a universal set \textbf{U} to compute complement set $\bar{P}$ and then use the difference operation $(\textbf{U} - \bar{P})$ to compute it \cite{minato2001zero}.
+
+\section{Algorithms}
+\label{sec:algorithms}
+In order to run Buchberger's algorithm, we needed to formulate helper functions.  These functions have to be able to process ZBDDs and return the correct object.  The first algorithm is to find leading terms in a ZBDD.  The algorithm loops through the ZBDD object by traversing the ''then'' child (also known as the 1  path).  The function returns a pointer to a DdNode that represents the leading terms of the ZBDD function.
+{\small
+\begin{align*}
+&\textbf{Inputs:}\ \ DdManager,\ ZBDD,\ Variable List[\ ],\ 1 \\
+&\textbf{Outputs:}\ Leading\ Terms \\
+&\ \ \text{1: }\ temp\leftarrow 1; \\
+&\ \ \text{2: }\ \textbf{while }(ZBDD\neq \textbf{NULL})\ \textbf{do} \\
+&\ \ \text{3: }\ \ \ temp\ =\ VariableList[i]*temp \\
+&\ \ \text{4: }\ \ \ ZBDD\ =\ then\ child\ of\ ZBDD \\
+&\ \ \text{5: }\ \ \ i\ =\ i + 1 \\
+&\ \ \text{6: }\ \textbf{end while} \\
+&\ \ \text{7: }\ \text{return } temp;
+\end{align*}
+\par}
+
+The next algorithm is multivariate division.  Again, this function had to be adapted to return a pointer to a DdNode that represents the remainder of the division as a ZBDD.  The ZBDD input is the dividend and the ZBDDlist is the divisor.  The ZBDDlist is a struct that includes a DdNode pointer and a pointer to the next DdNode in the list.  The algorithm loops through each DdNode in the list, finds the leading term and then attempts to divide the ZBDD.
+{\small
+\begin{align*}
+&\textbf{Inputs:}\ \ DdManager,\ ZBDD,\ ZBDDlist[\ ],\ Variable List[\ ],\ 1 \\
+&\textbf{Outputs:}\ Remainder \\ 
+&\ \ \text{1: }\ zero\leftarrow 0;\ quot\leftarrow 0;\ rem\leftarrow 0; \\
+&\ \ \text{2: }\ \textbf{int } i = 1; \\
+&\ \ \text{3: }\ \textbf{while } (ZBDD \neq zero)\ \textbf{do} \\
+&\ \ \text{4: }\ \ \ \textbf{if } \exists i\ \text{s.t.} \frac{ZBDD}{ZBDDlist[i]} \textbf{then} \\
+&\ \ \text{5: }\ \ \ \ \ quot = \left( quot + \frac{LT(ZBDD)}{LT(ZBDDlist[i])} \right)\\
+&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\ \left( quote \cap \frac{LT(ZBDD)}{LT(ZBDDlist[i])} \right) \\
+&\ \ \text{6: }\ \ \ \ \ ZBDD = \{ZBDD\} - \left\lbrace\frac{LT(ZBDD)}{LT(ZBDDlist[i])}\right\rbrace*ZBDDList[i] \\
+&\ \ \text{7: }\ \ \ \textbf{else } \\
+&\ \ \text{8: }\ \ \ \ \ rem = \left(rem + LT(ZBDD)\right) - \left(rem\cap LT(ZBDD)\right) \\
+&\ \ \text{9: }\ \ \ \ \ ZBDD = \{ZBDD\} - \{LT(ZBDD)\} \\
+&\ \text{10: }\ \ \ \textbf{end if } \\
+&\ \text{11: }\ i = i+1; \\
+&\ \text{12: }\ \textbf{end  while} \\
+&\ \text{13: }\ \text{return } rem; \\
+\end{align*}
+\par}
+
+One of the key steps in Buchberger's algorithm is finding the s-polynomials of the functions.  S-polynomials are formed to cancel the leading terms of two polynomials.  The Gr{\H o}bner basis can be directly defined by these s-polynomials. 
+{\small
+\begin{align*}
+&\textbf{Theorem } Let\ I \subset K\left[ x_{1},x_{2},\ldots ,x_{n}\right] \ be\ a\ polynomial\ ideal \\ &with\ basis\ G = \{ g_{1},g_{2},\ldots ,g_{n} \} \ then\ G\ is\ a\ Gr\text{{\H o}}bner\ basis \\ 
+&for\ I\ if\ and\ only\ if\ the\ remainder\ on\ dividing\ every\ S- \\
+&polynomial\ S\left(g_{i},g_{j}\right)\left(i \not= j \right)\ by\ G\ ( in\ any\ order\ of\ the \\ 
+&basis\ elements ) \ is\ zero. \cite{seligspoly} 
+\end{align*}
+\par} 
+
+Here is what the algorithm looks like for ZBDDs.
+
+{\small
+\begin{align*}
+&\textbf{Inputs:}\ \ DdManager,\ ZBDD1,\ ZBDD2,\ VariableList[\ ],\ 1 \\
+&\textbf{Outputs:}\ S-polynomial \\
+&\ \ \text{1: }\ LCM = LT(ZBDD1)*LT(ZBBD2) \\
+&\ \ \text{2: }\ prod1 = \frac{LCM}{LT(ZBDD1)}ZBBD1 \\
+&\ \ \text{3: }\ prod2 = \frac{LCM}{LT(ZBDD2)}ZBBD2 \\
+&\ \ \text{4: }\ prod3 = prod1 \cap prod2 \\
+&\ \ \text{5: }\ \textbf{if } prod1 \ge prod2\ \textbf{then} \\
+&\ \ \text{6: }\ \ \ diff = \{prod2\} - \{prod3\} \\
+&\ \ \text{7: }\ \ \ sply = \{prod1\} - \{prod2\} \\
+&\ \ \text{8: }\ \ \ sply = \left(sply + diff\right) - \left(sply \cap diff\right) \\
+&\ \ \text{9: }\ \textbf{else } \\
+&\ \text{10: }\ \ \ diff = \{prod1\} - \{prod3\} \\
+&\ \text{11: }\ \ \ sply = \{prod2\} - \{prod1\} \\
+&\ \text{12: }\ \ \ sply = \left(sply + diff\right) - \left(sply \cap diff\right) \\
+&\ \text{13: }\ \textbf{end if } \\
+&\ \text{14: }\ \text{return } sply; \\
+\end{align*}
+\par}
+
+With the help of the aforementioned functions, Buchberger's algorithm can be run on ZBDDs.  The function below repeatedly computes the s-polynomials of pairs of ZBDDs and then divides by the list of ZBDDs.  If the remainder is non-zero then the remainder is added to the list of ZBDDs.  The algorithm is shown below. 
+{\small
+\begin{align*}
+&\textbf{Inputs:}\ \ F = List\ of\ ZBDDs \\
+&\ \ \ \ \ \ \ \ \ \ \left[ f_{1},f_{2},\ldots ,f_s \right] \\
+&\textbf{Outputs:}\ G = List\ of\ ZBDDs\ representing\ the\ Gr\text{{\H o}}bner\ basis \\
+&\ \ \ \ \ \ \ \ \ \ \ \left[ g_{1},g_{2},\ldots ,g_t \right]\\
+&\ \ \text{1: }\ \text{Initialize: } G:=F;\ \mathcal{G}:=\{\{f_i , f_j\} \mid f_i \not= f_j \in G\} \\  
+&\ \ \text{2: }\ \textbf{while } \mathcal{G} \not= {\O}\ \textbf{do} \\
+&\ \ \text{3: }\ \ \ \text{Pick a pair } \{ f, g\} \in \mathcal{G} \\
+&\ \ \text{4: }\ \ \ \mathcal{G} := \{ \mathcal{G} \} - \{\{f,g\}\} \\
+&\ \ \text{5: }\ \ \ Spoly(f,g)\overset{G}{\to} +\ h \\
+&\ \ \text{6: }\ \ \ \textbf{if } h \not= 0\ \textbf{then} \\
+&\ \ \text{7: }\ \ \ \ \ \ \mathcal{G} := \mathcal{G} \cup \{\{u,h\} \mid \forall u \in G\} \\ 
+&\ \ \text{8: }\ \ \ \ \ \ G := \left( G + h \right) - \left( G \cap h \right) \\
+&\ \ \text{9: }\ \ \ \textbf{end if} \\
+&\ \text{10: }\ \textbf{end while} \\
+\end{align*}
+\par}
+
+
+\section{The Experiment}
+\label{sec:experiment}
+We set out to perform Buchberger's algorithm to ZBDDs.  The purpose was to test if we could properly find the Gr{\H o}bner basis of a polynomial that was represented by a ZBDD.  
+
+\section{Results}
+\label{sec:results}
+Fill in results of the experiment.
+
+\section{Conclusion}
+\label{sec:conc}
+I conclude this treatiese with \ldots
+\cite{brickenstein2009polybori}
+\cite{minato1993zero}
+\cite{minato1996binary}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{multicols}{2}
+\bibliographystyle{IEEEtran}
+\bibliography{ece5745bib}
+%\end{multicols}
+
+
+\end{document}
+
+
+% LocalWords:  tikz pt greenbox darkgreen lightgreen ra lightblue tikzpicture

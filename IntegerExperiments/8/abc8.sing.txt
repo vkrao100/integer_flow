@@ -1,0 +1,320 @@
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn880+1
+-nn862-nn864+2
+-nn828-nn830-nn832+3
+-nn778-nn780-nn782-nn784+4
+-nn712-nn714-nn716-nn718-nn720+5
+-nn630-nn632-nn634-nn636-nn638-nn640+6
+-nn534-nn536-nn538-nn540-nn542-nn544+nn444+6
+-nn430+nn424-nn432-nn434-nn436-nn438-nn440+6
+-nn326+nn320-nn328-nn330-nn332-nn334+5
+-nn238+nn232-nn240-nn242-nn244+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+0
+0
+0
+list of coefficients from remainder [1]:
+   64
+[2]:
+   192
+list of affected outputs [1]:
+   64
+[2]:
+   192
+                     SINGULAR                                 /
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.2
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Feb 2019
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
+// ** loaded /usr/bin/../share/singular/LIB/linalg.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmodapp.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/sing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/qhmoduli.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/rinvar.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/zeroset.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/primitiv.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/presolve.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gkdim.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/dmod.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/control.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/homolog.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/deform.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/gmssing.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/bfun.lib (4.1.2.0,Feb_2019)
+// ** loaded my_proc.lib 
+// ** loaded /usr/bin/../share/singular/LIB/teachstd.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/normaliz.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/crypto.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/atkins.lib (4.1.2.0,Feb_2019)
+// ** loaded /usr/bin/../share/singular/LIB/ntsolve.lib (4.1.2.0,Feb_2019)
+-nn880+1
+-nn862-nn864+2
+-nn828-nn830-nn832+3
+-nn778-nn780-nn782-nn784+4
+-nn712-nn714-nn716-nn718-nn720+5
+-nn630-nn632-nn634-nn636-nn638-nn640+6
+-nn534-nn536-nn538-nn540-nn542-nn544+nn444+6
+-nn430+nn424-nn432-nn434-nn436-nn438-nn440+6
+-nn326+nn320-nn328-nn330-nn332-nn334+5
+-nn238+nn232-nn240-nn242-nn244+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+0
+0
+0
+list of coefficients from remainder [1]:
+   64
+[2]:
+   192
+list of affected outputs [1]:
+   64
+[2]:
+   192
+[1]:
+   7
+[2]:
+   6
+logical cone of output -s(6) [1]:
+   -nn248
+[2]:
+   -nn246
+[3]:
+   -nn262
+[4]:
+   -nn276
+[5]:
+   -nn290
+[6]:
+   -nn304
+[7]:
+   -nn318
+[8]:
+   -nn254
+[9]:
+   -nn260
+[10]:
+   -nn268
+[11]:
+   -nn274
+[12]:
+   -nn282
+[13]:
+   -nn288
+[14]:
+   -nn296
+[15]:
+   -nn302
+[16]:
+   -nn310
+[17]:
+   -nn316
+[18]:
+   -nn324
+[19]:
+   -s(6)
+-nn238+nn232-nn240-nn242-nn244-b(1)*a(5)+2*b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(1)*a(5)+4*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(1)*a(5)+8*b(0)*a(6)+2
+-nn70+nn64-8*b(1)*a(5)+16*b(0)*a(6)+1
+nn40-16*b(1)*a(5)+32*b(0)*a(6)
+-32*b(1)*a(5)+64*b(0)*a(6)
+-64*b(1)*a(5)+128*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244+2*b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170+4*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112+8*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64+16*b(1)*a(5)-8*b(0)*a(6)+1
+nn40+32*b(1)*a(5)-16*b(0)*a(6)
+64*b(1)*a(5)-32*b(0)*a(6)
+128*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(2)*a(4)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170-2*b(2)*a(4)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112-4*b(2)*a(4)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64-8*b(2)*a(4)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40-16*b(2)*a(4)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(2)*a(4)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(2)*a(4)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244-b(2)*a(4)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(2)*a(4)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(2)*a(4)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(2)*a(4)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(2)*a(4)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(2)*a(4)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(2)*a(4)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(3)*a(3)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170-2*b(3)*a(3)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112-4*b(3)*a(3)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64-8*b(3)*a(3)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40-16*b(3)*a(3)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(3)*a(3)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(3)*a(3)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244-b(3)*a(3)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(3)*a(3)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(3)*a(3)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(3)*a(3)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(3)*a(3)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(3)*a(3)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(3)*a(3)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(4)*a(2)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170-2*b(4)*a(2)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112-4*b(4)*a(2)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64-8*b(4)*a(2)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40-16*b(4)*a(2)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(4)*a(2)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(4)*a(2)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244-b(4)*a(2)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(4)*a(2)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(4)*a(2)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(4)*a(2)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(4)*a(2)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(4)*a(2)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(4)*a(2)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(5)*a(1)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170-2*b(5)*a(1)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112-4*b(5)*a(1)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64-8*b(5)*a(1)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40-16*b(5)*a(1)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(5)*a(1)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(5)*a(1)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244-b(5)*a(1)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(5)*a(1)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(5)*a(1)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(5)*a(1)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(5)*a(1)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(5)*a(1)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(5)*a(1)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244-b(6)*a(0)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170-2*b(6)*a(0)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112-4*b(6)*a(0)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64-8*b(6)*a(0)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40-16*b(6)*a(0)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+-32*b(6)*a(0)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+-64*b(6)*a(0)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244-b(6)*a(0)+3*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170-2*b(6)*a(0)+6*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112-4*b(6)*a(0)+12*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64-8*b(6)*a(0)+24*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40-16*b(6)*a(0)+48*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+-32*b(6)*a(0)+96*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+-64*b(6)*a(0)+192*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+-nn238+nn232-nn240-nn242-nn244+2*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+5
+-nn166+nn160-nn168-nn170+4*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+5
+-nn110+nn104-nn112+8*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+6
+-nn70+nn64+16*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+9
+nn40+32*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)+16
+64*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)+32
+128*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)+64
+-nn238+nn232-nn240-nn242-nn244+2*b(1)*b(0)*a(6)*a(5)-b(1)*a(5)-b(0)*a(6)+4
+-nn166+nn160-nn168-nn170+4*b(1)*b(0)*a(6)*a(5)-2*b(1)*a(5)-2*b(0)*a(6)+3
+-nn110+nn104-nn112+8*b(1)*b(0)*a(6)*a(5)-4*b(1)*a(5)-4*b(0)*a(6)+2
+-nn70+nn64+16*b(1)*b(0)*a(6)*a(5)-8*b(1)*a(5)-8*b(0)*a(6)+1
+nn40+32*b(1)*b(0)*a(6)*a(5)-16*b(1)*a(5)-16*b(0)*a(6)
+64*b(1)*b(0)*a(6)*a(5)-32*b(1)*a(5)-32*b(0)*a(6)
+128*b(1)*b(0)*a(6)*a(5)-64*b(1)*a(5)-64*b(0)*a(6)
+nn254+nn318+nn304+nn290+nn276+nn262+2*nn248*nn246-nn238+nn232-nn240-nn242-nn244-b(6)*a(0)-b(5)*a(1)-b(4)*a(2)-b(3)*a(3)-b(2)*a(4)-b(1)*a(5)-b(0)*a(6)+4
+2*nn254+2*nn318+2*nn304+2*nn290+2*nn276+2*nn262+4*nn248*nn246-nn166+nn160-nn168-nn170-2*b(6)*a(0)-2*b(5)*a(1)-2*b(4)*a(2)-2*b(3)*a(3)-2*b(2)*a(4)-2*b(1)*a(5)-2*b(0)*a(6)+3
+4*nn254+4*nn318+4*nn304+4*nn290+4*nn276+4*nn262+8*nn248*nn246-nn110+nn104-nn112-4*b(6)*a(0)-4*b(5)*a(1)-4*b(4)*a(2)-4*b(3)*a(3)-4*b(2)*a(4)-4*b(1)*a(5)-4*b(0)*a(6)+2
+8*nn254+8*nn318+8*nn304+8*nn290+8*nn276+8*nn262+16*nn248*nn246-nn70+nn64-8*b(6)*a(0)-8*b(5)*a(1)-8*b(4)*a(2)-8*b(3)*a(3)-8*b(2)*a(4)-8*b(1)*a(5)-8*b(0)*a(6)+1
+16*nn254+16*nn318+16*nn304+16*nn290+16*nn276+16*nn262+32*nn248*nn246+nn40-16*b(6)*a(0)-16*b(5)*a(1)-16*b(4)*a(2)-16*b(3)*a(3)-16*b(2)*a(4)-16*b(1)*a(5)-16*b(0)*a(6)
+32*nn254+32*nn318+32*nn304+32*nn290+32*nn276+32*nn262+64*nn248*nn246-32*b(6)*a(0)-32*b(5)*a(1)-32*b(4)*a(2)-32*b(3)*a(3)-32*b(2)*a(4)-32*b(1)*a(5)-32*b(0)*a(6)
+64*nn254+64*nn318+64*nn304+64*nn290+64*nn276+64*nn262+128*nn248*nn246-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+prem: 64*nn254+64*nn318+64*nn304+64*nn290+64*nn276+64*nn262+128*nn248*nn246-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+dividend- 64*nn254+64*nn318+64*nn304+64*nn290+64*nn276+64*nn262+128*nn248*nn246-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+quotient- -64
+divisor- -nn254
+residue- 64*nn318+64*nn304+64*nn290+64*nn276+64*nn262+128*nn248*nn246-64*b(6)*a(0)-64*b(5)*a(1)-64*b(4)*a(2)-64*b(3)*a(3)-64*b(2)*a(4)-64*b(1)*a(5)-64*b(0)*a(6)
+quotient is a constant
+   ? `abc8` is not defined
+Auf Wiedersehen.
+	Command being timed: "Singular 8/abc8.sing --no-warn"
+	User time (seconds): 9.49
+	System time (seconds): 0.14
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:09.63
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 31100
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 148819
+	Voluntary context switches: 1
+	Involuntary context switches: 18
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

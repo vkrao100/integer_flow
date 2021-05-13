@@ -1,0 +1,13 @@
+# Benchmark "Multi2" written by ABC on Thu May  6 16:45:37 2021
+.model Multi2
+.inputs a0 a1 b0 b1
+.outputs m0 m1 m2 m3
+.gate AND2X1 A=b0 B=a0 Y=m0
+.gate AND2X1 A=b0 B=a1 Y=n10
+.gate AND2X1 A=b1 B=a0 Y=n11
+.gate XOR2X1 A=n11 B=n10 Y=m1
+.gate INVX1  A=m0 Y=n13
+.gate AND2X1 A=b1 B=a1 Y=n14
+.gate AND2X1 A=n14 B=n13 Y=m2
+.gate AND2X1 A=n11 B=n10 Y=m3
+.end

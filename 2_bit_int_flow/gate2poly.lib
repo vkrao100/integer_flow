@@ -1,0 +1,51 @@
+// Multi-inputs (1~5) OR gates
+proc or1(poly f)
+{
+    return (f);
+}
+
+proc or2(poly f, poly g)
+{
+    return (f+g+f*g);
+}
+
+proc or3(poly f1, poly f2, poly f3)
+{
+    poly g = or2(f1,f2);
+    g = or2(g,f3);
+    return (g);
+}
+
+proc or4(poly f1, poly f2, poly f3, poly f4)
+{
+    poly g = or3(f1,f2,f3);
+    g = or2(g,f4);
+    return (g);
+}
+
+proc or5(poly f1, poly f2, poly f3, poly f4, poly f5)
+{
+    poly g = or4(f1,f2,f3,f4);
+    g = or2(g,f5);
+    return (g);
+}
+
+proc orgate(poly g,poly h)
+{
+    return(g+h+g*h);
+}
+
+proc xorgate(poly g,poly h)
+{
+    return(g+h);
+}
+
+proc invgate(poly g)
+{
+    return(1+g);
+}
+
+proc andgate(poly g,poly h)
+{
+    return(g*h);
+}

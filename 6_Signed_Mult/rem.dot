@@ -1,0 +1,46 @@
+digraph "ZDD" {
+size = "7.5,10"
+center = true;
+edge [dir = none];
+{ node [shape = plaintext];
+  edge [style = invis];
+  "CONST NODES" [style = invis];
+" a1 " -> " b1 " -> " a0 " -> " b0 " -> "CONST NODES"; 
+}
+{ rank = same; node [shape = box]; edge [style = invis];
+"  Remainder  "; }
+{ rank = same; " a1 ";
+"0x7890";
+}
+{ rank = same; " b1 ";
+"0x788f";
+"0x77f0";
+}
+{ rank = same; " a0 ";
+"0x7886";
+"0x77d7";
+}
+{ rank = same; " b0 ";
+"0x77e4";
+}
+{ rank = same; "CONST NODES";
+{ node [shape = box]; "0x7788";
+"0x7787";
+}
+}
+"  Remainder  " -> "0x7890" [style = solid];
+"0x7890" -> "0x788f";
+"0x7890" -> "0x77f0" [style = dashed];
+"0x788f" -> "0x7886";
+"0x788f" -> "0x77e4" [style = dashed];
+"0x77f0" -> "0x77d7";
+"0x77f0" -> "0x7788" [style = dashed];
+"0x7886" -> "0x7787";
+"0x7886" -> "0x77e4" [style = dashed];
+"0x77d7" -> "0x7787";
+"0x77d7" -> "0x7788" [style = dashed];
+"0x77e4" -> "0x7787";
+"0x77e4" -> "0x7788" [style = dashed];
+"0x7788" [label = "0"];
+"0x7787" [label = "1"];
+}
