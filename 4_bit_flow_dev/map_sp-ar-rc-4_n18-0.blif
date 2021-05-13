@@ -3,7 +3,8 @@
 .inputs IN1[0] IN1[1] IN1[2] IN1[3] IN2[0] IN2[1] IN2[2] IN2[3]
 .outputs P[0] P[1] P[2] P[3] P[4] P[5] P[6] P[7]
 .gate AND2X1 A=IN2[0] B=IN1[0] Y=P[0]
-.gate AND2X1 A=IN2[1] B=IN1[0] Y=n18
+#.gate AND2X1 A=IN2[1] B=IN1[0] Y=n18
+.gate ONE Y=n18
 .gate AND2X1 A=IN2[0] B=IN1[1] Y=n19
 .gate XOR2X1 A=n19 B=n18 Y=P[1]
 .gate AND2X1 A=n19 B=n18 Y=n21
