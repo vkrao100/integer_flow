@@ -59,17 +59,22 @@ unsigned get_model_maxvar()     {return model->maxvar;}
 /*------------------------------------------------------------------------*/
 unsigned get_model_inputs_lit(unsigned i) {
   assert(i < NN);
+  msg("model inp lit %d",model->inputs[i].lit);
+  msg("model inp name %s",model->inputs[i].name);
   return model->inputs[i].lit;
 }
 /*------------------------------------------------------------------------*/
 const char* get_model_inputs_name(unsigned i) {
   assert(i < NN);
+  msg("model inp name %s",model->inputs[i].name);
   return model->inputs[i].name;
 }
 /*------------------------------------------------------------------------*/
 unsigned slit(unsigned i) {
   if (!model) return -1;
   assert(i < NN);
+  msg("model outp lit %d",model->outputs[i].lit);
+  msg("model outp name %s",model->outputs[i].name);
   return model->outputs[i].lit;
 }
 /*------------------------------------------------------------------------*/
