@@ -102,6 +102,7 @@ void allocate_gates(bool assert) {
 
     std::string name = "a" + std::to_string((i-a0)/ainc);
     gates[i] = new Gate(aiger, name, ++level, 1);
+    //gates[i]->print_gate_constraint(stdout);
   }
 
   // inputs b
@@ -111,6 +112,7 @@ void allocate_gates(bool assert) {
 
     std::string name = "b" + std::to_string((i-b0)/binc);
     gates[i] = new Gate(aiger, name, ++level, 1);
+    //gates[i]->print_gate_constraint(stdout);
   }
 
   // internal gates
@@ -120,6 +122,7 @@ void allocate_gates(bool assert) {
 
     std::string name = "l" + std::to_string(aiger);
     gates[i] = new Gate(aiger, name, ++level);
+    //gates[i]->print_gate_constraint(stdout);
   }
 
   // output s
@@ -129,6 +132,7 @@ void allocate_gates(bool assert) {
     std::string name = "s" + std::to_string(aiger);
     gates[i] = new Gate(M-i-1, name, ++level, 0, 1);
     gates[i]->set_slice(aiger);
+    //gates[i]->print_gate_constraint(stdout);
   }
 }
 

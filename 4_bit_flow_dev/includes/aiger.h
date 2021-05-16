@@ -65,7 +65,7 @@ typedef struct aiger_symbol aiger_symbol;
 
 /*------------------------------------------------------------------------*/
 /* Each literal is associated to a variable having an unsigned index.  The
- * variable index is obtained by deviding the literal index by two, which is
+ * variable index is obtained by dividing the literal index by two, which is
  * the same as removing the sign bit.
  */
 #define aiger_var2lit(i) \
@@ -83,7 +83,7 @@ typedef void (*aiger_free) (void *mem_mgr, void *ptr, size_t);
 
 /*------------------------------------------------------------------------*/
 /* Callback function for client character stream reading.  It returns an
- * ASCII character or EOF.  Thus is has the same semantics as the standard
+ * ASCII character or EOF.  Thus it has the same semantics as the standard
  * library 'getc'.   See 'aiger_read_generic' for more details.
  */
 typedef int (*aiger_get) (void *client_state);
