@@ -1,0 +1,13 @@
+# Benchmark "../btor/btor2" written by ABC on Mon May 17 13:56:15 2021
+.model ../btor/btor2
+.inputs a[0] b[0] a[1] b[1]
+.outputs s[0] s[1] s[2] s[3]
+.gate AND2X1 A=b[0] B=a[0] Y=s[0]
+.gate AND2X1 A=a[1] B=b[0] Y=new_n10_
+.gate AND2X1 A=b[1] B=a[0] Y=new_n11_
+.gate XOR2X1 A=new_n11_ B=new_n10_ Y=s[1]
+.gate AND2X1 A=new_n11_ B=new_n10_ Y=new_n13_
+.gate AND2X1 A=b[1] B=a[1] Y=new_n14_
+.gate XOR2X1 A=new_n14_ B=new_n13_ Y=s[2]
+.gate AND2X1 A=new_n14_ B=new_n13_ Y=s[3]
+.end

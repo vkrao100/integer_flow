@@ -1,0 +1,4 @@
+# Benchmark "sp-ar-rc-128-opt-dc2" written by ABC on Mon May 17 13:08:08 2021
+.model sp-ar-rc-128-opt-dc2
+Aoki format - Input:IN1[0],Output:P[0]
+Working on 128-bit multiplier.
