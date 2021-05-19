@@ -1,2 +1,5 @@
 # Benchmark "../abc/abc2" written by ABC on Mon May 17 13:55:07 2021
 .model ../abc/abc2
+abc format - Input:a1,Output:m1
+Working on 2-bit multiplier.
+python ../code_repo/utilities.py map_abc2.blif 2 2 1 a0

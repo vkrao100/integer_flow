@@ -5,44 +5,44 @@
   cofac*.log - output with target names and remainders generated
   {on,off} - use either on-set for computation or off-set for computation
   {0,1} - 0 - no sis_synthesis of don't cares
-  		  1 - perform don't care simplification using sis
+		  1 - perform don't care simplification using sis
 
   Approach:
 
   For every cofactor (remainder):
-  	Create eqn by reading functions from cofac*.log (2^n functions)
-  	Read in abc - write it out as blif (unmapped)
-  	Rename all intermediate nodes using a distinct notation
-  	As and when you generate blifs - merge it into respective single files
-  		gfch - greedy function blif file
-  		dfch - don't care computation blif file
+	Create eqn by reading functions from cofac*.log (2^n functions)
+	Read in abc - write it out as blif (unmapped)
+	Rename all intermediate nodes using a distinct notation
+	As and when you generate blifs - merge it into respective single files
+		gfch - greedy function blif file
+		dfch - don't care computation blif file
 
   In GFC:
-  	Add lines related to Union/intersection and set difference
-  	Synthesize using abc
+	Add lines related to Union/intersection and set difference
+	Synthesize using abc
 
   In DFC:
-    Add lines related to Union/intersection and set difference
-  	If possible, synthesize using sis and then with abc
-  	Else synthesize using abc
+	Add lines related to Union/intersection and set difference
+	If possible, synthesize using sis and then with abc
+	Else synthesize using abc
 
   Blif logic:
-  	for Boolean sets (on-set/off-set/DC-set)
-  	Union - 00 0
-  	Intersection - 11 1
-  	Diff (A-B) - 10 1
+	for Boolean sets (on-set/off-set/DC-set)
+	Union - 00 0
+	Intersection - 11 1
+	Diff (A-B) - 10 1
 
-  	for polynomial functions
-  	Union - 11 1
-  	Intersection - 00 0
-  	Diff (A-B) - 01 0
+	for polynomial functions
+	Union - 11 1
+	Intersection - 00 0
+	Diff (A-B) - 01 0
 '''
-
 import sys
 # import re
 import os
 import subprocess
 import time
+import pdb
 
 # from utilities import *
 
@@ -50,7 +50,7 @@ abc_synth = False
 
 delete_cof_files = True
 delete_tmp_files = False
-src_path = ''
+src_path = '../code_repo/'
 
 ###################################################################
 ##################### Time stamp for procedures ###################
@@ -65,7 +65,19 @@ def print_time(tm_abc_aig='N/A',
 
 	print '\n------------------- Time Data -------------------'
 	print 'create aigs using abc             			', round(tm_abc_aig,1)
-	print 'Total setup time for gfc files 				', round(tm_set+tm_setg,1)
+	print 'Total setup time for gfc files (cofacs)[2:].zfill(num_trgts)
+
+	if not first_time:
+		pFH.seek(0, os.SEEK_END)
+		pos = pFH.tell() - 1
+
+		for _ in range(num_trgts+1):
+			while pos > 0 and pFH.read(1) != "\n":
+				pos -= 1
+				pFH.seek(pos, os.SEEK_SET)
+
+		if pos > 0:
+			pFH.seek(pos, os.SEE				', round(tm_set+tm_setg,1)
 	print 'Total setup time for dfc files 				', round(tm_set+tm_setd,1)
 	print 'Synthesizing gfc files using abc: 			', round(tm_gfcs,1)
 	print 'Synthesizing dfc files using sis: 			', round(tm_sdfcs,1)
@@ -87,6 +99,7 @@ total_args = len(sys.argv)-1
 expctd_args = 3
 inps = []
 outps = []
+rs = 'rg'
 
 if (total_args < expctd_args):
 	print ("Expected {} input argument file(s)!!".format(expctd_args))
@@ -114,8 +127,12 @@ elif bug_config == 3: #bugs/targets near PO
 else: # default bugs near PI
 	pass
 
+#baseFileName
+bfName = baseFile.strip('.blif')
+
 #open a log file for tracking model info and bug info
-logFile = baseFile.strip('.blif') + '.log'
+logFile = '{}.log'.format(bfName)
+remFile = 'rem_{}.log'.format(bfName)
 try:
 	logFile = open(logFile,'w')
 except IOError:
@@ -174,15 +191,64 @@ bitWidth = inpLen/2
 assert(len(outps) == inpLen)
 
 logFile.write("Working on {}-bit multiplier.".format(bitWidth)+'\n')
+logFile.write("Adding {} bugs at random locations with bug config {}".format(num_trgts,bug_config)+'\n')
 
-cmd = 'python {}utilities.py {}.blif {} {} {} {}'.format(src_path, baseFile, bitWidth, num_trgts, bug_config, inpStr)
+cmd = 'python {}utilities.py {} {} {} {} {}'.format(src_path, baseFile, bitWidth, num_trgts, bug_config, inpStr)
 logFile.write(cmd+'\n')
 subprocess.call([cmd],shell=True,cwd=os.getcwd())
 
+#patch file generated after adding bugs
+pFile = '{}_p{}_pready.blif'.format(bfName,num_trgts)
+pdb.set_trace()
+try:
+	pFH = open(pFile,'wr+')
+except IOError:
+	print ("Couldn't open patch file for reading, check add_bug module!!")
+	sys.exit(0)
 
+line0 = pFH.readline()
 
+jtrgts = line0.lstrip().split('#')
+targetstr = jtrgts[1].strip().split()
+
+assert(len(targetstr) == num_trgts)
+
+logFile.write("Bugs added at locations {}".format(' '.join(targetstr))+'\n')
 blifFile.close()
+
+#Goto end of file
+remlog = open(remFile,'w')
+remlog.write("Targets: {}\n".format(' '.join(targetstr)))
+first_time = True
+
+for cofacs in range(2**num_trgts):
+	keystr = bin(cofacs)[2:].zfill(num_trgts)
+
+	if not first_time:
+		pFH.seek(0, os.SEEK_END)
+		pos = pFH.tell() - 1
+
+		for _ in range(num_trgts+1):
+			while pos > 0 and pFH.read(1) != "\n":
+				pos -= 1
+				pFH.seek(pos, os.SEEK_SET)
+
+		if pos > 0:
+			pFH.seek(pos, os.SEEK_SET)
+			pFH.truncate()
+
+	for target in range(num_trgts):
+		if keystr[target] == '0':
+			pFH.write('.gate ZERO Y={}{}2\n'.format(rs,target))
+		if keystr[target] == '1':
+			pFH.write('.gate ONE Y={}{}2\n'.format(rs,target))      	
+	pFH.write('.end\n')
+	first_time = False
+	pFH.close()
+	pdb.set_trace()
+
 logFile.close()
+
 
 # # Proceeding to analyze cofactor log file to compute the MFR patches.
 # # Write the ON-set and OFFC-set files from .

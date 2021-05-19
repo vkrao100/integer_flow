@@ -92,6 +92,9 @@ void slice_by_xor_chains() {
     Gate * output = gates[i+M-1];
     output->set_slice(i);
 
+    //fixed error - 1
+    if(!output->children_size()) continue;
+
     assert(output->children_size() == 1);
     Gate * child = output->children_front();
 
@@ -176,6 +179,9 @@ void slice_jut_gates() {
   for (int i = NN-1; i >= 0; i--) {
     Gate * output = gates[i+M-1];
     output->set_slice(i);
+    
+    //fixed error - 1
+    if(!output->children_size()) continue;
 
     assert(output->children_size() == 1);
     Gate * child = output->children_front();
@@ -183,6 +189,9 @@ void slice_jut_gates() {
     std::queue<Gate*> downwards_queue;
     if (child->get_xor_gate() == 1 || i != static_cast<int>(NN-1))
       downwards_queue.push(child);
+
+    //fixed error - 1
+    if(child->parents_size() > 1) upwards_slicing(child, child);
 
     while (!downwards_queue.empty()) {
       Gate * n = downwards_queue.front();
@@ -300,6 +309,15 @@ void fix_jut_gates() {
 void slicing_xor() {
   slice_by_xor_chains();
   slice_jut_gates();
+  //fixed error - 1
+  for (int i=NN-1; i>= 0; i--) {
+  std::list<Gate*> sl = slices[i];
+  for (std::list<Gate*>::const_iterator it=sl.begin(); it != sl.end(); ++it) {
+    Gate * n = *it;
+    if (n->get_elim()) continue;
+    if (n->get_gate_constraint()) n->print_gate_constraint(stdout);
+    }
+  }
   if (fix_xors()) fix_jut_gates();
 }
 
@@ -550,8 +568,14 @@ void fill_slices() {
 /*------------------------------------------------------------------------*/
 
 void slicing_non_xor() {
-  for (unsigned i = 0; i < NN; i++)
-    input_cone(gate(slit(i)), i);
+  //fixed error - 1
+/*  for (unsigned i = 0; i < NN; i++)
+    input_cone(gate(slit(i)), i);*/
+  for (unsigned i = 0; i < NN; i++){
+    unsigned lit = slit(i);
+    if(!lit) continue;
+    input_cone(gate(lit), i);
+  }
 
   find_carries();
   merge_all();

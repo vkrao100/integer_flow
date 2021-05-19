@@ -1,0 +1,6 @@
+# Benchmark "sp-ar-rc-4" written by ABC on Wed May 12 15:38:50 2021
+.model sp-ar-rc-4
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 4-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map_sp-ar-rc-4_cf0.blif 4 2 1 IN1[0]
