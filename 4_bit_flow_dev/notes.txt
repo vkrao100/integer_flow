@@ -1,0 +1,38 @@
+Notes-vikas
+
+get gate of output 2 -
+Gate * out2 = gate(slit(2));
+gates[i] has all the gates
+
+get the gate constraint (polynomial)
+Polynomial * p1 = n1->get_gate_constraint();
+
+variable - assigned to a gate (gate output)
+{
+	hash_Value - for variables - used for storing terms
+	level - order of the variables
+	num - value to relate AIG gates to gate class
+}
+
+vstack used to build term
+
+term = variable + rest 
+{
+	variable
+	tail in linkedlist 
+	ref counter
+	hash
+	next - hash collission link	
+}
+
+monomial = coefficient + term
+{
+	term
+	coeff
+	ref counter
+}
+
+polynomial = monomials in a stack (sorted mstack)
+{
+	sorted deque of monomials
+}
