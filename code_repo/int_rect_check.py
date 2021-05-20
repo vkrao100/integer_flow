@@ -241,10 +241,17 @@ for cofacs in range(2**num_trgts):
 		strip_last_x_lines(num_trgts)
 	pFH.write('\n')
 	for target in range(num_trgts):
+		#Always rectify at rg*2
+		# rectLoc = 2
+		if target%2 == 0: #rectify at rg*3
+			rectLoc = 3
+		else: # rectify at rg*4
+			rectLoc = 4
+
 		if keystr[target] == '0':
-			pFH.write('.gate ZERO Y={}{}3\n'.format(rs,target))
+			pFH.write('.gate ZERO Y={}{}{}\n'.format(rs,target,rectLoc))
 		if keystr[target] == '1':
-			pFH.write('.gate ONE Y={}{}3\n'.format(rs,target))      	
+			pFH.write('.gate ONE Y={}{}{}\n'.format(rs,target,rectLoc))      	
 	pFH.write('.end\n')
 	first_time = False
 	pFH.close()
@@ -252,7 +259,8 @@ for cofacs in range(2**num_trgts):
 		logFile.write('Generating cofactor remainder {}'.format(cofacs))
 
 	subprocess.call(['abc -f abc_gen_aig_cofacs.script '],stdout=logFile,shell=True,cwd=os.getcwd())
-	subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	subprocess.call(['../amulet1.5/amulet -verify {}.aig '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 
 	if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
