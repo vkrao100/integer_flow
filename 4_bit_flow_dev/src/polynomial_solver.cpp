@@ -47,7 +47,7 @@ void verify(const char * inp_f, const char * out_f1,
   }
 
   if (rectify) {
-    if (!(f1 = fopen(out_f1, "w")))
+    if (!(f1 = fopen(out_f1, "a")))
     die("can not write output to '%s'", out_f1);
   }
 
@@ -92,6 +92,7 @@ void verify(const char * inp_f, const char * out_f1,
   } else {
     msg("");
     msg("CORRECT MULTIPLIER");
+    fprintf(f1, "CORRECT");
     if (certify) {
       msg("");
       msg("writing gate constraints to '%s' ", out_f1);

@@ -543,7 +543,7 @@ class Gate {
 
       @param n Gate*
   */
-  void children_push_back(Gate * n) {children.push_back(n);}
+  void children_push_back(Gate * n) {if(n) children.push_back(n);}
 
   /**
       Removes gate n from the children

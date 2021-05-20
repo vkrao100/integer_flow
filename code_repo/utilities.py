@@ -69,14 +69,36 @@ def read_a_line(fhandle):
 def find_a_trgt_node(lb,ub,ih):
 	
 	global trgtloc
+	global node_name_not_settled
+	global found
 	foundNet = False
+	nstr = ''
+	#Check if the node names are n* or new_n*_
+	if node_name_not_settled:
+		line = read_a_line(ih)
+		while '.gate' not in line:
+			line = ih.readline().strip()
+		# Hopefully the nodenames occur within first 10 lines and doesn't change
+		for _ in range(10): 
+			nets = line.split()
+			if any('new_n' in net for net in nets) and (not found):
+				found = True
+			line = ih.readline().strip()
+		#Only run this loop first time
+		node_name_not_settled = False
+		#Pull back the handler to beginning of file
+		ih.seek(0)
+
 	while True:
 		rnum = random.randint(lb,ub)
 		print ("{}:{}:{}".format(lb,ub,rnum))
 		# Some blifs have internal nodes as n*
-		onode = 'n{}'.format(rnum)
 		#Some blifs have internal nodes as new_n*_
-		#onode = 'new_n{}_'.format(rnum)
+		if found:
+			onode = 'new_n{}_'.format(rnum)
+		else:
+			onode = 'n{}'.format(rnum)
+
 		if onode not in trgtloc:
 			break
 
@@ -113,7 +135,8 @@ bitWidth    = int(sys.argv[2])
 nbugs	    = int(sys.argv[3])
 bug_config  = int(sys.argv[4])
 inpStr 	    = sys.argv[5]
-
+node_name_not_settled = True
+found = False
 
 fileLen = int(file_len(bliffileInput))
 cmdstr  = ''
@@ -145,19 +168,31 @@ def iterate_bugs():
 	for bnu in range(0,nbugs):
 		# if bnu == 1:
 		# 	pdb.set_trace()
+		# As slot width increases - the bug is more liekely
+		# to be placed close to middle columns. In those cases,
+		# Verification using amulet doesn't complete even for 2 bugs
+		# Hence, limiting slot to under 1000 for exps.
+		if slot > 1000:
+			slot = 1000
 
-		if bug_config == 1: # Closer to PIs
+		if (bug_config == 1) and (slot == 1000): # All bugs within the first slot
+ 			lbnd = lbound  
+			ubnd = lbound + slot
+		elif (bug_config == 1):
 			lbnd = lbound + slot*(bnu) 
-			ubnd = lbound + slot*(bnu+1) 
+			ubnd = lbound + slot*(bnu+1)
 		elif bug_config == 2: # near mid
 			pass
 		elif bug_config == 3: # near POs
 			pass
+		elif bug_config == 4:
+			lbnd = lbound + slot*(bnu) 
+			ubnd = lbound + slot*(bnu+1)
 		else: #Random
 			lbnd = lbound + slot*(bnu) 
 			ubnd = lbound + slot*(bnu+1) 
 
-		print ("{}:{}:{}:{}".format(lbnd,ubnd,lbound,ubound))
+		# print ("{}:{}:{}:{}".format(lbnd,ubnd,lbound,ubound))
 		assert(lbnd >= lbound) 
 		assert(ubnd <= ubound) 
 
@@ -227,8 +262,10 @@ def add_bug(bugout, bugintA, bugintB, bval, inpFile, outFile, patch=False):
 		line = inpFile.readline()
 
 	outFile.write('.gate AND2X1   A={}3 B='.format(rs)+bugout+' Y={}4\n'.format(rs))
-	outFile.write('.gate XOR2X1   A={0}2 B={0}0 Y={0}3\n'.format(rs))
-	outFile.write('{}.gate XOR2X1   A={}1 B='.format(patchstr,rs)+bugintA+' Y={}2\n'.format(rs))
+	# outFile.write('.gate XOR2X1   A={0}2 B={0}0 Y={0}3\n'.format(rs))
+	outFile.write('{0}.gate XOR2X1   A={1}2 B={1}0 Y={1}3\n'.format(patchstr,rs))
+	# outFile.write('{}.gate XOR2X1   A={}1 B='.format(patchstr,rs)+bugintA+' Y={}2\n'.format(rs))
+	outFile.write('.gate XOR2X1   A={}1 B='.format(rs)+bugintA+' Y={}2\n'.format(rs))
 	outFile.write('.gate AND2X1   A='+bugintA+' B='+bugintB+' Y={}tmp1\n'.format(rs))
 	outFile.write('.gate XOR2X1   A='+bugintA+' B='+bugintB+' Y={}tmp2\n'.format(rs))
 	outFile.write('.gate XOR2X1   A={0}tmp1 B={0}tmp2 Y={0}1\n'.format(rs))

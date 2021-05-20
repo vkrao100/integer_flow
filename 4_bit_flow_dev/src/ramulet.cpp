@@ -132,28 +132,28 @@ int main(int argc, char ** argv) {
         msg("selected mode: adder substitution");
         mode = 1;
       } else {
-        die("mode has alreday been selected(try '-h')");
+        die("mode has already been selected(try '-h')");
       }
     } else if (!strcmp(argv[i], "-verify")) {
       if (!mode) {
         msg("selected mode: verification");
         mode = 2;
       } else {
-        die("mode has alreday been selected(try '-h')");
+        die("mode has already been selected(try '-h')");
       }
     } else if (!strcmp(argv[i], "-certify")) {
       if (!mode) {
         msg("selected mode: verification + certificates");
         mode = 3;
       } else {
-        die("mode has alreday been selected(try '-h')");
+        die("mode has already been selected(try '-h')");
       }
     } else if (!strcmp(argv[i], "-rectify")) {
       if (!mode) {
         msg("selected mode: rectification check");
         mode = 4;
       } else {
-        die("mode has alreday been selected(try '-h')");
+        die("mode has already been selected(try '-h')");
       }
     } else if (!strcmp(argv[i], "-p1")) {
       if (proof) die("too many proof formats selected(try '-h')");

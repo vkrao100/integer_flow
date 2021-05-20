@@ -92,9 +92,7 @@ void slice_by_xor_chains() {
     Gate * output = gates[i+M-1];
     output->set_slice(i);
 
-    //fixed error - 1
     if(!output->children_size()) continue;
-
     assert(output->children_size() == 1);
     Gate * child = output->children_front();
 
@@ -179,10 +177,8 @@ void slice_jut_gates() {
   for (int i = NN-1; i >= 0; i--) {
     Gate * output = gates[i+M-1];
     output->set_slice(i);
-    
-    //fixed error - 1
-    if(!output->children_size()) continue;
 
+    if(!output->children_size()) continue;
     assert(output->children_size() == 1);
     Gate * child = output->children_front();
 
@@ -190,7 +186,6 @@ void slice_jut_gates() {
     if (child->get_xor_gate() == 1 || i != static_cast<int>(NN-1))
       downwards_queue.push(child);
 
-    //fixed error - 1
     if(child->parents_size() > 1) upwards_slicing(child, child);
 
     while (!downwards_queue.empty()) {
@@ -307,9 +302,9 @@ void fix_jut_gates() {
 /*------------------------------------------------------------------------*/
 
 void slicing_xor() {
+
   slice_by_xor_chains();
   slice_jut_gates();
-  //fixed error - 1
   for (int i=NN-1; i>= 0; i--) {
   std::list<Gate*> sl = slices[i];
   for (std::list<Gate*>::const_iterator it=sl.begin(); it != sl.end(); ++it) {
@@ -444,7 +439,7 @@ void merge_all() {
     for (unsigned i = M-2; i > NN; i--) {
       Gate * n = gates[i];
 
-      if (n->get_slice() < 0) continue;  // elim
+      if (n->get_slice() < 1) continue;  // elim
       if (n->get_elim()) continue;
       if (is_model_input(n->get_var_num())) continue;
 
@@ -515,6 +510,8 @@ void promote_all() {
       Gate * v0 = gate(rhs0);
       Gate * v1 = gate(rhs1);
 
+      if(!v0 || !v1) continue;
+
       if (n->get_xor_gate() != 2 &&
         (!v0->get_carry_gate() || !v1->get_carry_gate()) &&
         (!v0->get_carry_gate() || !v1->get_input()) &&
@@ -568,14 +565,12 @@ void fill_slices() {
 /*------------------------------------------------------------------------*/
 
 void slicing_non_xor() {
-  //fixed error - 1
-/*  for (unsigned i = 0; i < NN; i++)
-    input_cone(gate(slit(i)), i);*/
   for (unsigned i = 0; i < NN; i++){
     unsigned lit = slit(i);
-    if(!lit) continue;
+    if(lit < 2) continue;
     input_cone(gate(lit), i);
   }
+
 
   find_carries();
   merge_all();

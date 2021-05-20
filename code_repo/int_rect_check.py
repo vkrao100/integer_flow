@@ -47,6 +47,7 @@ import pdb
 # from utilities import *
 
 abc_synth = False
+pdebug = False
 
 delete_cof_files = True
 delete_tmp_files = False
@@ -65,19 +66,7 @@ def print_time(tm_abc_aig='N/A',
 
 	print '\n------------------- Time Data -------------------'
 	print 'create aigs using abc             			', round(tm_abc_aig,1)
-	print 'Total setup time for gfc files (cofacs)[2:].zfill(num_trgts)
-
-	if not first_time:
-		pFH.seek(0, os.SEEK_END)
-		pos = pFH.tell() - 1
-
-		for _ in range(num_trgts+1):
-			while pos > 0 and pFH.read(1) != "\n":
-				pos -= 1
-				pFH.seek(pos, os.SEEK_SET)
-
-		if pos > 0:
-			pFH.seek(pos, os.SEE				', round(tm_set+tm_setg,1)
+	print 'Total setup time for gfc files 				', round(tm_set+tm_setg,1)
 	print 'Total setup time for dfc files 				', round(tm_set+tm_setd,1)
 	print 'Synthesizing gfc files using abc: 			', round(tm_gfcs,1)
 	print 'Synthesizing dfc files using sis: 			', round(tm_sdfcs,1)
@@ -100,6 +89,8 @@ expctd_args = 3
 inps = []
 outps = []
 rs = 'rg'
+
+cofac_synth = ''
 
 if (total_args < expctd_args):
 	print ("Expected {} input argument file(s)!!".format(expctd_args))
@@ -159,6 +150,17 @@ def check_bnchmrk_format(inpStr):
 		'a[0]':"Btor format - Input:{},Output:{}".format(inps[1],outps[1]),
 	}[inpStr]
 
+def strip_last_x_lines(x):
+	global pos
+	for _ in range(x+1):
+		while pos > 0 and pFH.read(1) != "\n":
+			pos -= 1
+			pFH.seek(pos, os.SEEK_SET)
+
+	if pos > 0:
+		pFH.seek(pos, os.SEEK_SET)
+		pFH.truncate()
+
 # capture the model info and comments
 cline = read_a_line(blifFile)
 
@@ -198,15 +200,11 @@ logFile.write(cmd+'\n')
 subprocess.call([cmd],shell=True,cwd=os.getcwd())
 
 #patch file generated after adding bugs
-pFile = '{}_p{}_pready.blif'.format(bfName,num_trgts)
-pdb.set_trace()
-try:
-	pFH = open(pFile,'wr+')
-except IOError:
-	print ("Couldn't open patch file for reading, check add_bug module!!")
-	sys.exit(0)
+pName = '{}_p{}_pready'.format(bfName,num_trgts)
+pFile = pName + '.blif'
 
-line0 = pFH.readline()
+with open(pFile,'r') as pFH:
+	line0 = pFH.readline()	
 
 jtrgts = line0.lstrip().split('#')
 targetstr = jtrgts[1].strip().split()
@@ -214,41 +212,59 @@ targetstr = jtrgts[1].strip().split()
 assert(len(targetstr) == num_trgts)
 
 logFile.write("Bugs added at locations {}".format(' '.join(targetstr))+'\n')
+logFile.write("Generating AIG's and remainders for each assignments to targets\n")
 blifFile.close()
 
 #Goto end of file
 remlog = open(remFile,'w')
 remlog.write("Targets: {}\n".format(' '.join(targetstr)))
+remlog.close()
 first_time = True
+
+tmp = open('abc_gen_aig_cofacs.script','w')
+tmp.write('read cadence_abc.genlib\n')
+tmp.write('source abc.rc\n')
+tmp.write('read_blif {};\n'.format(pFile))
+tmp.write('strash;\n') 
+tmp.write('fraig;\n')
+tmp.write(cofac_synth)
+tmp.write('write_aiger {}.aig;quit;\n'.format(pName))
+
+tmp.close()
 
 for cofacs in range(2**num_trgts):
 	keystr = bin(cofacs)[2:].zfill(num_trgts)
-
+	pFH = open(pFile,'r+')
+	pFH.seek(0, os.SEEK_END)
+	pos = pFH.tell() - 1
 	if not first_time:
-		pFH.seek(0, os.SEEK_END)
-		pos = pFH.tell() - 1
-
-		for _ in range(num_trgts+1):
-			while pos > 0 and pFH.read(1) != "\n":
-				pos -= 1
-				pFH.seek(pos, os.SEEK_SET)
-
-		if pos > 0:
-			pFH.seek(pos, os.SEEK_SET)
-			pFH.truncate()
-
+		strip_last_x_lines(num_trgts)
+	pFH.write('\n')
 	for target in range(num_trgts):
 		if keystr[target] == '0':
-			pFH.write('.gate ZERO Y={}{}2\n'.format(rs,target))
+			pFH.write('.gate ZERO Y={}{}3\n'.format(rs,target))
 		if keystr[target] == '1':
-			pFH.write('.gate ONE Y={}{}2\n'.format(rs,target))      	
+			pFH.write('.gate ONE Y={}{}3\n'.format(rs,target))      	
 	pFH.write('.end\n')
 	first_time = False
 	pFH.close()
-	pdb.set_trace()
+	if (pdebug):
+		logFile.write('Generating cofactor remainder {}'.format(cofacs))
 
+	subprocess.call(['abc -f abc_gen_aig_cofacs.script '],stdout=logFile,shell=True,cwd=os.getcwd())
+	subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+
+	if delete_cof_files:
+		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
+
+with open(pFile,'r+') as pFH:
+	strip_last_x_lines(num_trgts-1)
+
+subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
+
+
+logFile.write("Remainder generation done !!\n")
 logFile.close()
-
 
 # # Proceeding to analyze cofactor log file to compute the MFR patches.
 # # Write the ON-set and OFFC-set files from .

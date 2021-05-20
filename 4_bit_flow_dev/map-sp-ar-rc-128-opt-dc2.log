@@ -1,4 +1,55 @@
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+Warning: Constant-0 drivers added to 1 non-driven nets in network "sp-ar-rc-128-opt-dc2":
+INVX1
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-sp-ar-rc-128-opt-dc2_p2_pready.aig'
+[amulet2] MILOA 173531 256 0 256 173275
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 173787 gates
+[amulet2] found 16384 partial products
+[amulet2] assuming simple pp generator
+[amulet2] found 31290 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 58291 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 55643 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 256 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 60964 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 255
+[amulet2] reducing by slice 254
+[amulet2] reducing by slice 253
+[amulet2] reducing by slice 252
+[amulet2] reducing by slice 251
+[amulet2] reducing by slice 250
+[amulet2] reducing by slice 249
+[amulet2] reducing by slice 248
+[amulet2] reducing by slice 247
+[amulet2] reducing by slice 246
+[amulet2] reducing by slice 245
+[amulet2] reducing by slice 244
+c
+c caught signal 'SIGINT'(2)
+c
+c
+c raising signal 'SIGINT'(2) again
 # Benchmark "sp-ar-rc-128-opt-dc2" written by ABC on Mon May 17 13:08:08 2021
 .model sp-ar-rc-128-opt-dc2
-Aoki format - Input:IN1[0],Output:P[0]
+Aoki format - Input:IN1[1],Output:P[1]
 Working on 128-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map-sp-ar-rc-128-opt-dc2.blif 128 2 1 IN1[0]
+Bugs added at locations new_n900_ new_n1402_
+Generating AIG's and remainders for each assignments to targets
