@@ -38,11 +38,12 @@
 	Diff (A-B) - 01 0
 '''
 import sys
-# import re
+import re
 import os
 import subprocess
 import time
 import pdb
+from collections import defaultdict
 
 # from utilities import *
 
@@ -108,22 +109,13 @@ else:
 		print ("Couldn't read the input file using handler!!")
 		sys.exit(0)
 
-#Placeholder code
-if bug_config == 1:#bugs/targets near PI
-	pass
-elif bug_config == 2: #bugs/targets near mid
-	pass
-elif bug_config == 3: #bugs/targets near PO
-	pass
-else: # default bugs near PI
-	pass
-
 #baseFileName
 bfName = baseFile.strip('.blif')
 
 #open a log file for tracking model info and bug info
 logFile = '{}.log'.format(bfName)
 remFile = 'rem_{}.log'.format(bfName)
+rcFile  = 'rc_{}.log'.format(bfName)
 try:
 	logFile = open(logFile,'w')
 except IOError:
@@ -147,6 +139,7 @@ def check_bnchmrk_format(inpStr):
 	return {
 		'IN1[0]':"Aoki format - Input:{},Output:{}".format(inps[1],outps[1]) ,
 		'a0':"abc format - Input:{},Output:{}".format(inps[1],outps[1]),
+		'pi00':"Another abc format - Input:{},Output:{}".format(inps[1],outps[1]),
 		'a[0]':"Btor format - Input:{},Output:{}".format(inps[1],outps[1]),
 	}[inpStr]
 
@@ -160,6 +153,137 @@ def strip_last_x_lines(x):
 	if pos > 0:
 		pFH.seek(pos, os.SEEK_SET)
 		pFH.truncate()
+
+def write_abc_aig_cofac_gen_script():
+
+	tmp = open('abc_gen_aig_cofacs.script','w')
+	tmp.write('read cadence_abc.genlib\n')
+	tmp.write('source abc.rc\n')
+	tmp.write('read_blif {};\n'.format(pFile))
+	tmp.write('strash;\n') 
+	tmp.write('fraig;\n')
+	tmp.write(cofac_synth)
+	tmp.write('write_aiger {}.aig;quit;\n'.format(pName))
+
+	tmp.close()
+
+def write_poly_mul_script_for_amulet():
+
+	logFile.write("*** Generating rectification check file for amulet *** \n\n")
+	#poly multiplication (rect check) using amulet framework
+	pm =  open('{}.cpp'.format(rcFile),'w')
+	#polynomial generation file
+	pl =  open('poly.log','w') 
+	#file to write the monom/term/poly delete lines which are appended to main file
+	dl =  open('del.log','w') 
+	pm.write("#include \"includes/polynomial.h\"\n")
+	pm.write("int main(){\n\n")
+
+	orderNum = 2*bitWidth 
+	for idx in range(bitWidth-1,-1,-1):
+		pm.write("\tVar * b{0} = new Var(\"b{0}\",{1});\n".format(idx,orderNum))
+		orderNum -= 1
+
+	for idx in range(bitWidth-1,-1,-1):
+		pm.write("\tVar * a{0} = new Var(\"a{0}\",{1});\n".format(idx,orderNum))
+		orderNum -=1
+
+	assert(orderNum == 0)
+
+	pm.write("\tmpz_t coeff;\n")
+	pm.write("\tmpz_init_set_ui(coeff,1);\n\n")
+	# Read the cofactor remainder file generated from amulet
+	try:
+		rl = open(remFile,'r')
+	except IOError:
+		print ("Couldn't open the remainder file for reading!!")
+		sys.exit(0)
+
+	# Build terms and polynomials
+	line = rl.readline()
+	t_map = set()
+	m_map = set()
+	p_map = defaultdict(list)
+
+	for cofac in range(2**num_trgts):
+		line = rl.readline().strip().strip(';')
+		if (line[0:8] == "CORRECT"):
+			logFile.write("Constant assignment {} to the targets rectifies the circuit".format(bin(idx)[2:].zfill(num_trgts)))
+			# cleanup()
+			sys.exit(0)
+
+		polynomial = line.strip()
+		terms = re.findall(r'([-+]?\d*)([ab\d*\*]*)',polynomial)
+
+		p_str = "p_{}".format(cofac)
+		
+		for idx in range(len(terms)-1): # Last term is dummy due to null character
+			
+			mhash = abs(hash(terms[idx][0]+terms[idx][1]))
+			m_str = "m_{}".format(mhash)
+
+			if (mhash not in m_map):
+
+				is_copy = False
+				thash = abs(hash(terms[idx][1]))
+				t_str = "t_{}".format(thash)		
+				
+				#build monomial - check if monomial exists - 
+				# also presuming a collision free hashing (hence - using double hashing)
+				if (thash in t_map):
+					is_copy = True
+					t_str += "->copy()"
+				else:
+					if terms[idx][1]:
+						t_vars = terms[idx][1].lstrip("*").split("*")
+						for varbl in t_vars:
+							pm.write("\tadd_to_vstack({});\n".format(varbl))
+						pm.write("\tTerm * {} = build_term_from_stack();\n\n".format(t_str))
+
+				if (terms[idx][0][0] == '-'):
+					if (terms[idx][0] == '-'): # When no coefficient integer but just monom
+						pm.write("\tmpz_set_si(coeff,-1);\n")
+					else: 
+						pm.write("\tmpz_set_si(coeff,{});\n".format(terms[idx][0]))
+				elif (terms[idx][0][0] == '+'):
+					if (terms[idx][0] == '+'):
+						pm.write("\tmpz_set_ui(coeff,1);\n")
+					else:
+						pm.write("\tmpz_set_ui(coeff,{});\n".format(terms[idx][0].strip('+')))
+				else:
+					if (terms[idx][0]):
+						pm.write("\tmpz_set_ui(coeff,{});\n".format(terms[idx][0]))
+					else:
+						pm.write("\tmpz_set_ui(coeff,1);\n")
+				
+				if (terms[idx][1]):
+					pm.write("\tMonomial * {} = new Monomial (coeff,{});\n\n".format(m_str,t_str))
+				else:
+					pm.write("\tMonomial * {} = new Monomial (coeff,0);\n\n".format(m_str))
+
+				t_map.add(thash)
+				m_map.add(mhash)
+
+				dl.write("\tdelete({});\n".format(m_str))
+			pl.write("\tpush_mstack({}->copy);\n".format(m_str))
+			p_map[cofac].append(mhash)
+
+		pl.write("\tPolynomial * {} = build_poly();\n".format(p_str))
+
+	for cofac in range(2**num_trgts):
+		pl.write("\tdelete(p_{});\n".format(cofac))
+	
+	pl.close()
+	dl.write("\tdeallocate_terms();deallocate_mstack();mpz_clear(coeff);\n")
+	
+	for idx3 in range(bitWidth-1,-1,-1):
+		print(idx3)
+		dl.write("\tdelete(b{});delete(a{});\n".format(idx3))
+	
+	dl.write("\treturn 0;\n}")
+	dl.close()
+	pm.close()
+	logFile.write("*** Rectification check file generated *** \n")
 
 # capture the model info and comments
 cline = read_a_line(blifFile)
@@ -221,16 +345,7 @@ remlog.write("Targets: {}\n".format(' '.join(targetstr)))
 remlog.close()
 first_time = True
 
-tmp = open('abc_gen_aig_cofacs.script','w')
-tmp.write('read cadence_abc.genlib\n')
-tmp.write('source abc.rc\n')
-tmp.write('read_blif {};\n'.format(pFile))
-tmp.write('strash;\n') 
-tmp.write('fraig;\n')
-tmp.write(cofac_synth)
-tmp.write('write_aiger {}.aig;quit;\n'.format(pName))
-
-tmp.close()
+write_abc_aig_cofac_gen_script()
 
 for cofacs in range(2**num_trgts):
 	keystr = bin(cofacs)[2:].zfill(num_trgts)
@@ -259,9 +374,8 @@ for cofacs in range(2**num_trgts):
 		logFile.write('Generating cofactor remainder {}'.format(cofacs))
 
 	subprocess.call(['abc -f abc_gen_aig_cofacs.script '],stdout=logFile,shell=True,cwd=os.getcwd())
-	subprocess.call(['../amulet1.5/amulet -verify {}.aig '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	# subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-
+	# subprocess.call(['../amulet1.5/amulet -verify {}.aig '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 	if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
 
@@ -272,6 +386,10 @@ subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
 
 
 logFile.write("Remainder generation done !!\n")
+
+write_poly_mul_script_for_amulet()
+
+
 logFile.close()
 
 # # Proceeding to analyze cofactor log file to compute the MFR patches.
