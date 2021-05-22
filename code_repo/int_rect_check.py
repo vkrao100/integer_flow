@@ -52,7 +52,8 @@ pdebug = False
 
 delete_cof_files = True
 delete_tmp_files = False
-src_path = '../code_repo/'
+src_path   = '../code_repo/'
+rcheck_dir = 'rect_check/'
 
 ###################################################################
 ##################### Time stamp for procedures ###################
@@ -115,7 +116,7 @@ bfName = baseFile.strip('.blif')
 #open a log file for tracking model info and bug info
 logFile = '{}.log'.format(bfName)
 remFile = 'rem_{}.log'.format(bfName)
-rcFile  = 'rc_{}.log'.format(bfName)
+rcFile  = 'rc_{}.cpp'.format(bfName)
 try:
 	logFile = open(logFile,'w')
 except IOError:
@@ -167,16 +168,28 @@ def write_abc_aig_cofac_gen_script():
 
 	tmp.close()
 
+logFile.flush()
+
+
 def write_poly_mul_script_for_amulet():
 
 	logFile.write("*** Generating rectification check file for amulet *** \n\n")
-	#poly multiplication (rect check) using amulet framework
-	pm =  open('{}.cpp'.format(rcFile),'w')
-	#polynomial generation file
-	pl =  open('poly.log','w') 
+	
+	f1 = 'decl.log'
+	f2 = 'poly.log'
+	f3 = 'cleanup.log'
+	#Variable/monomial/term declarations and building
+	pm =  open(f1,'w')
+	#polynomial generation and multiplication file
+	pl =  open(f2,'w') 
 	#file to write the monom/term/poly delete lines which are appended to main file
-	dl =  open('del.log','w') 
-	pm.write("#include \"includes/polynomial.h\"\n")
+	dl =  open(f3,'w') 
+
+	#Final cpp file with all the above files merged
+	pmf =  open('{}'.format(rcFile),'w')
+	pmf.close()
+
+	pm.write("\n#include \"includes/polynomial.h\"\n")
 	pm.write("int main(){\n\n")
 
 	orderNum = 2*bitWidth 
@@ -203,7 +216,17 @@ def write_poly_mul_script_for_amulet():
 	line = rl.readline()
 	t_map = set()
 	m_map = set()
-	p_map = defaultdict(list)
+	# p_map = defaultdict(list)
+	
+	#Constant -1 poly to perform multiplication at every step
+	p_str = "mul_0"
+	mhash = abs(hash('1'+''))
+	m_str = "m_{}".format(mhash)
+	pm.write("\tmpz_set_ui(coeff,1);\n")
+	pm.write("\tMonomial * {} = new Monomial (coeff,0);\n\n".format(m_str))
+	pm.write("\tpush_mstack({}->copy());\n".format(m_str))
+	pm.write("\tPolynomial * {} = build_poly();\n".format(p_str))
+	# p_map[0].append(mhash)
 
 	for cofac in range(2**num_trgts):
 		line = rl.readline().strip().strip(';')
@@ -265,25 +288,59 @@ def write_poly_mul_script_for_amulet():
 				m_map.add(mhash)
 
 				dl.write("\tdelete({});\n".format(m_str))
-			pl.write("\tpush_mstack({}->copy);\n".format(m_str))
-			p_map[cofac].append(mhash)
+			pl.write("\tpush_mstack({}->copy());\n".format(m_str))
+			# p_map[cofac+1].append(mhash)
 
-		pl.write("\tPolynomial * {} = build_poly();\n".format(p_str))
+		pl.write("\tPolynomial * {} = build_poly();\n\n".format(p_str))
 
-	for cofac in range(2**num_trgts):
-		pl.write("\tdelete(p_{});\n".format(cofac))
+		#Code to multiply polynomials
+		pl.write("\tfprintf(stdout, \"Multiplying mul_{} and {} yields:\\n\");\n".format(cofac,p_str))
+		pl.write("\tPolynomial * mul_{} = multiply_poly(mul_{},{});\n".format(cofac+1,cofac,p_str))
+		pl.write("\tmul_{}->print(stdout);fprintf(stdout,\"\\n\");\n".format(cofac+1))
+		pl.write("\tdelete(mul_{});delete({});\n\n".format(cofac,p_str))
+		
+		if (cofac == (2**num_trgts-1)):
+			pl.write("\tif(mul_{0} && !mul_{0}->is_constant_zero_poly())\n".format(cofac+1))
+			pl.write("\t\tfprintf(stdout,\"Non-zero remainder ! Rectification not possible !!\\n\");\n")
+			pl.write("\telse\n")
+			pl.write("\t\tfprintf(stdout,\"Zero remainder ! Rectification possible !!\\n\");\n\n")
+			pl.write("\tdelete(mul_{0});\n".format(cofac+1))
+
+	# Delete hash sets and maps 
+	del t_map
+	del m_map
+	# del p_map
+
+	#Delete polynomial objects
+	# for cofac in range(2**num_trgts+1):
+	# 	pl.write("\tdelete(p_{});\n".format(cofac))
 	
 	pl.close()
 	dl.write("\tdeallocate_terms();deallocate_mstack();mpz_clear(coeff);\n")
-	
-	for idx3 in range(bitWidth-1,-1,-1):
-		print(idx3)
-		dl.write("\tdelete(b{});delete(a{});\n".format(idx3))
+	# pdb.set_trace()	
+
+	#Delete variable objects
+	for idx2 in range(bitWidth-1,-1,-1):
+		dl.write("\tdelete(b{0});delete(a{0});\n".format(idx2))
 	
 	dl.write("\treturn 0;\n}")
 	dl.close()
 	pm.close()
+
+	#Merge all three files using shell and then delete them
+	cmd = 'cat {0} {1} {2} > {3};rm {0} {1} {2};'.format(f1,f2,f3,rcFile)
+	subprocess.call([cmd],shell=True,cwd=os.getcwd())
+
 	logFile.write("*** Rectification check file generated *** \n")
+
+
+def run_rect_check_using_polylib():
+
+	#Merge all three files using shell and then delete them
+	cmd = 'cp {0} {1}demo_polylib.cpp;cd {1};make clean; sh ./configure.sh; make;./demo;cd ..;'.format(rcFile,rcheck_dir)
+	subprocess.call([cmd],stdout=logFile,shell=True,cwd=os.getcwd())
+	logFile.write("*** Rectification check done *** \n")
+
 
 # capture the model info and comments
 cline = read_a_line(blifFile)
@@ -375,7 +432,7 @@ for cofacs in range(2**num_trgts):
 
 	subprocess.call(['abc -f abc_gen_aig_cofacs.script '],stdout=logFile,shell=True,cwd=os.getcwd())
 	# subprocess.call(['../amulet1.5/amulet -verify {}.aig '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	subprocess.call(['./ramulet -rectify {}.aig {} '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 	if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
 
@@ -384,10 +441,11 @@ with open(pFile,'r+') as pFH:
 
 subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
 
-
 logFile.write("Remainder generation done !!\n")
 
 write_poly_mul_script_for_amulet()
+
+run_rect_check_using_polylib()
 
 
 logFile.close()

@@ -113,7 +113,7 @@ def find_a_trgt_node(lb,ub,ih):
 			trgtloc.append(onode)
 			gLen = len(nets)
 			if gLen == 4: # Inverter/Buffer
-				i1node = nets[1].strip('A=')
+				i1node = nets[2].strip('A=')
 				i2node = i1node
 			else: # any 2-input gate
 				i1node = nets[2].strip('A=')

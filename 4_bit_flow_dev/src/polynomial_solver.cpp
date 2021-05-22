@@ -85,9 +85,10 @@ void verify(const char * inp_f, const char * out_f1,
       rem->print(stdout);
       if (rectify){
         rem->print(f1);
-      }
-      msg("");
-      generate_witness(rem, inp_f);
+      }else{
+        msg("");
+        generate_witness(rem, inp_f);
+    }
     }
   } else {
     msg("");

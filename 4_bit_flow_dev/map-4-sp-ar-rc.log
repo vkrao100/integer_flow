@@ -1,0 +1,823 @@
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 87 8 0 8 79
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 95 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 28 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 20 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+8;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.69 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.82 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 87 8 0 8 79
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 95 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 28 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 20 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+8;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.75 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.74 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.66 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 86 8 0 8 78
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 94 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 27 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 18 variable(s)
+[amulet2] totally promoted 1 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+24;
+[amulet2] 
+[amulet2] maximum resident set size:                       2.01 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.75 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 86 8 0 8 78
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 94 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 27 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 18 variable(s)
+[amulet2] totally promoted 1 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+24;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.65 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 87 8 0 8 79
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 95 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 28 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 20 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+8;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.75 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.61 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 21 variable(s)
+[amulet2] totally promoted 1 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 23 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] -8*b2*a1-8*b1*a2;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.74 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 106 8 0 8 98
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 114 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 17 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 32 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 31 variable(s)
+[amulet2] totally promoted 4 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 35 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] -8*b2*a1-8*b1*a2+8;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.66 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 94 8 0 8 86
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 102 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 30 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 24 variable(s)
+[amulet2] totally promoted 2 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 30 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.75 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 86 8 0 8 78
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 94 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 15 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 27 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 18 variable(s)
+[amulet2] totally promoted 1 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 25 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] 16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+24;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.75 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 106 8 0 8 98
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 114 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 17 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 32 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 31 variable(s)
+[amulet2] totally promoted 4 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 35 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] -8*b2*a1-8*b1*a2+8;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.66 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map-4-sp-ar-rc_p4_pready.aig'
+[amulet2] MILOA 96 8 0 8 88
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 104 gates
+[amulet2] found 14 partial products
+[amulet2] assuming booth recoding
+[amulet2] found 16 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 29 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 23 variable(s)
+[amulet2] totally promoted 1 variable(s)
+[amulet2] filled 8 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 26 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+[amulet2] reducing by slice 5
+[amulet2] reducing by slice 4
+[amulet2] reducing by slice 3
+[amulet2] reducing by slice 2
+[amulet2] reducing by slice 1
+[amulet2] reducing by slice 0
+[amulet2] INCORRECT MULTIPLIER
+[amulet2] 
+[amulet2] REMAINDER IS
+[amulet2] -8*b2*a1-8*b1*a2+16;
+[amulet2] 
+[amulet2] maximum resident set size:                       3.74 MB
+[amulet2] used time for initializing:                      0.00 seconds
+[amulet2] used time for slicing/elimination:               0.00 seconds
+[amulet2] used time for reduction:                         0.00 seconds
+[amulet2] used time for freeing memory:                    0.00 seconds
+[amulet2] total process time:                              0.00 seconds
+rm -f demo makefile \
+rm -rf build/
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO 
+new build directory 'build/'
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO  -c includes/term.cpp -o build/term.o
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO  -c includes/hash_val.cpp -o build/hash_val.o
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO  -c includes/monomial.cpp -o build/monomial.o
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO  -c includes/polynomial.cpp -o build/polynomial.o
+g++ -Wall -Wextra -std=c++11 -O3 -DNDEBUG -DHAVEGETRUSAGE -DHAVEUNLOCKEDIO  -o  demo demo_polylib.cpp build/term.o build/hash_val.o build/monomial.o build/polynomial.o  -lgmp
+Multiplying mul_0 and p_0 yields:
+16*b2*b1*b0*a2*a1*a0-8*b2*b1*a1*a0-8*b2*b0*a2*a0-8*b2*a1-8*b1*b0*a2*a1-8*b1*a2+8;
+
+Multiplying mul_1 and p_1 yields:
+-256*b2*b1*b0*a2*a1*a0+128*b2*b1*b0*a2*a1+128*b2*b1*b0*a2*a0+128*b2*b1*a2*a1*a0+128*b2*b1*a2*a1+128*b2*b0*a2*a1*a0-128*b2*b0*a2*a0-128*b2*a1-128*b1*a2+128;
+
+Multiplying mul_2 and p_2 yields:
+1024*b2*b1*b0*a2*a1*a0-2048*b2*b1*b0*a2*a1+1024*b2*b1*b0*a2*a0-2048*b2*b1*a2*a1*a0+1024*b2*b1*a2*a1+1024*b2*b0*a2*a1*a0-1024*b2*b0*a2*a0-1024*b2*a1-1024*b1*a2+1024;
+
+Multiplying mul_3 and p_3 yields:
+-32768*b2*b1*b0*a2*a1*a0+16384*b2*b1*b0*a2*a1+16384*b2*b1*b0*a2*a0+16384*b2*b1*a2*a1*a0+16384*b2*b1*a2*a1+16384*b2*b0*a2*a1*a0-16384*b2*b0*a2*a0-16384*b2*a1-16384*b1*a2+16384;
+
+Multiplying mul_4 and p_4 yields:
+-131072*b2*b1*b0*a2*a1*a0-131072*b2*b1*b0*a2*a1+262144*b2*b1*b0*a2*a0-131072*b2*b1*a2*a1*a0+262144*b2*b1*a2*a1+262144*b2*b0*a2*a1*a0-262144*b2*b0*a2*a0-262144*b2*a1-262144*b1*a2+262144;
+
+Multiplying mul_5 and p_5 yields:
+-6291456*b2*b1*b0*a2*a1*a0+6291456*b2*b1*b0*a2*a0+6291456*b2*b1*a2*a1+6291456*b2*b0*a2*a1*a0-6291456*b2*b0*a2*a0-6291456*b2*a1-6291456*b1*a2+6291456;
+
+Multiplying mul_6 and p_6 yields:
+-100663296*b2*b1*b0*a2*a1*a0+100663296*b2*b1*b0*a2*a0+100663296*b2*b1*a2*a1+100663296*b2*b0*a2*a1*a0-100663296*b2*b0*a2*a0-100663296*b2*a1-100663296*b1*a2+100663296;
+
+Multiplying mul_7 and p_7 yields:
+-2415919104*b2*b1*b0*a2*a1*a0+2415919104*b2*b1*b0*a2*a0+2415919104*b2*b1*a2*a1+2415919104*b2*b0*a2*a1*a0-2415919104*b2*b0*a2*a0-2415919104*b2*a1-2415919104*b1*a2+2415919104;
+
+Multiplying mul_8 and p_8 yields:
+-19327352832*b2*b1*b0*a2*a1*a0+19327352832*b2*b1*b0*a2*a0+19327352832*b2*b1*a2*a1+19327352832*b2*b0*a2*a1*a0-19327352832*b2*b0*a2*a0-19327352832*b2*a1-19327352832*b1*a2+19327352832;
+
+Multiplying mul_9 and p_9 yields:
+-309237645312*b2*b1*b0*a2*a1*a0+309237645312*b2*b1*b0*a2*a0+309237645312*b2*b1*a2*a1+309237645312*b2*b0*a2*a1*a0-309237645312*b2*b0*a2*a0-309237645312*b2*a1-309237645312*b1*a2+309237645312;
+
+Multiplying mul_10 and p_10 yields:
+0;
+
+Multiplying mul_11 and p_11 yields:
+0;
+
+Multiplying mul_12 and p_12 yields:
+0;
+
+Multiplying mul_13 and p_13 yields:
+0;
+
+Multiplying mul_14 and p_14 yields:
+0;
+
+Multiplying mul_15 and p_15 yields:
+0;
+
+Zero remainder ! Rectification possible !!
+# Benchmark "sp-ar-rc-4" written by ABC on Fri May 21 12:42:04 2021
+.model sp-ar-rc-4
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 4-bit multiplier.
+Adding 4 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map-4-sp-ar-rc.blif 4 4 1 IN1[0]
+Bugs added at locations new_n33_ new_n40_ new_n37_ new_n39_
+Generating AIG's and remainders for each assignments to targets
+Remainder generation done !!
+*** Generating rectification check file for amulet *** 
+
+*** Rectification check file generated *** 
+*** Rectification check done *** 

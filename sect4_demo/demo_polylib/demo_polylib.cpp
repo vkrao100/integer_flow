@@ -1,102 +1,154 @@
-/*------------------------------------------------------------------------*/
-/*! \file demo_polylib.cpp
-    \brief Demonstrantes the standalone usage of the polynomial library
-    of AMulet2
 
-  Copyright (C) 2020 Daniela Kaufmann, Johannes Kepler University Linz
-*/
-/*------------------------------------------------------------------------*/
-
-/*------------------------------------------------------------------------*/
 #include "includes/polynomial.h"
-/**
-    Main Function.
-    We generate some polynomials to demonstrate the use case of
-    the polynomial library.
-*/
-int main () {
-// First we allocate variables and assign the order,
-  Var * x = new Var("b1", 2);
-  Var * y = new Var("a0", 1);
+int main(){
 
-// Then we start to build some terms.
-  //x
-  add_to_vstack(x);
-  Term * t_x = build_term_from_stack();
+	Var * b3 = new Var("b3",8);
+	Var * b2 = new Var("b2",7);
+	Var * b1 = new Var("b1",6);
+	Var * b0 = new Var("b0",5);
+	Var * a3 = new Var("a3",4);
+	Var * a2 = new Var("a2",3);
+	Var * a1 = new Var("a1",2);
+	Var * a0 = new Var("a0",1);
+	mpz_t coeff;
+	mpz_init_set_ui(coeff,1);
 
-  //x*y
-  add_to_vstack(x);
-  add_to_vstack(y);
-  Term * t_xy = build_term_from_stack();
+	mpz_set_ui(coeff,1);
+	Monomial * m_6272018864 = new Monomial (coeff,0);
 
-// From terms we generate Monomials
-  mpz_t coeff;
+	push_mstack(m_6272018864->copy());
+	Polynomial * mul_0 = build_poly();
+	add_to_vstack(b2);
+	add_to_vstack(b1);
+	add_to_vstack(b0);
+	add_to_vstack(a2);
+	add_to_vstack(a1);
+	add_to_vstack(a0);
+	Term * t_6469530634474749333 = build_term_from_stack();
 
-  mpz_init_set_ui(coeff, 1);
+	mpz_set_ui(coeff,8);
+	Monomial * m_4293277043957353726 = new Monomial (coeff,t_6469530634474749333);
 
-  mpz_set_si(coeff, -2);
-  Monomial * m1 = new Monomial (coeff, t_xy);
+	add_to_vstack(b2);
+	add_to_vstack(b1);
+	add_to_vstack(a3);
+	add_to_vstack(a2);
+	Term * t_7932949219566412674 = build_term_from_stack();
 
-  mpz_set_si(coeff, -2);
-  Monomial * m2 = new Monomial (coeff, t_xy->copy());
-  // Here we need a copy of the term, because we used it a second time
+	mpz_set_ui(coeff,32);
+	Monomial * m_3636849635939613949 = new Monomial (coeff,t_7932949219566412674);
 
-  mpz_set_ui(coeff, 2);
-  Monomial * m3 = new Monomial (coeff, 0);
+	add_to_vstack(b2);
+	add_to_vstack(b1);
+	add_to_vstack(a1);
+	add_to_vstack(a0);
+	Term * t_5932943219776413326 = build_term_from_stack();
 
-// Let us start to generate polynomials
-  push_mstack(m1->copy());
-  Polynomial * p = build_poly();
+	mpz_set_si(coeff,-8);
+	Monomial * m_4058318797790044269 = new Monomial (coeff,t_5932943219776413326);
 
-  push_mstack(m2->copy());
-  push_mstack(m3->copy());
-  Polynomial * q = build_poly();
+	add_to_vstack(b2);
+	add_to_vstack(a2);
+	Term * t_640136816885747313 = build_term_from_stack();
 
-  fprintf(stdout, "Following polynomials are generated:\n");
-  fprintf(stdout, "p: "); p->print(stdout);
-  fprintf(stdout, "q: "); q->print(stdout);
-  fprintf(stdout, "\n");
+	mpz_set_si(coeff,-16);
+	Monomial * m_976337456665232868 = new Monomial (coeff,t_640136816885747313);
 
-  fprintf(stdout, "Adding p and q yields:\n");
-  Polynomial * add = add_poly(p, q);
-  fprintf(stdout, "p+q: "); add->print(stdout);
-  fprintf(stdout, "\n");
-  delete(add);
+	add_to_vstack(b1);
+	add_to_vstack(a3);
+	Term * t_1640161816882747009 = build_term_from_stack();
 
-  fprintf(stdout, "Multiplying p and q yields:\n");
-  Polynomial * mul = multiply_poly(p, q);
-  fprintf(stdout, "p*q: "); mul->print(stdout);
-  fprintf(stdout, "\n");
-  delete(mul);
+	mpz_set_si(coeff,-16);
+	Monomial * m_23671543363767228 = new Monomial (coeff,t_1640161816882747009);
 
-  fprintf(stdout, "Multiplying q by 6 yields:\n");
-  mpz_set_ui(coeff, 6);
-  Polynomial * mulc = multiply_poly_with_constant(q, coeff);
-  fprintf(stdout, "6*q: "); mulc->print(stdout);
-  fprintf(stdout, "\n");
-  delete(mulc);
+	mpz_set_ui(coeff,16);
+	Monomial * m_5233698020995952808 = new Monomial (coeff,t_6469530634474749333->copy());
 
-  fprintf(stdout, "Dividing p by x yields:\n");
-  Polynomial * div = divide_by_term(p, t_x);
-  fprintf(stdout, "p/x: "); div->print(stdout);
-  fprintf(stdout, "\n");
-  delete(div);
+	add_to_vstack(b2);
+	add_to_vstack(b0);
+	add_to_vstack(a2);
+	add_to_vstack(a0);
+	Term * t_3990810492335340354 = build_term_from_stack();
 
-  // Deletion of objects
-  delete(p);
-  delete(q);
+	mpz_set_si(coeff,-8);
+	Monomial * m_8511275704929516323 = new Monomial (coeff,t_3990810492335340354);
 
-  delete(m1);
-  delete(m2);
-  delete(m3);
+	add_to_vstack(b1);
+	add_to_vstack(b0);
+	add_to_vstack(a2);
+	add_to_vstack(a1);
+	Term * t_8023267112098009398 = build_term_from_stack();
 
-  deallocate_terms();
-  deallocate_mstack ();
-  mpz_clear(coeff);
+	mpz_set_si(coeff,-8);
+	Monomial * m_6242360946813005123 = new Monomial (coeff,t_8023267112098009398);
 
-  delete(x);
-  delete(y);
+	mpz_set_ui(coeff,8);
+	Monomial * m_5504033067049723 = new Monomial (coeff,0);
 
+	push_mstack(m_4293277043957353726->copy());
+	push_mstack(m_3636849635939613949->copy());
+	push_mstack(m_4058318797790044269->copy());
+	push_mstack(m_976337456665232868->copy());
+	push_mstack(m_23671543363767228->copy());
+	Polynomial * p_0 = build_poly();
 
-  return 0;
+	fprintf(stdout, "Multiplying mul_0 and p_0 yields:\n");
+	Polynomial * mul_1 = multiply_poly(mul_0,p_0);
+	mul_1->print(stdout);fprintf(stdout,"\n");
+	delete(mul_0);delete(p_0);
+
+	push_mstack(m_5233698020995952808->copy());
+	push_mstack(m_3636849635939613949->copy());
+	push_mstack(m_4058318797790044269->copy());
+	push_mstack(m_8511275704929516323->copy());
+	push_mstack(m_976337456665232868->copy());
+	push_mstack(m_6242360946813005123->copy());
+	push_mstack(m_23671543363767228->copy());
+	push_mstack(m_5504033067049723->copy());
+	Polynomial * p_1 = build_poly();
+
+	fprintf(stdout, "Multiplying mul_1 and p_1 yields:\n");
+	Polynomial * mul_2 = multiply_poly(mul_1,p_1);
+	mul_2->print(stdout);fprintf(stdout,"\n");
+	delete(mul_1);delete(p_1);
+
+	push_mstack(m_4293277043957353726->copy());
+	push_mstack(m_4058318797790044269->copy());
+	Polynomial * p_2 = build_poly();
+
+	fprintf(stdout, "Multiplying mul_2 and p_2 yields:\n");
+	Polynomial * mul_3 = multiply_poly(mul_2,p_2);
+	mul_3->print(stdout);fprintf(stdout,"\n");
+	delete(mul_2);delete(p_2);
+
+	push_mstack(m_5233698020995952808->copy());
+	push_mstack(m_4058318797790044269->copy());
+	push_mstack(m_8511275704929516323->copy());
+	push_mstack(m_6242360946813005123->copy());
+	push_mstack(m_5504033067049723->copy());
+	Polynomial * p_3 = build_poly();
+
+	fprintf(stdout, "Multiplying mul_3 and p_3 yields:\n");
+	Polynomial * mul_4 = multiply_poly(mul_3,p_3);
+	mul_4->print(stdout);fprintf(stdout,"\n");
+	delete(mul_3);delete(p_3);
+
+	fprintf(stdout,"Final rectification check mul done !! \n");
+
+	delete(mul_4);
+	delete(m_4293277043957353726);
+	delete(m_3636849635939613949);
+	delete(m_4058318797790044269);
+	delete(m_976337456665232868);
+	delete(m_23671543363767228);
+	delete(m_5233698020995952808);
+	delete(m_8511275704929516323);
+	delete(m_6242360946813005123);
+	delete(m_5504033067049723);
+	deallocate_terms();deallocate_mstack();mpz_clear(coeff);
+	delete(b3);delete(a3);
+	delete(b2);delete(a2);
+	delete(b1);delete(a1);
+	delete(b0);delete(a0);
+	return 0;
 }
