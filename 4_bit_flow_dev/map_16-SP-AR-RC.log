@@ -1,0 +1,47 @@
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'map_16-SP-AR-RC_p2_pready.aig'
+[amulet2] MILOA 2542 32 0 32 2510
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 2574 gates
+[amulet2] found 256 partial products
+[amulet2] assuming simple pp generator
+[amulet2] found 449 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 692 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 536 variable(s)
+[amulet2] totally promoted 5 variable(s)
+[amulet2] filled 32 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 552 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 31
+[amulet2] reducing by slice 30
+[amulet2] reducing by slice 29
+[amulet2] reducing by slice 28
+[amulet2] reducing by slice 27
+[amulet2] reducing by slice 26
+c
+c caught signal 'SIGINT'(2)
+c
+c
+c raising signal 'SIGINT'(2) again
+# Benchmark "16bit-SP-AR-RC" written by ABC on Mon May  3 18:24:06 2021
+.model 16bit-SP-AR-RC
+Another abc format - Input:pi01,Output:po01
+Working on 16-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map_16-SP-AR-RC.blif 16 2 1 pi00
+Bugs added at locations n95 n116
+Generating AIG's and remainders for each assignments to targets

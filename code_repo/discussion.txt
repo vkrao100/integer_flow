@@ -1,0 +1,64 @@
+
+Case 1:
+	r1 = c1*m1 + c2*m2 + c3*m3 + c4
+Case 2:
+	r2 = c1*m1 + c2*m2 + c3*m3
+Case 3:
+	r3 = c1*m1
+Case 4:
+	r4 = c1
+Case 5:
+	r5 = 0
+
+ci \in Z for i in 1 to 4
+mj \in X_PI for j in 1 to 3
+
+forall mj, mj^2-mj = 0 (only take values in {0,1})
+
+
+ss1 = {{},{c1,c2},{c2,c3}, {c1, c3, c4}}
+ss2 = {{},{c2,c3}, {c1, c3, c2}}
+ss3 = {{},{c1,c4}, {c2,c3,c4}}
+
+( then case 1 variety is empty? )
+
+Construction rule for ss:
+
+	1. for a set k in ss, 
+		a. sumofall ci in k = 0
+
+Corollary: 
+Then, mi corresponding to each ci should evaluate to 1
+and term cj \notin set k  corresponding mj should evaluate to 0
+
+empty set - Case where no coefficients are summed to equal 0 - i.e. in Cases 2, 3, where every term is set to 0
+
+Case 1: ss1
+	ignore {}
+	ignore every set where c4 isn't an element of k
+	consider p = ((1 + (m1)(1+m2)(m3) % 2) ?= 0 when r1 = 0
+Case 1: ss2
+	ignore {}
+	ignore every set where c4 isn't an element of k
+	variety of r1 is empty then. p = 1
+Case 1: ss3
+	ignore {}
+	ignore every set where c4 isn't an element of k
+	consider p1 = ((1 + (m1)(1+m2)(1+m3))), p2 = (1+(1+m1)(m2)(m3))
+	consider q = p1*p2
+
+Case 2: ss2
+	consider p1 = (1+(1+m1)(1+m2)(1+m3)), p2 = (1+(1+m1)(m2)(m3)), p3 = (1+(m1)(m2)(m3))
+	consider q = p1*p2*p3
+Case 2:
+	Variety never empty. Always at least (1+(1+m1)...(1+mj))
+
+Case 3:
+	Variety only empty when m1 = 0: p = m1. ss will only ever contain {}
+
+Case 4:
+	Variety is empty. ss will only ever contain {}. Ignore it. p = 1
+
+Case 5: ss gives {} p = 0
+
+

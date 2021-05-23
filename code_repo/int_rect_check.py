@@ -241,7 +241,9 @@ def write_poly_mul_script_for_amulet():
 		p_str = "p_{}".format(cofac)
 		
 		for idx in range(len(terms)-1): # Last term is dummy due to null character
-			
+			# terms[idx][0] = coefficient 
+			# terms[idx][1] = corresponding monomial
+			# idx - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
 			mhash = abs(hash(terms[idx][0]+terms[idx][1]))
 			m_str = "m_{}".format(mhash)
 

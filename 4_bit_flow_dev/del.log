@@ -1,0 +1,9 @@
+	delete(m_5670954959600206663);
+	delete(m_6994193804265063087);
+	delete(m_6919845183466767589);
+	delete(m_7975474625363798793);
+	delete(m_976337456665232871);
+	delete(m_23671543363767227);
+	delete(m_6919845183469767598);
+	delete(m_5504033067049723);
+	deallocate_terms();deallocate_mstack();mpz_clear(coeff);
