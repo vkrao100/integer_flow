@@ -243,7 +243,9 @@ def write_poly_mul_script_for_amulet():
 		for idx in range(len(terms)-1): # Last term is dummy due to null character
 			# terms[idx][0] = coefficient 
 			# terms[idx][1] = corresponding monomial
-			# idx - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
+			# cofac - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
+			# idx  - index for each term in the polynomial of a given remainder
+			pdb.set_trace()
 			mhash = abs(hash(terms[idx][0]+terms[idx][1]))
 			m_str = "m_{}".format(mhash)
 
@@ -308,6 +310,9 @@ def write_poly_mul_script_for_amulet():
 			pl.write("\t\tfprintf(stdout,\"Zero remainder ! Rectification possible !!\\n\");\n\n")
 			pl.write("\tdelete(mul_{0});\n".format(cofac+1))
 
+		subset_sum = compute_subset_sum_from_terms(terms)
+		construct_an_equivalent_boolean_poly(subset_sum)
+
 	# Delete hash sets and maps 
 	del t_map
 	del m_map
@@ -335,6 +340,21 @@ def write_poly_mul_script_for_amulet():
 
 	logFile.write("*** Rectification check file generated *** \n")
 
+
+def compute_subset_sum_from_terms(terms):
+
+	'''
+		Check coefficients of each term in terms and
+		compute a set of sets where the sum of all
+		coefficients within a subset is equal to 0.
+		Which implies, that their corresponding monomials
+		need to evaluate to 1 for that point to be in the variety.
+		And the rest of the monomials have to evaluate to 0.
+	'''
+	pass
+
+	
+	
 
 def run_rect_check_using_polylib():
 

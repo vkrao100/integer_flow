@@ -1,4 +1,4 @@
-# new_n63_ new_n53_ # Benchmark "sp-ar-rc-4" written by ABC on Fri May 21 12:42:04 2021
+# new_n59_ new_n42_ # Benchmark "sp-ar-rc-4" written by ABC on Fri May 21 12:42:04 2021
 .model sp-ar-rc-4
 .inputs IN1[0] IN1[1] IN1[2] IN1[3] IN2[0] IN2[1] IN2[2] IN2[3]
 .outputs P[0] P[1] P[2] P[3] P[4] P[5] P[6] P[7]
@@ -28,7 +28,8 @@
 .gate AND2X1 A=IN2[1] B=IN1[2] Y=new_n40_
 .gate XOR2X1 A=new_n40_ B=new_n39_ Y=new_n41_
 .gate AND2X1 A=IN2[0] B=IN1[3] Y=new_n42_
-.gate XOR2X1 A=new_n42_ B=new_n41_ Y=new_n43_
+# .gate XOR2X1 A=new_n42_ B=new_n41_ Y=new_n43_
+.gate XOR2X1 A=rg14 B=new_n41_ Y=new_n43_
 .gate INVX1  A=new_n43_ Y=new_n44_
 .gate XOR2X1 A=new_n44_ B=new_n38_ Y=new_n45_
 .gate XOR2X1 A=new_n45_ B=new_n28_ Y=P[3]
@@ -39,19 +40,20 @@
 .gate INVX1  A=new_n50_ Y=new_n51_
 .gate AND2X1 A=new_n51_ B=new_n49_ Y=new_n52_
 .gate AND2X1 A=new_n43_ B=new_n29_ Y=new_n53_
-# .gate INVX1  A=new_n53_ Y=new_n54_
-.gate INVX1 A=rg14 Y=new_n54_
+.gate INVX1  A=new_n53_ Y=new_n54_
 .gate AND2X1 A=new_n54_ B=new_n52_ Y=new_n55_
 .gate INVX1  A=new_n55_ Y=new_n56_
 .gate AND2X1 A=IN2[3] B=IN1[1] Y=new_n57_
 .gate AND2X1 A=new_n40_ B=new_n39_ Y=new_n58_
 .gate INVX1  A=new_n58_ Y=new_n59_
-.gate AND2X1 A=new_n42_ B=new_n40_ Y=new_n60_
+# .gate AND2X1 A=new_n42_ B=new_n40_ Y=new_n60_
+.gate AND2X1 A=rg14 B=new_n40_ Y=new_n60_
 .gate INVX1  A=new_n60_ Y=new_n61_
-.gate AND2X1 A=new_n61_ B=new_n59_ Y=new_n62_
-.gate AND2X1 A=new_n42_ B=new_n39_ Y=new_n63_
-# .gate INVX1  A=new_n63_ Y=new_n64_
-.gate INVX1 A=rg04 Y=new_n64_
+# .gate AND2X1 A=new_n61_ B=new_n59_ Y=new_n62_
+.gate AND2X1 A=new_n61_ B=rg04 Y=new_n62_
+# .gate AND2X1 A=new_n42_ B=new_n39_ Y=new_n63_
+.gate AND2X1 A=rg14 B=new_n39_ Y=new_n63_
+.gate INVX1  A=new_n63_ Y=new_n64_
 .gate AND2X1 A=new_n64_ B=new_n62_ Y=new_n65_
 .gate INVX1  A=new_n65_ Y=new_n66_
 .gate XOR2X1 A=new_n66_ B=new_n57_ Y=new_n67_
@@ -117,18 +119,18 @@
 .gate INVX1  A=new_n126_ Y=new_n127_
 .gate AND2X1 A=new_n127_ B=new_n125_ Y=new_n128_
 .gate INVX1  A=new_n128_ Y=P[7]
-.gate AND2X1   A=rg03 B=new_n63_ Y=rg04
+.gate AND2X1   A=rg03 B=new_n59_ Y=rg04
 #.gate XOR2X1   A=rg02 B=rg00 Y=rg03
-.gate XOR2X1   A=rg01 B=new_n42_ Y=rg02
-.gate AND2X1   A=new_n42_ B=new_n39_ Y=rg0tmp1
-.gate XOR2X1   A=new_n42_ B=new_n39_ Y=rg0tmp2
+.gate XOR2X1   A=rg01 B=new_n58_ Y=rg02
+.gate AND2X1   A=new_n58_ B=new_n58_ Y=rg0tmp1
+.gate XOR2X1   A=new_n58_ B=new_n58_ Y=rg0tmp2
 .gate XOR2X1   A=rg0tmp1 B=rg0tmp2 Y=rg01
-.gate INVX1    A=new_n42_ Y=rg00
-#.gate AND2X1   A=rg13 B=new_n53_ Y=rg14
+.gate INVX1    A=new_n58_ Y=rg00
+#.gate AND2X1   A=rg13 B=new_n42_ Y=rg14
 .gate XOR2X1   A=rg12 B=rg10 Y=rg13
-.gate XOR2X1   A=rg11 B=new_n43_ Y=rg12
-.gate AND2X1   A=new_n43_ B=new_n29_ Y=rg1tmp1
-.gate XOR2X1   A=new_n43_ B=new_n29_ Y=rg1tmp2
+.gate XOR2X1   A=rg11 B=IN2[0] Y=rg12
+.gate AND2X1   A=IN2[0] B=IN1[3] Y=rg1tmp1
+.gate XOR2X1   A=IN2[0] B=IN1[3] Y=rg1tmp2
 .gate XOR2X1   A=rg1tmp1 B=rg1tmp2 Y=rg11
-.gate INVX1    A=new_n43_ Y=rg10
+.gate INVX1    A=IN2[0] Y=rg10
 #.end

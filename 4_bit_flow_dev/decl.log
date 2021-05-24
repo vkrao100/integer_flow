@@ -1,0 +1,20 @@
+
+#include "includes/polynomial.h"
+int main(){
+
+	Var * b3 = new Var("b3",8);
+	Var * b2 = new Var("b2",7);
+	Var * b1 = new Var("b1",6);
+	Var * b0 = new Var("b0",5);
+	Var * a3 = new Var("a3",4);
+	Var * a2 = new Var("a2",3);
+	Var * a1 = new Var("a1",2);
+	Var * a0 = new Var("a0",1);
+	mpz_t coeff;
+	mpz_init_set_ui(coeff,1);
+
+	mpz_set_ui(coeff,1);
+	Monomial * m_6272018864 = new Monomial (coeff,0);
+
+	push_mstack(m_6272018864->copy());
+	Polynomial * mul_0 = build_poly();
