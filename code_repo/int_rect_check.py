@@ -43,12 +43,14 @@ import os
 import subprocess
 import time
 import pdb
-from collections import defaultdict
+from collections import defaultdict, deque
 
 # from utilities import *
 
 abc_synth = False
 pdebug = False
+use_singular = True
+use_singular_for_poly_mult = False
 
 delete_cof_files = True
 delete_tmp_files = False
@@ -87,7 +89,7 @@ tm0 = time.time()
 curr_wd = os.getcwd()
 
 total_args = len(sys.argv)-1
-expctd_args = 3
+expctd_args = 4
 inps = []
 outps = []
 rs = 'rg'
@@ -101,6 +103,7 @@ else:
 	fileInput     = sys.argv[1]
 	num_trgts     = int(sys.argv[2])
 	bug_config    = int(sys.argv[3])
+	use_tool      = sys.argv[4]
 	dirName       = os.path.dirname(fileInput)
 	baseFile      = os.path.basename(fileInput)
 	os.chdir('{}/{}/'.format(curr_wd,dirName))
@@ -109,6 +112,23 @@ else:
 	except IOError:
 		print ("Couldn't read the input file using handler!!")
 		sys.exit(0)
+
+use_revsca = False
+use_amulet10 = False
+use_amulet15 = False
+use_amulet20 = False
+
+
+if use_tool == 'amulet10':
+	use_amulet10 = True
+elif use_tool == 'amulet15':
+	use_amulet15 = True
+elif use_tool == 'amulet20':
+	use_amulet20 = True
+elif use_tool == 'revsca':
+	use_revsca = True
+else: #use the current default stable tool
+	use_amulet15 = True
 
 #baseFileName
 bfName = baseFile.strip('.blif')
@@ -168,7 +188,6 @@ def write_abc_aig_cofac_gen_script():
 
 	tmp.close()
 
-logFile.flush()
 
 
 def write_poly_mul_script_for_amulet():
@@ -227,11 +246,10 @@ def write_poly_mul_script_for_amulet():
 	pm.write("\tpush_mstack({}->copy());\n".format(m_str))
 	pm.write("\tPolynomial * {} = build_poly();\n".format(p_str))
 	# p_map[0].append(mhash)
-
 	for cofac in range(2**num_trgts):
 		line = rl.readline().strip().strip(';')
 		if (line[0:8] == "CORRECT"):
-			logFile.write("Constant assignment {} to the targets rectifies the circuit".format(bin(idx)[2:].zfill(num_trgts)))
+			logFile.write("Constant assignment {} to the targets rectifies the circuit".format(bin(cofac)[2:].zfill(num_trgts)))
 			# cleanup()
 			sys.exit(0)
 
@@ -245,7 +263,7 @@ def write_poly_mul_script_for_amulet():
 			# terms[idx][1] = corresponding monomial
 			# cofac - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
 			# idx  - index for each term in the polynomial of a given remainder
-			pdb.set_trace()
+			# pdb.set_trace()
 			mhash = abs(hash(terms[idx][0]+terms[idx][1]))
 			m_str = "m_{}".format(mhash)
 
@@ -310,8 +328,8 @@ def write_poly_mul_script_for_amulet():
 			pl.write("\t\tfprintf(stdout,\"Zero remainder ! Rectification possible !!\\n\");\n\n")
 			pl.write("\tdelete(mul_{0});\n".format(cofac+1))
 
-		subset_sum = compute_subset_sum_from_terms(terms)
-		construct_an_equivalent_boolean_poly(subset_sum)
+		# subset_sum = compute_subset_sum_from_terms(terms)
+		# construct_an_equivalent_boolean_poly(subset_sum)
 
 	# Delete hash sets and maps 
 	del t_map
@@ -353,9 +371,6 @@ def compute_subset_sum_from_terms(terms):
 	'''
 	pass
 
-	
-	
-
 def run_rect_check_using_polylib():
 
 	#Merge all three files using shell and then delete them
@@ -363,6 +378,14 @@ def run_rect_check_using_polylib():
 	subprocess.call([cmd],stdout=logFile,shell=True,cwd=os.getcwd())
 	logFile.write("*** Rectification check done *** \n")
 
+
+def run_rect_check_using_singular():
+
+	pass
+
+def compute_redGB_using_singular():
+
+	pass
 
 # capture the model info and comments
 cline = read_a_line(blifFile)
@@ -424,6 +447,8 @@ remlog.write("Targets: {}\n".format(' '.join(targetstr)))
 remlog.close()
 first_time = True
 
+logFile.flush()
+
 write_abc_aig_cofac_gen_script()
 
 for cofacs in range(2**num_trgts):
@@ -453,8 +478,18 @@ for cofacs in range(2**num_trgts):
 		logFile.write('Generating cofactor remainder {}'.format(cofacs))
 
 	subprocess.call(['abc -f abc_gen_aig_cofacs.script '],stdout=logFile,shell=True,cwd=os.getcwd())
-	# subprocess.call(['../amulet1.5/amulet -verify {}.aig '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	subprocess.call(['./ramulet -rectify {}.aig {} '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	if use_amulet20:
+		subprocess.call(['./ramulet -rectify {}.aig {} '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	elif use_amulet15:
+		subprocess.call(['./ramulet15 -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	elif use_amulet10:
+		subprocess.call(['../amulet1.0/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	elif use_revsca: #-u for unsigned multiplier -s for signed
+		subprocess.call(['./revsca20 {}.aig {} -u'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	else:	
+		subprocess.call(['../amulet1.5/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+
+
 	if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
 
@@ -465,12 +500,21 @@ subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
 
 logFile.write("Remainder generation done !!\n")
 
-write_poly_mul_script_for_amulet()
+print(targetstr)
 
-run_rect_check_using_polylib()
+if (use_singular and use_singular_for_poly_mult):
+	run_rect_check_using_singular()
+else:
+	write_poly_mul_script_for_amulet()
 
+	run_rect_check_using_polylib()
+
+if use_singular:
+	compute_redGB_using_singular()
 
 logFile.close()
+
+pdb.set_trace()
 
 # # Proceeding to analyze cofactor log file to compute the MFR patches.
 # # Write the ON-set and OFFC-set files from .

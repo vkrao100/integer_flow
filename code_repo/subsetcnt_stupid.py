@@ -50,6 +50,22 @@ def SubsetCnt(i, s) :
     # Returning the value
     return dp[i][s];
  
+'''
+i s v v d 
+0 0 0 1  
+1 2 0 1 
+2 4 0 1
+3 6 0 1   // done // return 0 to 2 4 
+4 2 0 1 0 //done // return 0 to 3 6
+5-2 0     // return 0
+5 2       // return 0
+4 6 0 1   //done // return 0 to 3 6 
+5 2       //return 0
+5 6       //return 0
+3 4 0 1 
+4 0 0 1   
+'''
+
 # Driver Code
 if __name__ == "__main__" :
         

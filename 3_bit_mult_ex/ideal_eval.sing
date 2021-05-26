@@ -1,0 +1,76 @@
+LIB "my_proc.lib";
+
+ring r = 0, (a0, a1, b0, b1), lp;
+
+poly f41 = a0^2 - a0;
+poly f42 = a1^2 - a1;
+poly f44 = b0^2 - b0;
+poly f45 = b1^2 - b1;
+
+option(redSB);
+
+ideal J0 = f41,f42,f44,f45;
+
+
+poly f1 = 4*a0*a1*b0*b1-2*a0*b0*b1-2*a1*b0;
+poly f2 = 4/3*a0*a1*b0*b1-2*a0*b0*b1-2/7*a1*b0;
+
+ideal G1 = reduce(slimgb(f1+J0),J0)+0;
+ideal G2 = reduce(slimgb(f2+J0),J0)+0;
+
+poly G1m = a1*b0*b1+a1*b0;
+poly G2m = a0*b0*b1+a1*b0;
+poly G3m = a0*a1*b0+a1*b0;
+
+list all = 
+list(0, 0, 0, 0),
+list(0, 0, 0, 1),
+list(0, 0, 1, 0),
+list(0, 0, 1, 1),
+list(0, 1, 0, 0),
+list(0, 1, 0, 1),
+list(0, 1, 1, 0),
+list(0, 1, 1, 1),
+list(1, 0, 0, 0),
+list(1, 0, 0, 1),
+list(1, 0, 1, 0),
+list(1, 0, 1, 1),
+list(1, 1, 0, 0),
+list(1, 1, 0, 1),
+list(1, 1, 1, 0),
+list(1, 1, 1, 1);
+
+
+int i;
+link lf=":aw ideal_eval.txt";
+poly p1,p2,p3,p4,p5,p6,p7;
+list tmp = p1,p2,p3,p4,p5,p6,p7;
+//write(":w ideal_eval.txt","f1    G1[1]    G1[1]%2   G1[2]    G1[2]%2    G1[3]    G1[3]%2    f2     G2[1]    G2[1]%2     G2[2]    G2[2]%2 ");
+write(":w ideal_eval.txt","f1      G1[1]  G1[1]%2  G1[2]  G1[2]%2  G1[3]  G1[3]%2 ");
+for (i = 1; i<=16;i++)
+{
+	tmp[1] = subst(f1,a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[2] = subst(G1[1],a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[3] = subst(G1m,a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[4] = subst(G1[2],a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[5] = subst(G2m,a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[6] = subst(G1[3],a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	tmp[7] = subst(G3m,a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+	poly f2e  = subst(f2,a0,all[i][1],a1,all[i][2],b0,all[i][3],b1,all[i][4]);
+
+	string sw;
+	if (tmp[1] == 0){
+		sw = sw + string(all[i][1])+string(all[i][2])+string(all[i][3])+string(all[i][4])+"    ";
+	}else{
+		sw = sw + string("----")+"    ";
+	}
+	for (int j = 2; j<= 7; j++){
+		if (int(number(tmp[j]))%2 == 0){
+			sw = sw + string(all[i][1])+string(all[i][2])+string(all[i][3])+string(all[i][4])+"    ";
+		}else{
+			sw = sw + string("----")+"    ";
+		}
+	}
+	write(lf,sw);
+}
+close(lf);

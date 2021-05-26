@@ -91,7 +91,7 @@ def find_a_trgt_node(lb,ub,ih):
 
 	while True:
 		rnum = random.randint(lb,ub)
-		print ("{}:{}:{}".format(lb,ub,rnum))
+		# print ("{}:{}:{}".format(lb,ub,rnum))
 		# Some blifs have internal nodes as n*
 		#Some blifs have internal nodes as new_n*_
 		if found:

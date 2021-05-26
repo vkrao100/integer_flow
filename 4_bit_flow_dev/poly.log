@@ -1,0 +1,33 @@
+	push_mstack(m_7635178686452646851->copy());
+	push_mstack(m_3985815474689890668->copy());
+	push_mstack(m_7752230083449542691->copy());
+	push_mstack(m_4037454554055695447->copy());
+	push_mstack(m_8599787916674608739->copy());
+	push_mstack(m_4190329595510783609->copy());
+	push_mstack(m_6384602620312778461->copy());
+	push_mstack(m_5224206661924502447->copy());
+	push_mstack(m_2993156643782905306->copy());
+	push_mstack(m_4935273370935977542->copy());
+	push_mstack(m_6071631901692711912->copy());
+	push_mstack(m_3348833197609324721->copy());
+	push_mstack(m_3737860472379642244->copy());
+	push_mstack(m_7037764463263632803->copy());
+	push_mstack(m_3557377101870836360->copy());
+	push_mstack(m_4055930900863504027->copy());
+	push_mstack(m_2319772468863153864->copy());
+	push_mstack(m_8008070001216541556->copy());
+	push_mstack(m_6369756648884812019->copy());
+	push_mstack(m_6168306601898621113->copy());
+	push_mstack(m_6670963959629206759->copy());
+	push_mstack(m_643906823550772947->copy());
+	push_mstack(m_1696179848435057674->copy());
+	push_mstack(m_4180969722362932742->copy());
+	push_mstack(m_6028890427495329382->copy());
+	push_mstack(m_5761471201535686847->copy());
+	Polynomial * p_0 = build_poly();
+
+	fprintf(stdout, "Multiplying mul_0 and p_0 yields:\n");
+	Polynomial * mul_1 = multiply_poly(mul_0,p_0);
+	mul_1->print(stdout);fprintf(stdout,"\n");
+	delete(mul_0);delete(p_0);
+
