@@ -2,15 +2,16 @@
 # Author : Vikas
 # Intent   - To add Don't care logic with a bug at random 
 #		  	nets in the input blif files.
-# Usage    - *.py <input_file.blif> <number of bugs> <string name for redundant variables> 
-#									<bug_net bug_net_fanin_1 bug_net_fanin_2> ...
-#		   - Example: *.py MAS_16.sing MAS_16.blif 1 rg n36 n35 n32
-#		    	- Introduce the redundant logic with a bug at gate output 
-#					n36 with fanins n35 and n32 with pre-pended variable name 'rg'	
+# Usage -   'python {0}utilities.py {1} {2} {3} {4} {5}'num_trgts, bug_config, inpStr)
+# 	    -   0 - src_path
+#		- 	1 - base file (blif)
+#		- 	2 - bit width
+#		- 	3 - number of targets (number of bugs)
+#		- 	4 - bug_config - look at the code for config explanations
+#		-	5 - input string name for redundant gate names
 # Notation - rg - redundant_gate
 #          - gb - gate bug
-# Outputs  - Dump a *.sing file with bugs added at the specified nets
-#		   - Dump a *.blif file with bugs added at the specified gates
+# Outputs  - Dump a *.blif file with bugs added at the specified gates
 #          - Dump a *_patch_ready.blif file with bugs added and targets commented
 ##############################################################################################################
 
@@ -24,18 +25,20 @@ import pdb
 
 
 
-usage = ''' Author - Vikas Rao
-			Intent   - To add Don't care logic with a bug at random nets in the input blif file.
-  Usage    - *.py <input_file.blif> <number of bugs> <string name for redundant variables> 
-  									<bug_net bug_net_fanin_1 bug_net_fanin_2> ...
-  		   - Example: *.py MAS_16.sing MAS_16.blif 1 rg n36 n35 n32
-  		    	- Introduce the redundant logic with a bug at gate output 
-  					n36 with fanins n35 and n32 with pre-pended variable name 'rg'	
-  Notation - rg - redundant_gate
-           - gb - gate bug
-  Outputs  - Dump a *.sing file with bugs added at the specified nets
-  		   - Dump a *.blif file with bugs added at the specified gates
-           - Dump a *_patch_ready.blif file with bugs added and targets commented '''
+usage = ''' # Author : Vikas
+# Intent   - To add Don't care logic with a bug at random 
+#		  	nets in the input blif files.
+# Usage -   'python {0}utilities.py {1} {2} {3} {4} {5}'num_trgts, bug_config, inpStr)
+# 	    -   0 - src_path
+#		- 	1 - base file (blif)
+#		- 	2 - bit width
+#		- 	3 - number of targets (number of bugs)
+#		- 	4 - bug_config - look at the code for config explanations
+#		-	5 - input string name for redundant gate names (example: 'rg','gb')
+# Notation - rg - redundant_gate
+#          - gb - gate_bug
+# Outputs  - Dump a *.blif file with bugs added at the specified gates
+#          - Dump a *_patch_ready.blif file with bugs added and targets commented '''
 
 if (len(sys.argv) == 2) and (sys.argv[1] in ["-h","-help","--help"]):
 	print(usage)
@@ -177,8 +180,8 @@ def iterate_bugs():
 		# Verification using amulet doesn't complete even for 2 bugs
 		# Hence, limiting slot to under 1000 for exps.
 		if (bug_config == 1): # All bugs within the first slot
-			if slot > 1000:
-				slot = 1000
+			if slot > 100:
+				slot = 100
  			lbnd = lbound  
 			ubnd = lbound + slot
 		elif (bug_config == 2): # random bug placement

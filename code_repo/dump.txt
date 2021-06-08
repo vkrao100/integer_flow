@@ -1,0 +1,42 @@
+******************************************************************************************************************
+*                                                   RevSCA-2.0                                                   *
+*                                                                                                                *
+* Copyright (c) 2020 Group of Computer Architecture. All Rights Reserved.                                        *
+* For more information, please visit http://www.sca-verification.org/ or contact revsca@sca-verification.org.    *
+******************************************************************************************************************
+
+Results Generated at Mon Jun  7 17:01:29 2021
+
+CPU	: Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz
+Memory  : 32070 MB
+
+Multiplier name  :  ../4_bit_flow_dev/test16.aig
+Multiplier size  :  16*16
+Number system    :  unsigned binary
+Output file name :  dump.txt
+
+*************************************
+--------------Run-times--------------
+*************************************
+
+Parsing & Reverse engineering : 0.0242374
+Detecting cones               : 0.0005333
+Generating cone polynomials   : 0.000306156
+Global backward rewriting     : 0.0126669
+Overall run-time              : 0.0377438
+
+*************************************
+----------Verification data----------
+*************************************
+
+#Node       : 2609
+#Atomic     : 240
+#Cone       : 287
+#Vanishing  : 0
+#MaxPoly    : 288
+
+*************************************
+---------Verification result---------
+*************************************
+
+The multiplier is correct!

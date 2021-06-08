@@ -1,15 +1,15 @@
 '''
-  Author - Vikas Rao
-  Usage - *.py *.blif <num_of_targets> <bug_config>
-  
-  cofac*.log - output with target names and remainders generated
-  {on,off} - use either on-set for computation or off-set for computation
-  {0,1} - 0 - no sis_synthesis of don't cares
-		  1 - perform don't care simplification using sis
+	Author - Vikas Rao
+	Usage - *.py *.blif <num_of_targets> <bug_config>
+	
+	cofac*.log - output with target names and remainders generated
+	{on,off} - use either on-set for computation or off-set for computation
+	{0,1} - 0 - no sis_synthesis of don't cares
+			1 - perform don't care simplification using sis
 
-  Approach:
+	Approach:
 
-  For every cofactor (remainder):
+	For every cofactor (remainder):
 	Create eqn by reading functions from cofac*.log (2^n functions)
 	Read in abc - write it out as blif (unmapped)
 	Rename all intermediate nodes using a distinct notation
@@ -17,16 +17,16 @@
 		gfch - greedy function blif file
 		dfch - don't care computation blif file
 
-  In GFC:
+	In GFC:
 	Add lines related to Union/intersection and set difference
 	Synthesize using abc
 
-  In DFC:
+	In DFC:
 	Add lines related to Union/intersection and set difference
 	If possible, synthesize using sis and then with abc
 	Else synthesize using abc
 
-  Blif logic:
+	Blif logic:
 	for Boolean sets (on-set/off-set/DC-set)
 	Union - 00 0
 	Intersection - 11 1
@@ -43,7 +43,9 @@ import os
 import subprocess
 import time
 import pdb
+import threading
 from collections import defaultdict, deque
+
 
 # from utilities import *
 
@@ -61,12 +63,12 @@ rcheck_dir = 'rect_check/'
 ##################### Time stamp for procedures ###################
 ###################################################################
 def print_time(tm_abc_aig='N/A',
-			   tm_set='N/A',
-			   tm_setg='N/A',
-			   tm_setd='N/A',
-			   tm_gfcs='N/A',
-			   tm_sdfcs='N/A',
-			   tm_adfcs='N/A'):
+				 tm_set='N/A',
+				 tm_setg='N/A',
+				 tm_setd='N/A',
+				 tm_gfcs='N/A',
+				 tm_sdfcs='N/A',
+				 tm_adfcs='N/A'):
 
 	print '\n------------------- Time Data -------------------'
 	print 'create aigs using abc             			', round(tm_abc_aig,1)
@@ -119,9 +121,13 @@ use_amulet15 = False
 use_amulet20 = False
 
 
-if use_tool == 'amulet10':
-	use_amulet10 = True
-elif use_tool == 'amulet15':
+# if use_tool == 'amulet10':
+# 	use_amulet10 = True
+if use_tool not in ['amulet15','amulet20','revsca']:
+	print("Not a valid tool option !! Allowed options are - ['amulet15','amulet20','revsca']")
+	sys.exit(0)
+
+if use_tool == 'amulet15':
 	use_amulet15 = True
 elif use_tool == 'amulet20':
 	use_amulet20 = True
@@ -137,6 +143,7 @@ bfName = baseFile.strip('.blif')
 logFile = '{}.log'.format(bfName)
 remFile = 'rem_{}.log'.format(bfName)
 rcFile  = 'rc_{}.cpp'.format(bfName)
+
 try:
 	logFile = open(logFile,'w')
 except IOError:
@@ -150,10 +157,11 @@ def read_a_line(fhandle):
 
 	#Handle empty lines with all kinds of spaces
 	line = fhandle.readline()
-	if line.rstrip():
-		return line.strip().strip(';\\')
-	else:
-		return read_a_line(fhandle)
+	if (line):
+		if line.rstrip():
+			return line.strip().strip(';\\')
+		else:
+			return read_a_line(fhandle)
 
 def check_bnchmrk_format(inpStr):
 
@@ -188,7 +196,54 @@ def write_abc_aig_cofac_gen_script():
 
 	tmp.close()
 
+def escape_ansi(line):
+		ansi_escape =re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+		return ansi_escape.sub('', line)
 
+def process_revsca_output():
+
+	remlog = open(remFile,'a')
+	facCount = 0
+
+	with open('rev_sca.out','r') as rlog:
+		for cline in rlog:
+			cline = cline.strip().rstrip()
+			if cline:
+				if ((cline[0]  == '*') or ('Remainder' in cline) or('buggy' in cline)):
+					pass
+				elif (cline[2:7] == '1;37m'): 
+					# cline = cline.strip('[0m')
+					remlog.write(escape_ansi(cline) + '\n')
+					facCount += 1
+				elif ('correct' in cline):
+					remlog.write('CORRECT\n')
+
+	remlog.close()
+
+	assert(facCount == 2**num_trgts)
+
+def convert_to_polynomial(polynomial):
+
+	polyList = polynomial.split('+')
+
+	terms = [[0 for x in range(2)] for y in range(len(polyList))]
+
+	for idx in range(len(polyList)):
+		coeff = polyList[idx].strip().split('\xc3\x97',1)
+		terms[idx][0] = coeff[0].strip()
+		terms[idx][1] = coeff[1].strip()
+		# temp = coeff[1].strip().split('\xc3\x97')
+		# for vars in temp:
+		# 	if vars:
+		# 		if (int(vars) <= bitWidth):
+		# 			temp[vars] = 'a{}'
+	# for vars in terms[0][1]:
+	# 	if vars:
+	# 		print("yes:{}".format(vars))
+	# pdb.set_trace()
+	# terms = re.findall(r'([-+]?\d*)([\d*]*)',polynomial.split('+'))
+
+	return terms 
 
 def write_poly_mul_script_for_amulet():
 
@@ -253,8 +308,12 @@ def write_poly_mul_script_for_amulet():
 			# cleanup()
 			sys.exit(0)
 
+
 		polynomial = line.strip()
-		terms = re.findall(r'([-+]?\d*)([ab\d*\*]*)',polynomial)
+		if (use_tool == 'revsca'):
+			terms = convert_to_polynomial(polynomial)
+		else:
+			terms = re.findall(r'([-+]?\d*)([ab\d*\*]*)',polynomial)
 
 		p_str = "p_{}".format(cofac)
 		
@@ -279,11 +338,22 @@ def write_poly_mul_script_for_amulet():
 					is_copy = True
 					t_str += "->copy()"
 				else:
-					if terms[idx][1]:
-						t_vars = terms[idx][1].lstrip("*").split("*")
-						for varbl in t_vars:
-							pm.write("\tadd_to_vstack({});\n".format(varbl))
+					if (terms[idx][1]):
+						if (use_tool != 'revsca'):
+							t_vars = terms[idx][1].lstrip("*").split("*")
+
+							for varbl in t_vars:
+								pm.write("\tadd_to_vstack({});\n".format(varbl))
+						else:
+							t_vars = terms[idx][1].split('\xc3\x97')
+							for varbl in t_vars:
+								vidx = int(varbl)
+								if (vidx and (vidx <= bitWidth)):
+									pm.write("\tadd_to_vstack(a{});\n".format(vidx-1))
+								else:
+									pm.write("\tadd_to_vstack(b{});\n".format(vidx-1))
 						pm.write("\tTerm * {} = build_term_from_stack();\n\n".format(t_str))
+
 
 				if (terms[idx][0][0] == '-'):
 					if (terms[idx][0] == '-'): # When no coefficient integer but just monom
@@ -447,9 +517,13 @@ remlog.write("Targets: {}\n".format(' '.join(targetstr)))
 remlog.close()
 first_time = True
 
+# if use_tool == 'revsca':
+# 	remlog = open(remFile,'a')
+subprocess.call(['rm -rf rev_sca.out'],stdout=logFile,shell=True,cwd=os.getcwd())
 logFile.flush()
 
 write_abc_aig_cofac_gen_script()
+print(targetstr)
 
 for cofacs in range(2**num_trgts):
 	keystr = bin(cofacs)[2:].zfill(num_trgts)
@@ -482,15 +556,37 @@ for cofacs in range(2**num_trgts):
 		subprocess.call(['./ramulet -rectify {}.aig {} '.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 	elif use_amulet15:
 		subprocess.call(['./ramulet15 -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	elif use_amulet10:
-		subprocess.call(['../amulet1.0/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# elif use_amulet10:
+	# 	subprocess.call(['../amulet1.0/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 	elif use_revsca: #-u for unsigned multiplier -s for signed
-		subprocess.call(['./revsca20 {}.aig {} -u'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+		subprocess.call(['./revsca20 {}.aig dump.txt -u >> rev_sca.out'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 	else:	
 		subprocess.call(['../amulet1.5/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 
+	# tm0 = time.time()
+	# subprocess.call(['./revsca20 {}.aig {} -u'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# tm_rev = time.time() -tm0
+	# print("revsca:{}",tm_rev)
 
-	if delete_cof_files:
+	# tm0 = time.time()
+	# subprocess.call(['../amulet1.0/amulet -verify {}.aig'.format(pName)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# tm_amu = time.time()-tm0
+
+	# print("amulet10:{}",tm_amu)
+
+	# tm0 = time.time()
+	# subprocess.call(['./ramulet15 -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# tm_amu = time.time()-tm0
+
+	# print("amulet15:{}",tm_amu)
+
+	# tm0 = time.time()
+	# subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
+	# tm_amu = time.time()-tm0
+
+	# print("amulet20:{}",tm_amu)
+
+if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
 
 with open(pFile,'r+') as pFH:
@@ -500,21 +596,25 @@ subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
 
 logFile.write("Remainder generation done !!\n")
 
-print(targetstr)
+if use_tool == 'revsca':
+	# remlog.close()
+	process_revsca_output()
 
 if (use_singular and use_singular_for_poly_mult):
 	run_rect_check_using_singular()
 else:
 	write_poly_mul_script_for_amulet()
 
-	run_rect_check_using_polylib()
+# 	run_rect_check_using_polylib()
 
-if use_singular:
-	compute_redGB_using_singular()
+# if use_singular:
+# 	compute_redGB_using_singular()
+
+# if use_tool == 'revsca':
+# 	remlog.close()
 
 logFile.close()
 
-pdb.set_trace()
 
 # # Proceeding to analyze cofactor log file to compute the MFR patches.
 # # Write the ON-set and OFFC-set files from .

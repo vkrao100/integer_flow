@@ -1,0 +1,41 @@
+# Benchmark "sp-ar-rc-16" written by ABC on Fri May 21 12:43:29 2021
+.model sp-ar-rc-16
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 16-bit multiplier.
+Adding 1 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map-16-sp-ar-rc.blif 16 1 1 IN1[0]
+Bugs added at locations new_n374_
+Generating AIG's and remainders for each assignments to targets
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "cadence_abc.genlib".
+Loading resource file "abc.rc".
+[amulet] AMulet Version 000
+[amulet] Aiger multiplier examination tool
+[amulet] Copyright (C) 2019, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet] reading 'map-16-sp-ar-rc_p1_pready.aig'
+[amulet] found regular multiplier: N * N = 2N
+[amulet] MILOA 2589 32 0 32 2557
+[amulet] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet] assuming simple pp generator
+[amulet] assigning slices to variables
+[amulet] totally merged 926 variable(s)
+[amulet] totally promoted 14 variable(s)
+[amulet] filled 32 slices
+[amulet] ordered 2621 variables
+[amulet] decomposed 1649 variables
+[amulet] eliminated 0 variables
+[amulet] final reduction started
+[amulet] reduced by slice 31
+[amulet] reduced by slice 30
+[amulet] reduced by slice 29
+[amulet] reduced by slice 28
+[amulet] reduced by slice 27
+[amulet] reduced by slice 26
+[amulet] reduced by slice 25
+[amulet] reduced by slice 24
+c
+c caught signal 'SIGINT' (2)
+c
+c
+c raising signal 'SIGINT' (2) again

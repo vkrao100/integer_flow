@@ -25,6 +25,8 @@ ideal FI =
 
 ideal J = rem,FI;
 
-slimgb(J);
+ideal J1 = slimgb(J);
+J1[37];
+J1[37] = 0;
 
-quit;
+ideal J2 = slimgb(J1);

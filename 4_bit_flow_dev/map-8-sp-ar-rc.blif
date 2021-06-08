@@ -542,7 +542,8 @@
 .gate AND2X1 A=new_n536_ B=new_n512_ Y=new_n568_
 .gate INVX1  A=new_n568_ Y=new_n569_
 .gate AND2X1 A=new_n569_ B=new_n567_ Y=new_n570_
-.gate XOR2X1 A=new_n570_ B=new_n561_ Y=new_n571_
+#.gate XOR2X1 A=new_n570_ B=new_n561_ Y=new_n571_
+.gate AND2X1 A=new_n570_ B=new_n561_ Y=new_n571_
 .gate AND2X1 A=IN2[6] B=IN1[6] Y=new_n572_
 .gate INVX1  A=new_n532_ Y=new_n573_
 .gate AND2X1 A=new_n573_ B=new_n523_ Y=new_n574_

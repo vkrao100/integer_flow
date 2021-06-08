@@ -2,40 +2,11 @@
 .model sp-ar-rc-8
 Aoki format - Input:IN1[1],Output:P[1]
 Working on 8-bit multiplier.
-Adding 1 bugs at random locations with bug config 1
-python ../code_repo/utilities.py map-8-sp-ar-rc.blif 8 1 1 IN1[0]
-Bugs added at locations new_n88_
+Adding 2 bugs at random locations with bug config 1
+python ../code_repo/utilities.py map-8-sp-ar-rc.blif 8 2 1 IN1[0]
+Bugs added at locations new_n46_ new_n39_
 Generating AIG's and remainders for each assignments to targets
 ABC command line: "source abc_gen_aig_cofacs.script".
 
 Entered genlib library with 6 gates from file "cadence_abc.genlib".
 Loading resource file "abc.rc".
-[amulet] selected mode: rectification check
-[amulet] AMulet Version 005
-[amulet] Aiger multiplier examination tool
-[amulet] Copyright (C) 2019, Daniela Kaufmann, Johannes Kepler University Linz
-[amulet] reading 'map-8-sp-ar-rc_p1_pready.aig'
-[amulet] found regular multiplier: N * N = 2N
-[amulet] MILOA 585 16 0 16 569
-[amulet] assuming ordering as in the ABC generated or AOKI benchmarks
-[amulet] assuming booth recoding
-[amulet] assigning slices to variables
-[amulet] totally merged 202 variable(s)
-[amulet] totally promoted 6 variable(s)
-[amulet] filled 16 slices
-[amulet] ordered 601 variables
-[amulet] decomposed 369 variables
-[amulet] final reduction started
-[amulet] reduced by slice 15
-[amulet] reduced by slice 14
-[amulet] reduced by slice 13
-[amulet] reduced by slice 12
-[amulet] reduced by slice 11
-[amulet] reduced by slice 10
-[amulet] reduced by slice 9
-[amulet] reduced by slice 8
-c
-c caught signal 'SIGINT' (2)
-c
-c
-c raising signal 'SIGINT' (2) again
