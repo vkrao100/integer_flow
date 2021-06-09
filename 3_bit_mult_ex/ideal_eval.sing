@@ -18,6 +18,9 @@ poly f2 = 4/3*a0*a1*b0*b1-2*a0*b0*b1-2/7*a1*b0;
 ideal G1 = reduce(slimgb(f1+J0),J0)+0;
 ideal G2 = reduce(slimgb(f2+J0),J0)+0;
 
+poly G1b = id2poly_int(G1,J0);
+poly G2b = id2poly_int(G2,J0);
+
 poly G1m = a1*b0*b1+a1*b0;
 poly G2m = a0*b0*b1+a1*b0;
 poly G3m = a0*a1*b0+a1*b0;

@@ -1,0 +1,36 @@
+
+LIB "my_proc.lib";
+
+ring r1 = 0, (a0,a1,a2,a3,b0,b1,b2,b3),dp;
+
+ideal J0 = a0^2-a0,a1^2-a1,a2^2-a2,a3^2-a3,b0^2-b0,b1^2-b1,b2^2-b2,b3^2-b3;
+
+poly p_0=-16*a1*a2*b1*b2+32*a1*a2*a3*b0*b1*b2+-16*a2*a3*b0*b1+-16*a1*a3*b0*b2+-8*a0*b3;
+poly p_1=-16*a1*a2*b1*b2+32*a1*a2*a3*b0*b1*b2+-16*a2*a3*b0*b1+-16*a1*a3*b0*b2+-8*a0*b3+8;
+poly p_2=-8*a0*b3;
+poly p_3=8+-8*a0*b3;
+poly rect_check = reduce(1*p_0*p_1*p_2*p_3,J0);
+if (rect_check != 0){
+	"Rectification doesn't exist";
+	quit;
+}else{
+	"Rectification exists";
+	option(redSB);
+	poly pb_0 = id2poly_int(reduce(slimgb(p_0+J0),J0)+0,J0);
+	poly pb_1 = id2poly_int(reduce(slimgb(p_1+J0),J0)+0,J0);
+	poly pb_2 = id2poly_int(reduce(slimgb(p_2+J0),J0)+0,J0);
+	poly pb_3 = id2poly_int(reduce(slimgb(p_3+J0),J0)+0,J0);
+
+	list poly_list = pb_0,pb_1,pb_2,pb_3;
+	list polyb_list = 0,0,0,0;
+	for (int j=1;j<=size(poly_list);j++){
+		for (int i=1;i<=size(poly_list[j]);i++){
+			int coeff = int(leadcoef(poly_list[j][i]))%2;
+			if (coeff == -1 or coeff == 1){
+				polyb_list[j] = polyb_list[j] + leadmonom(poly_list[j][i]);
+			}
+		}
+	polyb_list[j];
+	}
+}
+quit;

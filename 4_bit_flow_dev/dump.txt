@@ -5,7 +5,7 @@
 * For more information, please visit http://www.sca-verification.org/ or contact revsca@sca-verification.org.    *
 ******************************************************************************************************************
 
-Results Generated at Mon Jun  7 18:41:20 2021
+Results Generated at Tue Jun  8 17:08:21 2021
 
 CPU	: Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz
 Memory  : 32070 MB
@@ -19,19 +19,19 @@ Output file name :  dump.txt
 --------------Run-times--------------
 *************************************
 
-Parsing & Reverse engineering : 0.001032
-Detecting cones               : 7.4914e-05
-Generating cone polynomials   : 0.000101375
-Global backward rewriting     : 0.00152753
-Overall run-time              : 0.00273581
+Parsing & Reverse engineering : 0.000961045
+Detecting cones               : 6.6277e-05
+Generating cone polynomials   : 8.3814e-05
+Global backward rewriting     : 0.00106824
+Overall run-time              : 0.00217938
 
 *************************************
 ----------Verification data----------
 *************************************
 
-#Node       : 117
+#Node       : 111
 #Atomic     : 10
-#Cone       : 29
+#Cone       : 26
 #Vanishing  : 0
 #MaxPoly    : 84
 

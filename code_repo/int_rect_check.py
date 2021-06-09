@@ -44,6 +44,7 @@ import subprocess
 import time
 import pdb
 import threading
+# import func_computation
 from collections import defaultdict, deque
 
 
@@ -52,7 +53,7 @@ from collections import defaultdict, deque
 abc_synth = False
 pdebug = False
 use_singular = True
-use_singular_for_poly_mult = False
+use_singular_for_poly_mult = True
 
 delete_cof_files = True
 delete_tmp_files = False
@@ -115,7 +116,7 @@ else:
 		print ("Couldn't read the input file using handler!!")
 		sys.exit(0)
 
-use_revsca = False
+use_revsca   = False
 use_amulet10 = False
 use_amulet15 = False
 use_amulet20 = False
@@ -143,6 +144,8 @@ bfName = baseFile.strip('.blif')
 logFile = '{}.log'.format(bfName)
 remFile = 'rem_{}.log'.format(bfName)
 rcFile  = 'rc_{}.cpp'.format(bfName)
+siFile  = 'rc_{}.sing'.format(bfName)
+siFile  = 'boolrem_{}.log'.format(bfName)
 
 try:
 	logFile = open(logFile,'w')
@@ -212,7 +215,6 @@ def process_revsca_output():
 				if ((cline[0]  == '*') or ('Remainder' in cline) or('buggy' in cline)):
 					pass
 				elif (cline[2:7] == '1;37m'): 
-					# cline = cline.strip('[0m')
 					remlog.write(escape_ansi(cline) + '\n')
 					facCount += 1
 				elif ('correct' in cline):
@@ -222,26 +224,21 @@ def process_revsca_output():
 
 	assert(facCount == 2**num_trgts)
 
-def convert_to_polynomial(polynomial):
+def split_revsca_polynomial(polynomial):
 
 	polyList = polynomial.split('+')
 
-	terms = [[0 for x in range(2)] for y in range(len(polyList))]
+	terms = [['0' for x in range(2)] for y in range(len(polyList))]
 
 	for idx in range(len(polyList)):
+		# print("for poly: {}".format(polyList[idx]))
 		coeff = polyList[idx].strip().split('\xc3\x97',1)
+		# print("coeff:{}".format(coeff))
 		terms[idx][0] = coeff[0].strip()
-		terms[idx][1] = coeff[1].strip()
-		# temp = coeff[1].strip().split('\xc3\x97')
-		# for vars in temp:
-		# 	if vars:
-		# 		if (int(vars) <= bitWidth):
-		# 			temp[vars] = 'a{}'
-	# for vars in terms[0][1]:
-	# 	if vars:
-	# 		print("yes:{}".format(vars))
-	# pdb.set_trace()
-	# terms = re.findall(r'([-+]?\d*)([\d*]*)',polynomial.split('+'))
+		if (len(coeff) == 2):
+			terms[idx][1] = coeff[1].strip()
+
+		del coeff
 
 	return terms 
 
@@ -290,7 +287,6 @@ def write_poly_mul_script_for_amulet():
 	line = rl.readline()
 	t_map = set()
 	m_map = set()
-	# p_map = defaultdict(list)
 	
 	#Constant -1 poly to perform multiplication at every step
 	p_str = "mul_0"
@@ -311,18 +307,19 @@ def write_poly_mul_script_for_amulet():
 
 		polynomial = line.strip()
 		if (use_tool == 'revsca'):
-			terms = convert_to_polynomial(polynomial)
+			terms = split_revsca_polynomial(polynomial)
+			termRange = len(terms)
 		else:
 			terms = re.findall(r'([-+]?\d*)([ab\d*\*]*)',polynomial)
+			termRange = len(terms)-1
 
 		p_str = "p_{}".format(cofac)
-		
-		for idx in range(len(terms)-1): # Last term is dummy due to null character
+		for idx in range(termRange): # Last term is dummy due to null character
+			# pdb.set_trace()
 			# terms[idx][0] = coefficient 
 			# terms[idx][1] = corresponding monomial
 			# cofac - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
 			# idx  - index for each term in the polynomial of a given remainder
-			# pdb.set_trace()
 			mhash = abs(hash(terms[idx][0]+terms[idx][1]))
 			m_str = "m_{}".format(mhash)
 
@@ -347,11 +344,12 @@ def write_poly_mul_script_for_amulet():
 						else:
 							t_vars = terms[idx][1].split('\xc3\x97')
 							for varbl in t_vars:
-								vidx = int(varbl)
-								if (vidx and (vidx <= bitWidth)):
-									pm.write("\tadd_to_vstack(a{});\n".format(vidx-1))
-								else:
-									pm.write("\tadd_to_vstack(b{});\n".format(vidx-1))
+								if varbl:
+									vidx = int(varbl)
+									if (vidx <= bitWidth):
+										pm.write("\tadd_to_vstack(a{});\n".format(vidx-1))
+									else:
+										pm.write("\tadd_to_vstack(b{});\n".format(vidx-1-bitWidth))
 						pm.write("\tTerm * {} = build_term_from_stack();\n\n".format(t_str))
 
 
@@ -376,12 +374,15 @@ def write_poly_mul_script_for_amulet():
 				else:
 					pm.write("\tMonomial * {} = new Monomial (coeff,0);\n\n".format(m_str))
 
+				del terms
 				t_map.add(thash)
 				m_map.add(mhash)
 
 				dl.write("\tdelete({});\n".format(m_str))
 			pl.write("\tpush_mstack({}->copy());\n".format(m_str))
 			# p_map[cofac+1].append(mhash)
+
+		# pdb.set_trace()
 
 		pl.write("\tPolynomial * {} = build_poly();\n\n".format(p_str))
 
@@ -429,17 +430,17 @@ def write_poly_mul_script_for_amulet():
 	logFile.write("*** Rectification check file generated *** \n")
 
 
-def compute_subset_sum_from_terms(terms):
+# def compute_subset_sum_from_terms(terms):
 
-	'''
-		Check coefficients of each term in terms and
-		compute a set of sets where the sum of all
-		coefficients within a subset is equal to 0.
-		Which implies, that their corresponding monomials
-		need to evaluate to 1 for that point to be in the variety.
-		And the rest of the monomials have to evaluate to 0.
-	'''
-	pass
+# 	'''
+# 		Check coefficients of each term in terms and
+# 		compute a set of sets where the sum of all
+# 		coefficients within a subset is equal to 0.
+# 		Which implies, that their corresponding monomials
+# 		need to evaluate to 1 for that point to be in the variety.
+# 		And the rest of the monomials have to evaluate to 0.
+# 	'''
+# 	pass
 
 def run_rect_check_using_polylib():
 
@@ -449,16 +450,496 @@ def run_rect_check_using_polylib():
 	logFile.write("*** Rectification check done *** \n")
 
 
-def run_rect_check_using_singular():
+def write_poly_script_for_singular():
 
-	pass
+	logFile.write("*** Generating rectification check file for Singular *** \n\n")
+	
+	#Final cpp file with all the above files merged
+	pmf =  open('{}'.format(siFile),'w')
 
-def compute_redGB_using_singular():
+	pmf.write("\nLIB \"my_proc.lib\";\n\nring r1 = 0, (")
+	rstr = ''
+	j0 = 'ideal J0 = '
+	for idx in range(bitWidth):
+		rstr += "a{},".format(idx)
+		j0 += 'a{0}^2-a{0},'.format(idx)
 
-	pass
+	for idx in range(bitWidth):
+		rstr += "b{},".format(idx)
+		j0 += 'b{0}^2-b{0},'.format(idx)
+
+	pmf.write('{}),dp;\n\n'.format(rstr[:-1]))
+	pmf.write('{};\n\n'.format(j0[:-1]))
+
+	del rstr
+	del j0
+
+	# Read the cofactor remainder file generated from amulet
+	try:
+		rl = open(remFile,'r')
+	except IOError:
+		print ("Couldn't open the remainder file for reading!!")
+		sys.exit(0)
+
+	# Build terms and polynomials
+	line  = rl.readline()
+	t_map = set()
+	m_map = set()
+	mul_poly = 'poly rect_check = reduce(1'
+	s_list = '\tlist poly_list = '
+	d_list = '\tlist polyb_list = '
+	gb_poly = ''
+	for cofac in range(2**num_trgts):
+		line = rl.readline().strip().strip(';')
+		if (line[0:8] == "CORRECT"):
+			logFile.write("Constant assignment {} to the targets rectifies the circuit".format(bin(cofac)[2:].zfill(num_trgts)))
+			# cleanup()
+			sys.exit(0)
+
+		p_str  = "p_{}".format(cofac)
+		polynomial = line.strip()
+		if (use_tool != 'revsca'):
+			pmf.write("poly {}={};\n".format(p_str,polynomial))
+		else:
+			terms = split_revsca_polynomial(polynomial)
+			term = "poly {}=".format(p_str)
+			for idx in range(len(terms)): 
+				# terms[idx][0] = coefficient 
+				# terms[idx][1] = corresponding monomial
+				# cofac - index for remainder (00 - rem_00, 01- rem_01, 10 - rem_10 ... so on)
+				# idx  - index for each term in the polynomial of a given remainder
+				term += terms[idx][0]
+				if (terms[idx][1] != '0'):
+					t_vars = terms[idx][1].split('\xc3\x97')
+					for varbl in t_vars:
+						if varbl:
+							vidx = int(varbl)
+							if (vidx <= bitWidth):
+								term += "*a{}".format(vidx-1)
+							else:
+								term += "*b{}".format(vidx-1-bitWidth)
+				term += '+'
+			pmf.write("{};\n".format(term[:-1]))
+
+					
+		#Code to multiply polynomials
+		mul_poly += '*{}'.format(p_str)
+		gb_poly += '\tpoly pb_{0} = id2poly_int(reduce(slimgb(p_{0}+J0),J0)+0,J0);\n'.format(cofac)
+		s_list += 'pb_{},'.format(cofac)
+		d_list += '0,'
+	
+	mul_poly += ',J0);\n'
+	pmf.write(mul_poly)
+
+	pmf.write("if (rect_check != 0){\n\t\"Rectification doesn't exist\";\n\tquit;\n}")
+	pmf.write("else{\n\t\"Rectification exists\";\n")
+	pmf.write("\toption(redSB);\n")
+	pmf.write("{}\n".format(gb_poly))
+	pmf.write("{};\n".format(s_list[:-1]))
+	pmf.write("{};\n".format(d_list[:-1]))
+	pmf.write("\tfor (int j=1;j<=size(poly_list);j++){\n")
+	pmf.write("\t\tfor (int i=1;i<=size(poly_list[j]);i++){\n")
+	pmf.write("\t\t\tint coeff = int(leadcoef(poly_list[j][i]))%2;\n")
+	pmf.write("\t\t\tif (coeff == -1 or coeff == 1){\n")
+	pmf.write("\t\t\t\tpolyb_list[j] = polyb_list[j] + leadmonom(poly_list[j][i]);\n")
+	pmf.write("\t\t\t}\n\t\t}\n\tpolyb_list[j];\n\t}\n}\nquit;")
+
+	pmf.close()
+
+	logFile.write("*** Rectification check file generated for singular*** \n")
+
+def compute_rc_and_boolrem_using_singular():
+
+	#Merge all three files using shell and then delete them
+	cmd = 'Singular --no-warn -q {} > {}'.format(siFile,cofacLog)
+	subprocess.call([cmd],stdout=logFile,shell=True,cwd=os.getcwd())
+	logFile.write("*** Rectification check done *** \n")
+
+
+def check_if_rect_exists():
+
+	clog = open("{}".format(cofacLog),'r')
+	cline = clog.readline()
+	clog.close()
+	if cline == 'Rectification exists':
+		return True
+	else:
+		return False
+
+
+def compute_functions():
+
+
+	# Proceeding to analyze cofactor log file to compute the MFR patches.
+	# Write the ON-set and OFFC-set files from .
+	# bnchmrk_dtls = read_a_line(log).split()
+
+	# #Verify bench mark details again
+	# bnch_mark = (bnchmrk_dtls.pop(0))
+	# bw = int(bnchmrk_dtls.pop(0))
+	# fw = int(bnchmrk_dtls.pop(0))
+	trgts = targetstr
+	fw = len(trgts)
+	bw = bitWidth
+	fstr = 'on'
+
+	cofacsp = []
+	cofacsn = []
+
+	for num_cofacs in range((2**fw)):
+		cofac = read_a_line(log)
+		if cofac != '':
+			cofacsp.append('!('+cofac+')')
+		else:
+			print ("empty section")
+
+	log.close()
+
+	assert(len(cofacsp) == (2**fw))
+
+	tot_sets = len(cofacsp)
+	tm_set = 0.0
+	tm_setg = 0.0
+	tm_setd = 0.0
+	tm_gfcs = 0.0
+	tm_sdfcs = 0.0
+	tm_adfcs = 0.0
+
+	if gfc_computation:
+
+		gfcfile    = 't{}_gfc_{}_{}_{}'.format(fstr,bnch_mark,bw,fw)
+		gfch = open('{}.blif'.format(gfcfile),'w')
+		gfch.write('# BLIF for all the targets computed using {}-sets of GFC computations\n'.format(fstr))
+		gfch.write('.model {}\n.inputs '.format(gfcfile))
+		write_inputs(gfch, bw, bnch_mark)
+		gfch.write('\n.outputs ')
+
+		for target in range(fw):
+			gfch.write(trgts[target]+' ')
+
+		gfch.write('\n')
+
+	if dfc_computation:
+
+		dfcfile = 't{}dc_dfc_{}_{}_{}'.format(fstr,bnch_mark,bw,fw)
+		dcfile = 'tdc_dfc_{}_{}_{}'.format(bnch_mark,bw,fw)
+		dfch = open('{}.blif'.format(dfcfile),'w')
+		edcfh = open('{}.blif'.format(dcfile),'w')
+		dfch.write('# BLIF for all the targets computed using {}-sets of DFC computations\n'.format(fstr))
+		edcfh.write('\n# exdc BLIF for all the targets computed using {}-sets of DFC computations\n'.format(fstr))
+		dfch.write('.model {}\n.inputs '.format(dfcfile))
+		edcfh.write('.exdc \n.inputs ')
+		write_inputs(dfch, bw, bnch_mark)
+		write_inputs(edcfh, bw, bnch_mark)
+		dfch.write('\n.outputs ')
+		edcfh.write('\n.outputs ')
+
+		for target in range(fw):
+			dfch.write(trgts[target]+' ')
+			edcfh.write(trgts[target]+' ')
+		dfch.write('\n')
+		edcfh.write('\n')
+
+	'''
+	Cofactor to merging
+
+	'''
+	print("\nComputing BLIFS for cofactors\n")
+	for cfidx in range(len(cofacsp)):
+
+		copfile = 'cofp_{}_{}_{}_{}'.format(bnch_mark,bw,fw,cfidx)
+		cpfh = open('{}.eqn'.format(copfile),'w')
+		cpfh.write('INORDER = ')
+		write_inputs(cpfh, bw, bnch_mark)
+		cpfh.write(';\nOUTORDER = cf{} ;\n'.format(cfidx))
+		cpfh.write('cf{} = {};'.format(cfidx,cofacsp[cfidx]))
+		cpfh.close()
+
+		tmp = open('tmp.txt','w')
+		tmp.write('source abc.rc\n'.format(src_path))
+		tmp.write('read_eqn {}.eqn;\n'.format(copfile))
+		tmp.write('strash;\n') 
+		tmp.write('fraig;\n')
+		tmp.write(cofac_synth)
+		tmp.write('write_blif {}.blif;quit;\n'.format(copfile))
+
+		tmp.close()
+
+		subprocess.call(['./abc -f tmp.txt  > /dev/null'],shell=True,cwd=os.getcwd())
+
+		if delete_cof_files:
+			subprocess.call(['rm tmp.txt'],shell=True,cwd=os.getcwd())
+			subprocess.call(['rm {}.eqn'.format(copfile)],shell=True,cwd=os.getcwd())
+
+		cmd = 'python {}rename_cofac_wires.py {}.blif'.format(src_path,copfile) + ' p{}'.format(cfidx)
+		subprocess.call([cmd],shell=True,cwd=os.getcwd())
+
+		if delete_cof_files:
+			subprocess.call(['rm {}.blif'.format(copfile)],shell=True,cwd=os.getcwd())
+
+		copfile = 'cfp_{}_{}_{}_{}'.format(bnch_mark,bw,fw,cfidx)
+		cfh = open('{}.blif'.format(copfile),'r')
+		line = cfh.readline().strip()
+		while(line[0:6] != '.names'):
+			line = cfh.readline().strip()
+		
+		if gfc_computation:
+			gfch.write(line+'\n')
+		if dfc_computation:
+			dfch.write(line+'\n')
+			edcfh.write(line+'\n')
+
+		for line in cfh.readlines():
+			if '.end' not in line.strip():
+				if gfc_computation:
+					gfch.write(line)
+				if dfc_computation:
+					dfch.write(line)
+					edcfh.write(line)
+		cfh.close()
+		if delete_cof_files:
+			subprocess.call(['rm {}.blif'.format(copfile)],shell=True,cwd=os.getcwd())	
+
+	tm_set = time.time()-tm0
+	tm0 = time.time()
+	print("Done!\n")
+
+	if gfc_computation:
+
+		for cofac in range(tot_sets):
+			nstr = '.names cf{} '.format(cofac)
+			vstr = '1'
+			if cofac == 0:
+				tgtstr = '{}gf{}\n{} 1\n'.format(nstr,cofac,vstr)
+			else:
+				for cmplfc in range(cofac-1,-1,-1):
+					nstr = '{}cf{} '.format(nstr,cmplfc)
+					vstr = '{}0'.format(vstr)
+				tgtstr = '{}gf{}\n{} 1\n'.format(nstr,cofac,vstr)
+			gfch.write(tgtstr)
+
+		for target in range(fw):
+			nstr = '.names '
+			vstr = ''
+			for gfidx in range(tot_sets):
+				keystr = bin(gfidx)[2:].zfill(fw)
+				if keystr[target] == svstr:
+					nstr = '{}gf{} '.format(nstr,gfidx)
+					vstr = '{}0'.format(vstr)
+			if comp_using_offset:
+				tgtstr = '{}{}c\n{} 0\n'.format(nstr,trgts[target],vstr)
+				nstr = '.names {0}c {0}\n0 1\n'.format(trgts[target])
+				tgtstr = '{}{}'.format(tgtstr,nstr)
+			else:
+				tgtstr = '{}{}\n{} 0\n'.format(nstr,trgts[target],vstr)
+			gfch.write(tgtstr)
+		gfch.write('\n.end\n')
+		gfch.close()
+
+		# Strashing & fraiging the gfc file for all targets using abc
+		abcs = open('gfc_abc.script','w')
+		abcs.write('source abc.rc\n')
+		abcs.write('read_library cadence_abc.genlib\n')
+		abcs.write('read_blif {}.blif\n'.format(gfcfile))
+		abcs.write('strash;\n')
+		abcs.write('fraig;\n')
+		abcs.write(gfc_synth_str)
+		if not sis_synth:
+			abcs.write('map;\n')
+		abcs.write('write_blif {}_abc_mapped.blif;quit;\n'.format(gfcfile))
+		abcs.close()
+		tm_setg = time.time()-tm0
+		tm0 = time.time()
+		print("Synthesizing GFC patch using abc\n")
+		subprocess.call(['./abc -f gfc_abc.script > /dev/null'],shell=True,cwd=os.getcwd())
+		tm_gfcs = time.time()-tm0
+		print("Done!\n")
+
+		if sis_synth:
+			print("Synthesizing GFC patch using sis\n")
+			sis_s = open('sis_synth.script','w')
+			sis_s.write('read_blif {}.blif\n'.format(gfcfile))
+			sis_s.write('print_stats\n')
+			sis_s.write(sis_synth_str)
+			sis_s.write('print_stats\n')
+			sis_s.write('write_blif {}_sis_mapped.blif\n'.format(gfcfile))
+			sis_s.write('quit')
+			sis_s.close()
+
+			subprocess.call(['./sis < sis_synth.script > /dev/null'],shell=True,cwd=os.getcwd())
+			print("Done!\n")
+			if delete_tmp_files:
+				subprocess.call(['rm sis_synth.script'],shell=True,cwd=os.getcwd())
+		if delete_tmp_files:
+			subprocess.call(['rm gfc_abc.script'],shell=True,cwd=os.getcwd())
+			subprocess.call(['rm {}.blif'.format(gfcfile)],shell=True,cwd=os.getcwd())
+
+	tm0 = time.time()
+	if dfc_computation:
+
+		inter_dict = {}
+		dcnstr = '.names '
+		dcvstr = ''
+		pcdc = []
+		first_time = True
+		for idx1 in range(tot_sets):
+			enstr = '.names cf{} dcSet '.format(idx1)
+			evstr = '10'
+			if idx1 == 0:
+				etgtstr = '{}ef{}\n{} 1\n'.format(enstr,idx1,evstr)
+			else:
+				for ecmplfc in range(idx1-1,-1,-1):
+					enstr = '{}cf{} '.format(enstr,ecmplfc)
+					evstr = '{}0'.format(evstr)
+				etgtstr = '{}ef{}\n{} 1\n'.format(enstr,idx1,evstr)
+			dfch.write(etgtstr)
+			for idx2 in range(idx1,tot_sets):
+				xbin = bin(idx1^idx2)[2:].zfill(fw)
+				if (xbin.count('1') == 1):
+					didx = xbin.index('1')
+					idx1str = bin(idx1)[2:].zfill(fw)
+					xbin = idx1str[:didx] + 'd' + idx1str[didx+1:] #0d/d0/d1/1d
+
+					inter_dict[xbin] = '.names cf{} cf{} dc{}\n11 1\n'.format(idx1,idx2,xbin)
+					dfch.write(inter_dict[xbin])
+					edcfh.write(inter_dict[xbin])
+					dcnstr = '{}dc{} '.format(dcnstr,xbin)
+					dcvstr = '{}0'.format(dcvstr)
+					if not first_time:
+						edcnstr = '.names dc{} '.format(xbin)
+						edcvstr = '1'
+						for pdc in pcdc:
+							edcnstr = '{}dc{} '.format(edcnstr,pdc)
+							edcvstr = '{}0'.format(edcvstr)
+						tgtstr = '{}edc{}\n{} 1\n'.format(edcnstr,xbin,edcvstr)
+					else:
+						tgtstr = '.names cf{} cf{} edc{}\n11 1\n'.format(idx1,idx2,xbin)
+						first_time = False
+					pcdc.append(xbin)
+					dfch.write(tgtstr)
+					edcfh.write(tgtstr)
+
+		dfch.write('{}dcSet\n{} 0\n'.format(dcnstr,dcvstr))
+
+		for target in range(fw):
+			nstr = '.names '
+			dcnstr = '.names '
+			vstr = ''
+			dcvstr = ''
+			for dfidx in range(tot_sets):
+				keystr = bin(dfidx)[2:].zfill(fw)
+				if keystr[target] == svstr:
+					nstr = '{}ef{} '.format(nstr,dfidx)
+					vstr = '{}0'.format(vstr)
+			for pdc in pcdc:
+				if pdc[target] == svstr:
+					nstr = '{}edc{} '.format(nstr,pdc)
+					vstr = '{}0'.format(vstr)
+				if pdc[target] == 'd':
+					dcnstr = '{}edc{} '.format(dcnstr,pdc)
+					dcvstr = '{}0'.format(dcvstr)
+			if comp_using_offset:
+				tgtstr = '{}{}c\n{} 0\n'.format(nstr,trgts[target],vstr)
+				nstr = '.names {0}c {0}\n0 1\n'.format(trgts[target])
+				tgtstr = '{}{}'.format(tgtstr,nstr)
+			else:
+				tgtstr = '{}{}\n{} 0\n'.format(nstr,trgts[target],vstr)
+			dctgtstr = '{}{}\n{} 0\n'.format(dcnstr,trgts[target],dcvstr)
+			dfch.write(tgtstr)
+			edcfh.write(dctgtstr)
+
+		edcfh.write('\n.end\n')
+		dfch.close()
+		edcfh.close()
+
+		if sis_synth_dfc:
+			filenames = ['{}.blif'.format(dfcfile), '{}.blif'.format(dcfile)]
+			with open('{}_preSIS.blif'.format(dfcfile), 'w') as outfile:
+				for fname in filenames:
+					with open(fname) as infile:
+						for line in infile:
+							outfile.write(line)
+		else:
+			subprocess.call(['mv {0}.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)
+
+
+		if delete_tmp_files:
+			if sis_synth_dfc:
+				subprocess.call(['rm {}.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
+			subprocess.call(['rm {}.blif'.format(dcfile)],shell=True,cwd=os.getcwd())
+		
+		if sis_synth_dfc: 
+			print("Synthesizing DFC patch using sis\n")
+			sis = open('sis_ondc.script','w')
+			sis.write('read_blif {}_preSIS.blif\n'.format(dfcfile))
+			sis.write('print_stats\n')
+			sis.write(sis_synth_str)
+			sis.write('print_stats\n')
+			sis.write('write_blif {}_postSIS.blif\n'.format(dfcfile))
+			sis.write('quit')
+			sis.close()
+			tm_setd = time.time()-tm0
+			tm0 = time.time()
+
+			subprocess.call(['./sis < sis_ondc.script > /dev/null'],shell=True,cwd=os.getcwd(),stdout=None)
+			print("Done!\n")
+			try:
+				log = open('{0}_postSIS.blif'.format(dfcfile),'r')
+			except IOError:
+				subprocess.call(['cp {0}_preSIS.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)
+			if delete_tmp_files:
+				subprocess.call(['rm sis_ondc.script'],shell=True,cwd=os.getcwd())
+				subprocess.call(['rm {}_preSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
+		# else:
+			# subprocess.call(['mv {0}_preSIS.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)			
+		
+		tm_sdfcs = time.time()-tm0
+		tm0 = time.time()
+
+		tmp = open('dfc_abc_synth.script','w')
+		tmp.write('source abc.rc\n')
+		tmp.write('read_blif {}_postSIS.blif\n'.format(dfcfile))
+		if sis_synth_dfc:
+			tmp.write('exdc_free\n')
+		tmp.write('strash;\n')
+		tmp.write('fraig;\n')
+		tmp.write('read_library cadence_abc.genlib;\n')
+		tmp.write(dfc_synth_str)
+		tmp.write('map;\n')
+		tmp.write('write_blif {}_abc_mapped.blif;quit;\n'.format(dfcfile))
+		tmp.close()
+
+		print("Synthesizing DFC patch using abc\n")
+		subprocess.call(['./abc -f dfc_abc_synth.script > /dev/null'],shell=True,cwd=os.getcwd(),stdout=subprocess.PIPE)
+		print("Done!\n")
+
+		if delete_tmp_files:
+			subprocess.call(['rm dfc_abc_synth.script'],shell=True,cwd=os.getcwd())
+			subprocess.call(['rm {}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
+
+		tm_adfcs = time.time()-tm0
+
+	tmp = open('gfc_dfc_abc_stats.script','w')
+	tmp.write('read_library cadence_abc.genlib;\n')
+	if gfc_computation:
+		tmp.write('read_blif {}/{}_abc_mapped.blif\n'.format(dirName,gfcfile))
+		tmp.write('ps;\n')
+	if dfc_computation:
+		tmp.write('read_blif {}/{}_abc_mapped.blif\n'.format(dirName,dfcfile))
+		tmp.write('ps;\n')
+	tmp.write('quit;\n')
+	tmp.close()
+
+	print_time(tm_set,tm_setg,tm_setd,tm_gfcs,tm_sdfcs,tm_adfcs)
 
 # capture the model info and comments
 cline = read_a_line(blifFile)
+bnch_mark = ''
+
+while(cline[0:6] != '.model'):
+	cline = cline.split()
+	bnch_mark = cline[1]
+	cline = read_a_line(blifFile)
 
 while(cline[0:7] != '.inputs'):
 	logFile.write(cline+'\n')
@@ -563,29 +1044,6 @@ for cofacs in range(2**num_trgts):
 	else:	
 		subprocess.call(['../amulet1.5/amulet -verify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
 
-	# tm0 = time.time()
-	# subprocess.call(['./revsca20 {}.aig {} -u'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	# tm_rev = time.time() -tm0
-	# print("revsca:{}",tm_rev)
-
-	# tm0 = time.time()
-	# subprocess.call(['../amulet1.0/amulet -verify {}.aig'.format(pName)],stdout=logFile,shell=True,cwd=os.getcwd())
-	# tm_amu = time.time()-tm0
-
-	# print("amulet10:{}",tm_amu)
-
-	# tm0 = time.time()
-	# subprocess.call(['./ramulet15 -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	# tm_amu = time.time()-tm0
-
-	# print("amulet15:{}",tm_amu)
-
-	# tm0 = time.time()
-	# subprocess.call(['./ramulet -rectify {}.aig {}'.format(pName,remFile)],stdout=logFile,shell=True,cwd=os.getcwd())
-	# tm_amu = time.time()-tm0
-
-	# print("amulet20:{}",tm_amu)
-
 if delete_cof_files:
 		subprocess.call(['rm {}.aig'.format(pName)],shell=True,cwd=os.getcwd())
 
@@ -597,380 +1055,17 @@ subprocess.call(['rm abc_gen_aig_cofacs.script'],shell=True,cwd=os.getcwd())
 logFile.write("Remainder generation done !!\n")
 
 if use_tool == 'revsca':
-	# remlog.close()
 	process_revsca_output()
 
 if (use_singular and use_singular_for_poly_mult):
-	run_rect_check_using_singular()
+	write_poly_script_for_singular()
+	compute_rc_and_boolrem_using_singular()
+	rect_exists = check_if_rect_exists()
+	if rect_exists:
+		compute_functions()
 else:
 	write_poly_mul_script_for_amulet()
-
-# 	run_rect_check_using_polylib()
-
-# if use_singular:
-# 	compute_redGB_using_singular()
-
-# if use_tool == 'revsca':
-# 	remlog.close()
+	run_rect_check_using_polylib()
 
 logFile.close()
 
-
-# # Proceeding to analyze cofactor log file to compute the MFR patches.
-# # Write the ON-set and OFFC-set files from .
-# bnchmrk_dtls = read_a_line(log).split()
-
-# #Verify bench mark details again
-# bnch_mark = (bnchmrk_dtls.pop(0))
-# bw = int(bnchmrk_dtls.pop(0))
-# fw = int(bnchmrk_dtls.pop(0))
-# trgts = read_a_line(log).split()
-
-# cofacsp = []
-# cofacsn = []
-
-# for num_cofacs in range((2**fw)):
-# 	cofac = read_a_line(log)
-# 	if cofac != '':
-# 		cofacsp.append('!('+cofac+')')
-# 	else:
-# 		print ("empty section")
-
-# log.close()
-
-# assert(len(cofacsp) == (2**fw))
-
-# tot_sets = len(cofacsp)
-# tm_set = 0.0
-# tm_setg = 0.0
-# tm_setd = 0.0
-# tm_gfcs = 0.0
-# tm_sdfcs = 0.0
-# tm_adfcs = 0.0
-
-# if gfc_computation:
-
-# 	gfcfile    = 't{}_gfc_{}_{}_{}'.format(fstr,bnch_mark,bw,fw)
-# 	gfch = open('{}.blif'.format(gfcfile),'w')
-# 	gfch.write('# BLIF for all the targets computed using {}-sets of GFC computations\n'.format(fstr))
-# 	gfch.write('.model {}\n.inputs '.format(gfcfile))
-# 	write_inputs(gfch, bw, bnch_mark)
-# 	gfch.write('\n.outputs ')
-
-# 	for target in range(fw):
-# 		gfch.write(trgts[target]+' ')
-
-# 	gfch.write('\n')
-
-# if dfc_computation:
-
-# 	dfcfile = 't{}dc_dfc_{}_{}_{}'.format(fstr,bnch_mark,bw,fw)
-# 	dcfile = 'tdc_dfc_{}_{}_{}'.format(bnch_mark,bw,fw)
-# 	dfch = open('{}.blif'.format(dfcfile),'w')
-# 	edcfh = open('{}.blif'.format(dcfile),'w')
-# 	dfch.write('# BLIF for all the targets computed using {}-sets of DFC computations\n'.format(fstr))
-# 	edcfh.write('\n# exdc BLIF for all the targets computed using {}-sets of DFC computations\n'.format(fstr))
-# 	dfch.write('.model {}\n.inputs '.format(dfcfile))
-# 	edcfh.write('.exdc \n.inputs ')
-# 	write_inputs(dfch, bw, bnch_mark)
-# 	write_inputs(edcfh, bw, bnch_mark)
-# 	dfch.write('\n.outputs ')
-# 	edcfh.write('\n.outputs ')
-
-# 	for target in range(fw):
-# 		dfch.write(trgts[target]+' ')
-# 		edcfh.write(trgts[target]+' ')
-# 	dfch.write('\n')
-# 	edcfh.write('\n')
-
-# '''
-# Cofactor to merging
-
-# '''
-# print("\nComputing BLIFS for cofactors\n")
-# for cfidx in range(len(cofacsp)):
-
-# 	copfile = 'cofp_{}_{}_{}_{}'.format(bnch_mark,bw,fw,cfidx)
-# 	cpfh = open('{}.eqn'.format(copfile),'w')
-# 	cpfh.write('INORDER = ')
-# 	write_inputs(cpfh, bw, bnch_mark)
-# 	cpfh.write(';\nOUTORDER = cf{} ;\n'.format(cfidx))
-# 	cpfh.write('cf{} = {};'.format(cfidx,cofacsp[cfidx]))
-# 	cpfh.close()
-
-# 	tmp = open('tmp.txt','w')
-# 	tmp.write('source abc.rc\n'.format(src_path))
-# 	tmp.write('read_eqn {}.eqn;\n'.format(copfile))
-# 	tmp.write('strash;\n') 
-# 	tmp.write('fraig;\n')
-# 	tmp.write(cofac_synth)
-# 	tmp.write('write_blif {}.blif;quit;\n'.format(copfile))
-
-# 	tmp.close()
-
-# 	subprocess.call(['./abc -f tmp.txt  > /dev/null'],shell=True,cwd=os.getcwd())
-
-# 	if delete_cof_files:
-# 		subprocess.call(['rm tmp.txt'],shell=True,cwd=os.getcwd())
-# 		subprocess.call(['rm {}.eqn'.format(copfile)],shell=True,cwd=os.getcwd())
-
-# 	cmd = 'python {}rename_cofac_wires.py {}.blif'.format(src_path,copfile) + ' p{}'.format(cfidx)
-# 	subprocess.call([cmd],shell=True,cwd=os.getcwd())
-
-# 	if delete_cof_files:
-# 		subprocess.call(['rm {}.blif'.format(copfile)],shell=True,cwd=os.getcwd())
-
-# 	copfile = 'cfp_{}_{}_{}_{}'.format(bnch_mark,bw,fw,cfidx)
-# 	cfh = open('{}.blif'.format(copfile),'r')
-# 	line = cfh.readline().strip()
-# 	while(line[0:6] != '.names'):
-# 		line = cfh.readline().strip()
-	
-# 	if gfc_computation:
-# 		gfch.write(line+'\n')
-# 	if dfc_computation:
-# 		dfch.write(line+'\n')
-# 		edcfh.write(line+'\n')
-
-# 	for line in cfh.readlines():
-# 		if '.end' not in line.strip():
-# 			if gfc_computation:
-# 				gfch.write(line)
-# 			if dfc_computation:
-# 				dfch.write(line)
-# 				edcfh.write(line)
-# 	cfh.close()
-# 	if delete_cof_files:
-# 		subprocess.call(['rm {}.blif'.format(copfile)],shell=True,cwd=os.getcwd())	
-
-# tm_set = time.time()-tm0
-# tm0 = time.time()
-# print("Done!\n")
-
-# if gfc_computation:
-
-# 	for cofac in range(tot_sets):
-# 		nstr = '.names cf{} '.format(cofac)
-# 		vstr = '1'
-# 		if cofac == 0:
-# 			tgtstr = '{}gf{}\n{} 1\n'.format(nstr,cofac,vstr)
-# 		else:
-# 			for cmplfc in range(cofac-1,-1,-1):
-# 				nstr = '{}cf{} '.format(nstr,cmplfc)
-# 				vstr = '{}0'.format(vstr)
-# 			tgtstr = '{}gf{}\n{} 1\n'.format(nstr,cofac,vstr)
-# 		gfch.write(tgtstr)
-
-# 	for target in range(fw):
-# 		nstr = '.names '
-# 		vstr = ''
-# 		for gfidx in range(tot_sets):
-# 			keystr = bin(gfidx)[2:].zfill(fw)
-# 			if keystr[target] == svstr:
-# 				nstr = '{}gf{} '.format(nstr,gfidx)
-# 				vstr = '{}0'.format(vstr)
-# 		if comp_using_offset:
-# 			tgtstr = '{}{}c\n{} 0\n'.format(nstr,trgts[target],vstr)
-# 			nstr = '.names {0}c {0}\n0 1\n'.format(trgts[target])
-# 			tgtstr = '{}{}'.format(tgtstr,nstr)
-# 		else:
-# 			tgtstr = '{}{}\n{} 0\n'.format(nstr,trgts[target],vstr)
-# 		gfch.write(tgtstr)
-# 	gfch.write('\n.end\n')
-# 	gfch.close()
-
-# 	# Strashing & fraiging the gfc file for all targets using abc
-# 	abcs = open('gfc_abc.script','w')
-# 	abcs.write('source abc.rc\n')
-# 	abcs.write('read_library cadence_abc.genlib\n')
-# 	abcs.write('read_blif {}.blif\n'.format(gfcfile))
-# 	abcs.write('strash;\n')
-# 	abcs.write('fraig;\n')
-# 	abcs.write(gfc_synth_str)
-# 	if not sis_synth:
-# 		abcs.write('map;\n')
-# 	abcs.write('write_blif {}_abc_mapped.blif;quit;\n'.format(gfcfile))
-# 	abcs.close()
-# 	tm_setg = time.time()-tm0
-# 	tm0 = time.time()
-# 	print("Synthesizing GFC patch using abc\n")
-# 	subprocess.call(['./abc -f gfc_abc.script > /dev/null'],shell=True,cwd=os.getcwd())
-# 	tm_gfcs = time.time()-tm0
-# 	print("Done!\n")
-
-# 	if sis_synth:
-# 		print("Synthesizing GFC patch using sis\n")
-# 		sis_s = open('sis_synth.script','w')
-# 		sis_s.write('read_blif {}.blif\n'.format(gfcfile))
-# 		sis_s.write('print_stats\n')
-# 		sis_s.write(sis_synth_str)
-# 		sis_s.write('print_stats\n')
-# 		sis_s.write('write_blif {}_sis_mapped.blif\n'.format(gfcfile))
-# 		sis_s.write('quit')
-# 		sis_s.close()
-
-# 		subprocess.call(['./sis < sis_synth.script > /dev/null'],shell=True,cwd=os.getcwd())
-# 		print("Done!\n")
-# 		if delete_tmp_files:
-# 			subprocess.call(['rm sis_synth.script'],shell=True,cwd=os.getcwd())
-# 	if delete_tmp_files:
-# 		subprocess.call(['rm gfc_abc.script'],shell=True,cwd=os.getcwd())
-# 		subprocess.call(['rm {}.blif'.format(gfcfile)],shell=True,cwd=os.getcwd())
-
-# tm0 = time.time()
-# if dfc_computation:
-
-# 	inter_dict = {}
-# 	dcnstr = '.names '
-# 	dcvstr = ''
-# 	pcdc = []
-# 	first_time = True
-# 	for idx1 in range(tot_sets):
-# 		enstr = '.names cf{} dcSet '.format(idx1)
-# 		evstr = '10'
-# 		if idx1 == 0:
-# 			etgtstr = '{}ef{}\n{} 1\n'.format(enstr,idx1,evstr)
-# 		else:
-# 			for ecmplfc in range(idx1-1,-1,-1):
-# 				enstr = '{}cf{} '.format(enstr,ecmplfc)
-# 				evstr = '{}0'.format(evstr)
-# 			etgtstr = '{}ef{}\n{} 1\n'.format(enstr,idx1,evstr)
-# 		dfch.write(etgtstr)
-# 		for idx2 in range(idx1,tot_sets):
-# 			xbin = bin(idx1^idx2)[2:].zfill(fw)
-# 			if (xbin.count('1') == 1):
-# 				didx = xbin.index('1')
-# 				idx1str = bin(idx1)[2:].zfill(fw)
-# 				xbin = idx1str[:didx] + 'd' + idx1str[didx+1:] #0d/d0/d1/1d
-
-# 				inter_dict[xbin] = '.names cf{} cf{} dc{}\n11 1\n'.format(idx1,idx2,xbin)
-# 				dfch.write(inter_dict[xbin])
-# 				edcfh.write(inter_dict[xbin])
-# 				dcnstr = '{}dc{} '.format(dcnstr,xbin)
-# 				dcvstr = '{}0'.format(dcvstr)
-# 				if not first_time:
-# 					edcnstr = '.names dc{} '.format(xbin)
-# 					edcvstr = '1'
-# 					for pdc in pcdc:
-# 						edcnstr = '{}dc{} '.format(edcnstr,pdc)
-# 						edcvstr = '{}0'.format(edcvstr)
-# 					tgtstr = '{}edc{}\n{} 1\n'.format(edcnstr,xbin,edcvstr)
-# 				else:
-# 					tgtstr = '.names cf{} cf{} edc{}\n11 1\n'.format(idx1,idx2,xbin)
-# 					first_time = False
-# 				pcdc.append(xbin)
-# 				dfch.write(tgtstr)
-# 				edcfh.write(tgtstr)
-
-# 	dfch.write('{}dcSet\n{} 0\n'.format(dcnstr,dcvstr))
-
-# 	for target in range(fw):
-# 		nstr = '.names '
-# 		dcnstr = '.names '
-# 		vstr = ''
-# 		dcvstr = ''
-# 		for dfidx in range(tot_sets):
-# 			keystr = bin(dfidx)[2:].zfill(fw)
-# 			if keystr[target] == svstr:
-# 				nstr = '{}ef{} '.format(nstr,dfidx)
-# 				vstr = '{}0'.format(vstr)
-# 		for pdc in pcdc:
-# 			if pdc[target] == svstr:
-# 				nstr = '{}edc{} '.format(nstr,pdc)
-# 				vstr = '{}0'.format(vstr)
-# 			if pdc[target] == 'd':
-# 				dcnstr = '{}edc{} '.format(dcnstr,pdc)
-# 				dcvstr = '{}0'.format(dcvstr)
-# 		if comp_using_offset:
-# 			tgtstr = '{}{}c\n{} 0\n'.format(nstr,trgts[target],vstr)
-# 			nstr = '.names {0}c {0}\n0 1\n'.format(trgts[target])
-# 			tgtstr = '{}{}'.format(tgtstr,nstr)
-# 		else:
-# 			tgtstr = '{}{}\n{} 0\n'.format(nstr,trgts[target],vstr)
-# 		dctgtstr = '{}{}\n{} 0\n'.format(dcnstr,trgts[target],dcvstr)
-# 		dfch.write(tgtstr)
-# 		edcfh.write(dctgtstr)
-
-# 	edcfh.write('\n.end\n')
-# 	dfch.close()
-# 	edcfh.close()
-
-# 	if sis_synth_dfc:
-# 		filenames = ['{}.blif'.format(dfcfile), '{}.blif'.format(dcfile)]
-# 		with open('{}_preSIS.blif'.format(dfcfile), 'w') as outfile:
-# 			for fname in filenames:
-# 				with open(fname) as infile:
-# 					for line in infile:
-# 						outfile.write(line)
-# 	else:
-# 		subprocess.call(['mv {0}.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)
-
-
-# 	if delete_tmp_files:
-# 		if sis_synth_dfc:
-# 			subprocess.call(['rm {}.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
-# 		subprocess.call(['rm {}.blif'.format(dcfile)],shell=True,cwd=os.getcwd())
-	
-# 	if sis_synth_dfc: 
-# 		print("Synthesizing DFC patch using sis\n")
-# 		sis = open('sis_ondc.script','w')
-# 		sis.write('read_blif {}_preSIS.blif\n'.format(dfcfile))
-# 		sis.write('print_stats\n')
-# 		sis.write(sis_synth_str)
-# 		sis.write('print_stats\n')
-# 		sis.write('write_blif {}_postSIS.blif\n'.format(dfcfile))
-# 		sis.write('quit')
-# 		sis.close()
-# 		tm_setd = time.time()-tm0
-# 		tm0 = time.time()
-
-# 		subprocess.call(['./sis < sis_ondc.script > /dev/null'],shell=True,cwd=os.getcwd(),stdout=None)
-# 		print("Done!\n")
-# 		try:
-# 			log = open('{0}_postSIS.blif'.format(dfcfile),'r')
-# 		except IOError:
-# 			subprocess.call(['cp {0}_preSIS.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)
-# 		if delete_tmp_files:
-# 			subprocess.call(['rm sis_ondc.script'],shell=True,cwd=os.getcwd())
-# 			subprocess.call(['rm {}_preSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
-# 	# else:
-# 		# subprocess.call(['mv {0}_preSIS.blif {0}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd(),stdout=None)			
-	
-# 	tm_sdfcs = time.time()-tm0
-# 	tm0 = time.time()
-
-# 	tmp = open('dfc_abc_synth.script','w')
-# 	tmp.write('source abc.rc\n')
-# 	tmp.write('read_blif {}_postSIS.blif\n'.format(dfcfile))
-# 	if sis_synth_dfc:
-# 		tmp.write('exdc_free\n')
-# 	tmp.write('strash;\n')
-# 	tmp.write('fraig;\n')
-# 	tmp.write('read_library cadence_abc.genlib;\n')
-# 	tmp.write(dfc_synth_str)
-# 	tmp.write('map;\n')
-# 	tmp.write('write_blif {}_abc_mapped.blif;quit;\n'.format(dfcfile))
-# 	tmp.close()
-
-# 	print("Synthesizing DFC patch using abc\n")
-# 	subprocess.call(['./abc -f dfc_abc_synth.script > /dev/null'],shell=True,cwd=os.getcwd(),stdout=subprocess.PIPE)
-# 	print("Done!\n")
-
-# 	if delete_tmp_files:
-# 		subprocess.call(['rm dfc_abc_synth.script'],shell=True,cwd=os.getcwd())
-# 		subprocess.call(['rm {}_postSIS.blif'.format(dfcfile)],shell=True,cwd=os.getcwd())
-
-# 	tm_adfcs = time.time()-tm0
-
-# tmp = open('gfc_dfc_abc_stats.script','w')
-# tmp.write('read_library cadence_abc.genlib;\n')
-# if gfc_computation:
-# 	tmp.write('read_blif {}/{}_abc_mapped.blif\n'.format(dirName,gfcfile))
-# 	tmp.write('ps;\n')
-# if dfc_computation:
-# 	tmp.write('read_blif {}/{}_abc_mapped.blif\n'.format(dirName,dfcfile))
-# 	tmp.write('ps;\n')
-# tmp.write('quit;\n')
-# tmp.close()
-
-# print_time(tm_set,tm_setg,tm_setd,tm_gfcs,tm_sdfcs,tm_adfcs)

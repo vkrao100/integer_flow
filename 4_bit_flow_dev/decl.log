@@ -18,3 +18,14 @@ int main(){
 
 	push_mstack(m_6272018864->copy());
 	Polynomial * mul_0 = build_poly();
+	add_to_vstack(a1);
+	add_to_vstack(a2);
+	add_to_vstack(a3);
+	add_to_vstack(b0);
+	add_to_vstack(b1);
+	add_to_vstack(b2);
+	Term * t_4985058809290933859 = build_term_from_stack();
+
+	mpz_set_ui(coeff,32);
+	Monomial * m_8369915863357292402 = new Monomial (coeff,t_4985058809290933859);
+
