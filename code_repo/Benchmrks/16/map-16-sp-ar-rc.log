@@ -1,0 +1,24 @@
+.model sp-ar-rc-16
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 16-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../../utilities.py map-16-sp-ar-rc.blif 16 2 1 IN1[0]
+Bugs added at locations new_n369_ new_n183_
+Rectifying at targets - rg03 rg14 
+Generating AIG's and remainders for each assignments to targets
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".

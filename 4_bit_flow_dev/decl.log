@@ -2,10 +2,18 @@
 #include "includes/polynomial.h"
 int main(){
 
-	Var * b3 = new Var("b3",8);
-	Var * b2 = new Var("b2",7);
-	Var * b1 = new Var("b1",6);
-	Var * b0 = new Var("b0",5);
+	Var * b7 = new Var("b7",16);
+	Var * b6 = new Var("b6",15);
+	Var * b5 = new Var("b5",14);
+	Var * b4 = new Var("b4",13);
+	Var * b3 = new Var("b3",12);
+	Var * b2 = new Var("b2",11);
+	Var * b1 = new Var("b1",10);
+	Var * b0 = new Var("b0",9);
+	Var * a7 = new Var("a7",8);
+	Var * a6 = new Var("a6",7);
+	Var * a5 = new Var("a5",6);
+	Var * a4 = new Var("a4",5);
 	Var * a3 = new Var("a3",4);
 	Var * a2 = new Var("a2",3);
 	Var * a1 = new Var("a1",2);
@@ -18,14 +26,17 @@ int main(){
 
 	push_mstack(m_6272018864->copy());
 	Polynomial * mul_0 = build_poly();
-	add_to_vstack(a1);
-	add_to_vstack(a2);
-	add_to_vstack(a3);
+	add_to_vstack(a5);
+	add_to_vstack(a6);
+	add_to_vstack(a7);
 	add_to_vstack(b0);
 	add_to_vstack(b1);
 	add_to_vstack(b2);
-	Term * t_4985058809290933859 = build_term_from_stack();
+	add_to_vstack(b3);
+	add_to_vstack(b6);
+	add_to_vstack(b7);
+	Term * t_2611624328016273833 = build_term_from_stack();
 
-	mpz_set_ui(coeff,32);
-	Monomial * m_8369915863357292402 = new Monomial (coeff,t_4985058809290933859);
+	mpz_set_ui(coeff,12288);
+	Monomial * m_9104664561816002391 = new Monomial (coeff,t_2611624328016273833);
 

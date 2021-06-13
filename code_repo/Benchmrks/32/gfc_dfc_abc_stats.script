@@ -1,0 +1,7 @@
+read_library ../../cadence_abc.genlib;
+source ../../abc.rc;
+read_blif ton_gfc_Benchmark_32_2_abc_mapped.blif
+ps;
+read_blif tondc_dfc_Benchmark_32_2_abc_mapped.blif
+ps;
+quit;

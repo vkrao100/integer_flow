@@ -1,0 +1,51 @@
+.model sp-ar-rc-8
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 8-bit multiplier.
+Adding 2 bugs at pre-determined locations with bug config 1
+Bugs added at locations new_n128_ new_n251_
+Rectifying at targets - new_n128_ new_n251_
+Generating AIG's and remainders for each assignments to targets
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+ABC command line: "source gfc_dfc_abc_stats.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+[1;37mton_gfc_Benchmark_8_2         :[0m i/o =   16/    2  lat =    0  nd =     4  edge =      7  area = 4.00  delay = 2.00  lev = 2
+[1;37mtondc_dfc_Benchmark_8_2       :[0m i/o =   16/    2  lat =    0  nd =     2  edge =      4  area = 2.00  delay = 1.00  lev = 1
+Generating cofactor remainder 0
+cofactor remainder 0 generated
+Generating cofactor remainder 1
+cofactor remainder 1 generated
+Generating cofactor remainder 2
+cofactor remainder 2 generated
+Generating cofactor remainder 3
+cofactor remainder 3 generated
+Remainder generation done !!
+*** Generating rectification check file for Singular *** 
+
+*** Rectification check file generated for singular*** 
+*** Rectification check done *** 
+
+--------- Time Data -----------------
+create bugs + setup time(processing)	  0.0
+Total time for remainder generation 	  32.8
+Total time for singular computation	  	0.1
+Total time for function computation	  	0.3
+Total time:                  		  	33.2
+----------- Time Data -----------------
+Total time: 33.2

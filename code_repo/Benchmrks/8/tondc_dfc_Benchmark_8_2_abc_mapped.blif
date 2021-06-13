@@ -1,0 +1,20 @@
+# Benchmark "tondc_dfc_Benchmark_8_2" written by ABC on Sat Jun 12 19:34:58 2021
+.model tondc_dfc_Benchmark_8_2
+.inputs a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7
+.outputs rg03 rg14
+.gate AND2X1 A=a7 B=a5 Y=new_n20_
+.gate AND2X1 A=b2 B=b0 Y=new_n21_
+.gate AND2X1 A=new_n21_ B=new_n20_ Y=new_n22_
+.gate INVX1  A=new_n22_ Y=new_n23_
+.gate AND2X1 A=b1 B=a7 Y=new_n24_
+.gate INVX1  A=new_n24_ Y=new_n25_
+.gate AND2X1 A=b3 B=a5 Y=new_n26_
+.gate INVX1  A=new_n26_ Y=new_n27_
+.gate AND2X1 A=b2 B=a6 Y=new_n28_
+.gate INVX1  A=new_n28_ Y=new_n29_
+.gate AND2X1 A=new_n29_ B=new_n27_ Y=new_n30_
+.gate AND2X1 A=new_n30_ B=new_n25_ Y=new_n31_
+.gate AND2X1 A=new_n31_ B=new_n23_ Y=new_n32_
+.gate INVX1  A=new_n32_ Y=rg14
+.gate ONE    Y=rg03
+.end

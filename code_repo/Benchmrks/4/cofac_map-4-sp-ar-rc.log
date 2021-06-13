@@ -1,0 +1,29 @@
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 9: `poly p_0=;`
+   ? expected poly-expression. type 'help poly;'
+   ? last reserved name was `poly`
+ error at token `;`
+   ? `p_0` is not defined
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 10: `poly tmp_1 = reduce(tmp_0*p_0,J0);`
+   ? expected poly-expression. type 'help poly;'
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 11: `poly p_1=;`
+   ? expected poly-expression. type 'help poly;'
+   ? last reserved name was `poly`
+ error at token `;`
+   ? `tmp_1` is not defined
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 12: `poly tmp_2 = reduce(tmp_1*p_1,J0);`
+   ? expected poly-expression. type 'help poly;'
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 13: `poly p_2=;`
+   ? expected poly-expression. type 'help poly;'
+   ? last reserved name was `poly`
+ error at token `;`
+   ? `tmp_2` is not defined
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 14: `poly tmp_3 = reduce(tmp_2*p_2,J0);`
+   ? expected poly-expression. type 'help poly;'
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 15: `poly p_3=;`
+   ? expected poly-expression. type 'help poly;'
+   ? last reserved name was `poly`
+ error at token `;`
+   ? `tmp_3` is not defined
+   ? error occurred in or before rc_map-4-sp-ar-rc.sing line 16: `poly tmp_4 = reduce(tmp_3*p_3,J0);`
+   ? expected poly-expression. type 'help poly;'
+   ? `tmp_4` is not defined

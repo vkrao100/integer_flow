@@ -1,0 +1,6 @@
+read ../../cadence_abc.genlib
+source ../../abc.rc
+read_blif map_64-SP-AR-RC_p2_pready.blif;
+strash;
+fraig;
+write_aiger map_64-SP-AR-RC_p2_pready.aig;quit;

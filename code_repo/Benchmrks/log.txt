@@ -1,0 +1,3 @@
+./8/map-8-sp-ar-rc.log:*** Generating rectification check file for Singular *** 
+./8/map-8-sp-ar-rc.log:*** Rectification check file generated for singular*** 
+./8/log.txt:map-8-sp-ar-rc.log:*** Generating rectification check file for Singular *** 

@@ -1,0 +1,27 @@
+# Benchmark "ton_gfc_Benchmark_4_2" written by ABC on Thu Jun 10 19:14:34 2021
+.model ton_gfc_Benchmark_4_2
+.inputs a0 a1 a2 a3 b0 b1 b2 b3
+.outputs rg03 rg14
+.gate INVX1  A=a0 Y=new_n11_
+.gate AND2X1 A=b1 B=a1 Y=new_n12_
+.gate INVX1  A=new_n12_ Y=new_n13_
+.gate AND2X1 A=new_n13_ B=new_n11_ Y=new_n14_
+.gate INVX1  A=new_n14_ Y=new_n15_
+.gate INVX1  A=a1 Y=new_n16_
+.gate INVX1  A=a3 Y=new_n17_
+.gate AND2X1 A=new_n17_ B=new_n16_ Y=new_n18_
+.gate INVX1  A=b1 Y=new_n19_
+.gate INVX1  A=b3 Y=new_n20_
+.gate AND2X1 A=new_n20_ B=new_n19_ Y=new_n21_
+.gate AND2X1 A=new_n21_ B=new_n18_ Y=new_n22_
+.gate INVX1  A=new_n22_ Y=new_n23_
+.gate AND2X1 A=new_n23_ B=b0 Y=new_n24_
+.gate AND2X1 A=new_n24_ B=new_n15_ Y=new_n25_
+.gate INVX1  A=new_n25_ Y=new_n26_
+.gate AND2X1 A=new_n12_ B=a0 Y=new_n27_
+.gate INVX1  A=new_n27_ Y=new_n28_
+.gate AND2X1 A=b2 B=a2 Y=new_n29_
+.gate AND2X1 A=new_n29_ B=new_n28_ Y=new_n30_
+.gate AND2X1 A=new_n30_ B=new_n26_ Y=rg03
+.gate ZERO   Y=rg14
+.end

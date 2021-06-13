@@ -1,0 +1,48 @@
+
+LIB "../../my_proc.lib";
+
+ring r1 = 0, (a0,a1,a2,a3,a4,a5,a6,a7,b0,b1,b2,b3,b4,b5,b6,b7),dp;
+
+ideal J0 = a0^2-a0,a1^2-a1,a2^2-a2,a3^2-a3,a4^2-a4,a5^2-a5,a6^2-a6,a7^2-a7,b0^2-b0,b1^2-b1,b2^2-b2,b3^2-b3,b4^2-b4,b5^2-b5,b6^2-b6,b7^2-b7;
+
+poly tmp_0 = 1;
+poly p_0=2048*b3*b2*b1*b0*a7*a6*a5-1024*b3*b2*b1*b0*a7*a5-512*b3*b2*b1*a6*a5-1024*b3*b2*b0*a7*a6*a5+512*b3*b2*b0*a7*a5+512*b3*b2*a6*a5-512*b3*b1*b0*a7*a6*a5+512*b3*b1*a7*a5-256*b3*a5-512*b2*b1*b0*a7*a6*a5-512*b2*b1*b0*a7*a6+512*b2*b1*b0*a7*a5-512*b2*b1*a7*a6*a5+512*b2*b1*a7*a6+256*b2*b1*a6*a5+512*b2*b0*a7*a6*a5-256*b2*b0*a7*a5-256*b2*a6+256*b1*b0*a7*a6-256*b1*a7-4*b0*a2;
+poly tmp_1 = reduce(tmp_0*p_0,J0);
+"Multiplication-0 done";
+poly p_1=2048*b3*b2*b1*b0*a7*a6*a5-1024*b3*b2*b1*b0*a7*a5-512*b3*b2*b1*a6*a5-1024*b3*b2*b0*a7*a6*a5+512*b3*b2*b0*a7*a5+512*b3*b2*a6*a5-512*b3*b1*b0*a7*a6*a5+512*b3*b1*a7*a5-256*b3*a5-512*b2*b1*b0*a7*a6*a5-512*b2*b1*b0*a7*a6+512*b2*b1*b0*a7*a5-512*b2*b1*a7*a6*a5+512*b2*b1*a7*a6+256*b2*b1*a6*a5+512*b2*b0*a7*a6*a5-256*b2*b0*a7*a5-256*b2*a6+256*b1*b0*a7*a6-256*b1*a7-4*b0*a2+256;
+poly tmp_2 = reduce(tmp_1*p_1,J0);
+"Multiplication-1 done";
+poly p_2=2048*b3*b2*b1*b0*a7*a6*a5-1024*b3*b2*b1*b0*a7*a5-512*b3*b2*b1*a6*a5-1024*b3*b2*b0*a7*a6*a5+512*b3*b2*b0*a7*a5+512*b3*b2*a6*a5-512*b3*b1*b0*a7*a6*a5+512*b3*b1*a7*a5-256*b3*a5-512*b2*b1*b0*a7*a6*a5-512*b2*b1*b0*a7*a6+512*b2*b1*b0*a7*a5-512*b2*b1*a7*a6*a5+512*b2*b1*a7*a6+256*b2*b1*a6*a5+512*b2*b0*a7*a6*a5-256*b2*b0*a7*a5-256*b2*a6+256*b1*b0*a7*a6-256*b1*a7;
+poly tmp_3 = reduce(tmp_2*p_2,J0);
+"Multiplication-2 done";
+poly p_3=2048*b3*b2*b1*b0*a7*a6*a5-1024*b3*b2*b1*b0*a7*a5-512*b3*b2*b1*a6*a5-1024*b3*b2*b0*a7*a6*a5+512*b3*b2*b0*a7*a5+512*b3*b2*a6*a5-512*b3*b1*b0*a7*a6*a5+512*b3*b1*a7*a5-256*b3*a5-512*b2*b1*b0*a7*a6*a5-512*b2*b1*b0*a7*a6+512*b2*b1*b0*a7*a5-512*b2*b1*a7*a6*a5+512*b2*b1*a7*a6+256*b2*b1*a6*a5+512*b2*b0*a7*a6*a5-256*b2*b0*a7*a5-256*b2*a6+256*b1*b0*a7*a6-256*b1*a7+256;
+poly tmp_4 = reduce(tmp_3*p_3,J0);
+"Multiplication-3 done";
+if ( tmp_4 != 0){
+	"Rectification doesn't exist";
+	quit;
+}else{
+	"Rectification exists";
+	option(redSB);
+	poly pb_0 = id2poly_int(reduce(slimgb(p_0+J0),J0)+0,J0);
+"	gb computation-0 done";
+	poly pb_1 = id2poly_int(reduce(slimgb(p_1+J0),J0)+0,J0);
+"	gb computation-1 done";
+	poly pb_2 = id2poly_int(reduce(slimgb(p_2+J0),J0)+0,J0);
+"	gb computation-2 done";
+	poly pb_3 = id2poly_int(reduce(slimgb(p_3+J0),J0)+0,J0);
+"	gb computation-3 done";
+
+	list poly_list = pb_0,pb_1,pb_2,pb_3;
+	list polyb_list = 0,0,0,0;
+	for (int j=1;j<=size(poly_list);j++){
+		for (int i=1;i<=size(poly_list[j]);i++){
+			int coeff = int(leadcoef(poly_list[j][i]))%2;
+			if (coeff == -1 or coeff == 1){
+				polyb_list[j] = polyb_list[j] + leadmonom(poly_list[j][i]);
+			}
+		}
+	polyb_list[j];
+	}
+}
+quit;

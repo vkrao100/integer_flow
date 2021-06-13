@@ -675,7 +675,7 @@ proc interid(ideal J, ideal I)
 }
 
 
-proc quot(ideal J,poly I)
+proc user_quot(ideal J,poly I)
 {
 
 	//int si = size(I);
@@ -1229,10 +1229,9 @@ proc id2poly_itr(ideal J, ideal J0)
 
 proc id2poly_int(ideal J, ideal J0)
 {
-	int i; poly tmp;
+	poly tmp = 1;
 	J = reduce(J,J0)+0; // to remove all J0 gens in J
-	tmp=1;
-	for(i=1; i<=size(J); i++)
+	for(int i=1; i<=size(J); i++)
 	{
 		tmp = reduce(tmp*(1-J[i]),J0);
 	}

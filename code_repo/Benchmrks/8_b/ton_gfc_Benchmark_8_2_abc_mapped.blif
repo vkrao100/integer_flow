@@ -1,0 +1,22 @@
+# Benchmark "ton_gfc_Benchmark_8_2" written by ABC on Sat Jun 12 17:55:12 2021
+.model ton_gfc_Benchmark_8_2
+.inputs a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7
+.outputs rg03 rg14
+.gate AND2X1 A=b0 B=a4 Y=new_n19_
+.gate INVX1  A=new_n19_ Y=new_n20_
+.gate AND2X1 A=b2 B=a2 Y=new_n21_
+.gate INVX1  A=new_n21_ Y=new_n22_
+.gate AND2X1 A=new_n22_ B=new_n20_ Y=new_n23_
+.gate INVX1  A=new_n23_ Y=new_n24_
+.gate AND2X1 A=b1 B=a3 Y=new_n25_
+.gate AND2X1 A=new_n25_ B=new_n24_ Y=new_n26_
+.gate INVX1  A=new_n26_ Y=new_n27_
+.gate AND2X1 A=b3 B=a2 Y=new_n28_
+.gate INVX1  A=new_n28_ Y=new_n29_
+.gate AND2X1 A=new_n21_ B=new_n19_ Y=new_n30_
+.gate INVX1  A=new_n30_ Y=new_n31_
+.gate AND2X1 A=new_n31_ B=new_n29_ Y=new_n32_
+.gate AND2X1 A=new_n32_ B=new_n27_ Y=rg14
+.gate AND2X1 A=b2 B=a1 Y=new_n34_
+.gate AND2X1 A=new_n34_ B=rg14 Y=rg03
+.end

@@ -1,0 +1,11 @@
+.model sp-ar-rc-16
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 16-bit multiplier.
+Adding 3 bugs at pre-determined locations with bug config 1
+Bugs added at locations new_n77_ new_n273_ new_n1617_
+Rectifying at targets - new_n77_ new_n273_ new_n1617_
+Generating AIG's and remainders for each assignments to targets
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".

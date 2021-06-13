@@ -1,20 +1,27 @@
 LIB "my_proc.lib";
+LIB "teachstd.lib";
 
-ring r = 0, (a0, a1, b0, b1), lp;
+ring r = 0, (a0, a1, a2, b0, b1, b2), lp;
 
 poly f41 = a0^2 - a0;
 poly f42 = a1^2 - a1;
+poly f43 = a2^2 - a2;
 poly f44 = b0^2 - b0;
 poly f45 = b1^2 - b1;
+poly f46 = b2^2 - b2;
 
 option(redSB);
 
-ideal J0 = f41,f42,f44,f45;
+ideal J0s = f41,f42,f44,f45;
+ideal J0 = f41,f42,f43, f44,f45, f46;
 
 
 poly f1 = 4*a0*a1*b0*b1-2*a0*b0*b1-2*a1*b0;
 poly f2 = 4/3*a0*a1*b0*b1-2*a0*b0*b1-2/7*a1*b0;
 
+poly f3 = (8*a0*a1*a2*b0+16*a0*a1*a2*b1-12*a0*a1-8*a0*a2*b0-16*a0*a2*b1+12*a0-8*a1*a2*b0-16*a1*a2*b1+12*a1+8*a2*b0+16*a2*b1-12);
+
+/*
 ideal G1 = reduce(slimgb(f1+J0),J0)+0;
 ideal G2 = reduce(slimgb(f2+J0),J0)+0;
 
@@ -76,4 +83,4 @@ for (i = 1; i<=16;i++)
 	}
 	write(lf,sw);
 }
-close(lf);
+close(lf);*/

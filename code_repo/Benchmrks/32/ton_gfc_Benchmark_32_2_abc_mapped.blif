@@ -1,0 +1,61 @@
+# Benchmark "ton_gfc_Benchmark_32_2" written by ABC on Sat Jun 12 19:36:28 2021
+.model ton_gfc_Benchmark_32_2
+.inputs a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18 \
+ a19 a20 a21 a22 a23 a24 a25 a26 a27 a28 a29 a30 a31 b0 b1 b2 b3 b4 b5 b6 \
+ b7 b8 b9 b10 b11 b12 b13 b14 b15 b16 b17 b18 b19 b20 b21 b22 b23 b24 b25 \
+ b26 b27 b28 b29 b30 b31
+.outputs rg03 rg14
+.gate AND2X1 A=a1 B=a0 Y=new_n67_
+.gate INVX1  A=new_n67_ Y=new_n68_
+.gate AND2X1 A=a2 B=a0 Y=new_n69_
+.gate AND2X1 A=new_n69_ B=b0 Y=new_n70_
+.gate INVX1  A=new_n70_ Y=new_n71_
+.gate AND2X1 A=new_n71_ B=new_n68_ Y=new_n72_
+.gate INVX1  A=new_n72_ Y=new_n73_
+.gate AND2X1 A=b3 B=b2 Y=new_n74_
+.gate AND2X1 A=new_n74_ B=new_n73_ Y=new_n75_
+.gate INVX1  A=new_n75_ Y=new_n76_
+.gate INVX1  A=b2 Y=new_n77_
+.gate AND2X1 A=b3 B=b1 Y=new_n78_
+.gate INVX1  A=new_n78_ Y=new_n79_
+.gate AND2X1 A=new_n79_ B=new_n77_ Y=new_n80_
+.gate INVX1  A=new_n80_ Y=new_n81_
+.gate AND2X1 A=new_n81_ B=a1 Y=new_n82_
+.gate AND2X1 A=new_n82_ B=new_n70_ Y=new_n83_
+.gate INVX1  A=new_n83_ Y=new_n84_
+.gate AND2X1 A=new_n84_ B=new_n76_ Y=new_n85_
+.gate AND2X1 A=b1 B=a2 Y=new_n86_
+.gate INVX1  A=new_n86_ Y=new_n87_
+.gate AND2X1 A=b0 B=a3 Y=new_n88_
+.gate INVX1  A=new_n88_ Y=new_n89_
+.gate AND2X1 A=new_n89_ B=new_n87_ Y=new_n90_
+.gate INVX1  A=new_n90_ Y=new_n91_
+.gate AND2X1 A=b3 B=a0 Y=new_n92_
+.gate AND2X1 A=new_n92_ B=new_n91_ Y=new_n93_
+.gate INVX1  A=new_n93_ Y=new_n94_
+.gate INVX1  A=a1 Y=new_n95_
+.gate INVX1  A=b0 Y=new_n96_
+.gate AND2X1 A=new_n96_ B=new_n95_ Y=new_n97_
+.gate INVX1  A=new_n97_ Y=new_n98_
+.gate AND2X1 A=b2 B=b1 Y=new_n99_
+.gate AND2X1 A=new_n99_ B=new_n69_ Y=new_n100_
+.gate AND2X1 A=new_n100_ B=new_n98_ Y=new_n101_
+.gate INVX1  A=new_n101_ Y=new_n102_
+.gate AND2X1 A=b0 B=a1 Y=new_n103_
+.gate AND2X1 A=new_n103_ B=new_n86_ Y=new_n104_
+.gate INVX1  A=new_n104_ Y=new_n105_
+.gate AND2X1 A=new_n99_ B=new_n67_ Y=new_n106_
+.gate INVX1  A=new_n106_ Y=new_n107_
+.gate AND2X1 A=new_n107_ B=new_n105_ Y=new_n108_
+.gate AND2X1 A=new_n108_ B=new_n102_ Y=new_n109_
+.gate AND2X1 A=new_n109_ B=new_n94_ Y=new_n110_
+.gate AND2X1 A=new_n69_ B=b2 Y=new_n111_
+.gate INVX1  A=new_n111_ Y=new_n112_
+.gate AND2X1 A=new_n112_ B=new_n107_ Y=new_n113_
+.gate INVX1  A=new_n113_ Y=new_n114_
+.gate AND2X1 A=new_n114_ B=new_n88_ Y=new_n115_
+.gate INVX1  A=new_n115_ Y=new_n116_
+.gate AND2X1 A=new_n116_ B=new_n110_ Y=new_n117_
+.gate AND2X1 A=new_n117_ B=new_n85_ Y=rg03
+.gate ZERO   Y=rg14
+.end

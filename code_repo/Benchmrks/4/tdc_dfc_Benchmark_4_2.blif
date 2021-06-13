@@ -1,0 +1,5 @@
+
+# exdc BLIF for all the targets computed using on-sets of DFC computations
+.exdc 
+.inputs a0 a1 a2 a3 b0 b1 b2 b3 
+.outputs rg03 rg14 

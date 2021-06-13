@@ -1,0 +1,100 @@
+.model CSAMultiplier
+abc format - Input:a1,Output:z1
+Working on 32-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../../utilities.py mapped-32.blif 32 2 1 a0
+Bugs added at locations new_n436_ new_n293_
+Rectifying at targets - rg03 rg14 
+Generating AIG's and remainders for each assignments to targets
+ABC command line: "source abc_gen_aig_cofacs.script".
+
+Entered genlib library with 6 gates from file "../../cadence_abc.genlib".
+Loading resource file "../../abc.rc".
+[amulet2] AMulet Version 2.1
+[amulet2] Aiger multiplier examination tool
+[amulet2] Copyright(C) 2020, Daniela Kaufmann, Johannes Kepler University Linz
+[amulet2] selected mode: rectification check
+[amulet2] reading 'mapped-32_p2_pready.aig'
+[amulet2] MILOA 10950 64 0 64 10886
+[amulet2] assuming ordering as in the ABC generated or AOKI benchmarks
+[amulet2] allocating 11014 gates
+[amulet2] found 1024 partial products
+[amulet2] assuming simple pp generator
+[amulet2] found 1951 xor-gates
+[amulet2] marking xor chain gates
+[amulet2] marked 0 xor gates in last slice
+[amulet2] remove internal xor gates
+[amulet2] removed 3088 internal xor gates
+[amulet2] slicing based on input cones
+[amulet2] totally merged 2493 variable(s)
+[amulet2] totally promoted 88 variable(s)
+[amulet2] filled 64 slices
+[amulet2] eliminate single occs
+[amulet2] decomposed 2530 variables
+[amulet2] 
+[amulet2] 
+[amulet2] started reducing
+[amulet2] reducing by slice 63
+[amulet2] reducing by slice 62
+[amulet2] reducing by slice 61
+[amulet2] reducing by slice 60
+[amulet2] reducing by slice 59
+[amulet2] reducing by slice 58
+[amulet2] reducing by slice 57
+[amulet2] reducing by slice 56
+[amulet2] reducing by slice 55
+[amulet2] reducing by slice 54
+[amulet2] reducing by slice 53
+[amulet2] reducing by slice 52
+[amulet2] reducing by slice 51
+[amulet2] reducing by slice 50
+[amulet2] reducing by slice 49
+[amulet2] reducing by slice 48
+[amulet2] reducing by slice 47
+[amulet2] reducing by slice 46
+[amulet2] reducing by slice 45
+[amulet2] reducing by slice 44
+[amulet2] reducing by slice 43
+[amulet2] reducing by slice 42
+[amulet2] reducing by slice 41
+[amulet2] reducing by slice 40
+[amulet2] reducing by slice 39
+[amulet2] reducing by slice 38
+[amulet2] reducing by slice 37
+[amulet2] reducing by slice 36
+[amulet2] reducing by slice 35
+[amulet2] reducing by slice 34
+[amulet2] reducing by slice 33
+[amulet2] reducing by slice 32
+[amulet2] reducing by slice 31
+[amulet2] reducing by slice 30
+[amulet2] reducing by slice 29
+[amulet2] reducing by slice 28
+[amulet2] reducing by slice 27
+[amulet2] reducing by slice 26
+[amulet2] reducing by slice 25
+[amulet2] reducing by slice 24
+[amulet2] reducing by slice 23
+[amulet2] reducing by slice 22
+[amulet2] reducing by slice 21
+[amulet2] reducing by slice 20
+[amulet2] reducing by slice 19
+[amulet2] reducing by slice 18
+[amulet2] reducing by slice 17
+[amulet2] reducing by slice 16
+[amulet2] reducing by slice 15
+[amulet2] reducing by slice 14
+[amulet2] reducing by slice 13
+[amulet2] reducing by slice 12
+[amulet2] reducing by slice 11
+[amulet2] reducing by slice 10
+[amulet2] reducing by slice 9
+[amulet2] reducing by slice 8
+[amulet2] reducing by slice 7
+[amulet2] reducing by slice 6
+c
+c caught signal 'SIGINT'(2)
+c
+c
+c raising signal 'SIGINT'(2) again
+Generating cofactor remainder 0

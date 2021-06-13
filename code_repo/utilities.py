@@ -180,8 +180,8 @@ def iterate_bugs():
 		# Verification using amulet doesn't complete even for 2 bugs
 		# Hence, limiting slot to under 1000 for exps.
 		if (bug_config == 1): # All bugs within the first slot
-			if slot > 100:
-				slot = 100
+			if slot > 400:
+				slot = 400
  			lbnd = lbound  
 			ubnd = lbound + slot
 		elif (bug_config == 2): # random bug placement

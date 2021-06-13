@@ -1,0 +1,8 @@
+.model sp-ar-rc-4
+Aoki format - Input:IN1[1],Output:P[1]
+Working on 4-bit multiplier.
+Adding 2 bugs at random locations with bug config 1
+python ../../utilities.py map-4-sp-ar-rc.blif 4 2 1 IN1[0]
+Bugs added at locations new_n43_ new_n36_
+Rectifying at targets - rg03 rg14 
+Generating AIG's and remainders for each assignments to targets
